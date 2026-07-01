@@ -1,72 +1,62 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { Compass, Globe2, ShieldCheck, ArrowRight } from "lucide-react";
+import { Target, Lock, Globe2 } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import ScrollReveal from "@/components/ScrollReveal";
 
 const values = [
   {
-    icon: Compass,
-    title: "Precision first",
+    icon: Target,
+    title: "Accurate to the tenth",
     text: "Every hour, every reading, every decimal. Pilots deserve tools as precise as the instruments they fly by.",
   },
   {
-    icon: Globe2,
-    title: "Borderless",
-    text: "Avation connects the world. PilotHobb works for pilots under any authority, on any continent.",
+    icon: Lock,
+    title: "Yours, forever",
+    text: "Your logbook is your record. Export to PDF anytime — your data is never locked in, even if you cancel.",
   },
   {
-    icon: ShieldCheck,
-    title: "Yours, always",
-    text: "Your logbook is your record. We build tools to maintain it — never to lock it away.",
+    icon: Globe2,
+    title: "Built worldwide",
+    text: "Aviation connects the world. PilotHobb adapts to any authority, on any continent, wherever you fly.",
   },
+];
+
+const stats = [
+  { label: "Global", sub: "Any authority" },
+  { label: "Recurring", sub: "Decades-long retention" },
+  { label: "iOS + Android", sub: "On every device" },
+  { label: "Reseller-ready", sub: "Academy seats" },
 ];
 
 export default function About() {
   return (
     <>
-      <PageHeader
-        title="For pilots, by pilots"
-        subtitle="PilotHobb was born from a simple frustration: logging flights shouldn't feel like paperwork."
-      />
+      <PageHeader eyebrow="About" title="Made by a pilot, for pilots." />
 
-      <section className="px-4 py-10 max-w-3xl mx-auto">
+      {/* Story */}
+      <section className="px-4 sm:px-6 py-6 max-w-2xl mx-auto">
         <ScrollReveal>
-          <div className="rounded-2xl bg-cockpit-panel border border-cockpit-border p-8 sm:p-10">
-            <h2 className="font-heading text-2xl font-bold text-cockpit-cream mb-4">Our story</h2>
-            <div className="space-y-4 text-cockpit-muted leading-relaxed">
-              <p>
-                PilotHobb started in a dim crew room, scribbling readings into a paper logbook
-                after a long cross-country. The Hobbs meter said 159.3 — and we thought, why
-                doesn't a digital logbook feel as precise and calm as that counter?
-              </p>
-              <p>
-                Most logbook apps are either spreadsheets dressed up as apps, or bloated
-                enterprise tools that forget what it's like to actually sit in a cockpit.
-                We wanted something different: a tool that feels like an instrument panel —
-                dark, precise, premium, and calm.
-              </p>
-              <p>
-                So we built PilotHobb. It tracks your Hobbs and Tach readings, computes flight
-                time automatically, watches your currency, and keeps your career milestones —
-                all in one place that feels like home base.
-              </p>
-            </div>
-          </div>
+          <p className="text-cockpit-muted text-lg leading-relaxed text-center">
+            PilotHobb started with a simple frustration: keeping a logbook and staying current
+            takes more admin than it should. Hours to total, renewal dates to count, a physical
+            book to keep perfect. We built the app we wished we had — one that handles the
+            paperwork so pilots can focus on flying.
+          </p>
         </ScrollReveal>
       </section>
 
-      <section className="px-4 py-10 max-w-5xl mx-auto">
+      {/* Values */}
+      <section className="px-4 sm:px-6 py-16 max-w-5xl mx-auto">
         <div className="grid sm:grid-cols-3 gap-4">
           {values.map((v, i) => {
             const Icon = v.icon;
             return (
               <ScrollReveal key={v.title} delay={i * 100}>
                 <div className="rounded-2xl bg-cockpit-panel border border-cockpit-border p-6 h-full">
-                  <div className="w-10 h-10 rounded-lg bg-cockpit-amber/10 border border-cockpit-amber/20 flex items-center justify-center mb-4">
-                    <Icon className="w-5 h-5 text-cockpit-amber" />
+                  <div className="w-12 h-12 rounded-xl bg-cockpit-amber/10 border border-cockpit-amber/20 flex items-center justify-center mb-4">
+                    <Icon className="w-6 h-6 text-cockpit-amber" />
                   </div>
-                  <h3 className="font-heading text-base font-semibold text-cockpit-cream mb-2">
+                  <h3 className="font-heading text-lg font-semibold text-cockpit-cream mb-2">
                     {v.title}
                   </h3>
                   <p className="text-sm text-cockpit-muted leading-relaxed">{v.text}</p>
@@ -77,40 +67,58 @@ export default function About() {
         </div>
       </section>
 
-      <section className="px-4 py-16 max-w-3xl mx-auto text-center">
+      {/* Partner / Investor section */}
+      <section id="partner" className="px-4 sm:px-6 py-16 max-w-5xl mx-auto">
         <ScrollReveal>
-          <div className="rounded-2xl bg-cockpit-panel-light border border-cockpit-border p-8">
-            <h2 className="font-heading text-xl font-bold text-cockpit-cream mb-2">
-              Linkzone Global FZCO
-            </h2>
-            <p className="text-sm text-cockpit-muted leading-relaxed max-w-md mx-auto">
-              PilotHobb is developed by Linkzone Global FZCO. We are an independent technology
-              company and are not affiliated with any aviation authority. PilotHobb is a
-              personal tracking tool — always verify your official records with your authority.
-            </p>
+          <div className="rounded-3xl bg-cockpit-panel border border-cockpit-amber/30 p-8 sm:p-10 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-cockpit-amber/10 to-transparent pointer-events-none" />
+            <div className="absolute -top-20 -right-20 w-64 h-64 bg-cockpit-amber/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="relative flex flex-col md:flex-row gap-8 items-center">
+              <div className="flex-1">
+                <span className="inline-block text-[11px] font-semibold text-cockpit-amber uppercase tracking-[0.15em] mb-3">
+                  For Partners & Investors
+                </span>
+                <h2 className="font-heading text-2xl sm:text-3xl font-bold text-cockpit-cream mb-4 leading-tight">
+                  A logbook every pilot needs — and keeps for life.
+                </h2>
+                <p className="text-cockpit-muted leading-relaxed mb-6 max-w-lg">
+                  Pilots everywhere must keep a logbook from the first lesson through every
+                  renewal. PilotHobb turns that into a subscription renewed for decades — low churn,
+                  recurring revenue, a global market.
+                </p>
+                <a
+                  href="mailto:hello@pilothobb.com"
+                  className="inline-flex items-center px-5 py-2.5 rounded-xl bg-cockpit-amber text-cockpit-bg text-sm font-semibold hover:shadow-lg hover:shadow-cockpit-amber/30 hover:-translate-y-0.5 transition-all"
+                >
+                  Become a launch partner
+                </a>
+              </div>
+              <div className="flex-1 w-full grid grid-cols-2 gap-3">
+                {stats.map((s) => (
+                  <div key={s.label} className="rounded-xl bg-cockpit-panel-light border border-cockpit-border p-4 text-center">
+                    <p className="font-mono text-base font-bold text-cockpit-amber">{s.label}</p>
+                    <p className="text-[10px] text-cockpit-muted mt-1">{s.sub}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </ScrollReveal>
       </section>
 
-      <section className="px-4 py-10">
+      {/* Contact */}
+      <section className="px-4 sm:px-6 py-16 max-w-2xl mx-auto text-center">
         <ScrollReveal>
-          <div className="max-w-3xl mx-auto rounded-3xl bg-cockpit-panel border border-cockpit-border p-10 text-center relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-cockpit-amber/5 to-transparent pointer-events-none" />
-            <div className="relative">
-              <h2 className="font-heading text-2xl font-bold text-cockpit-cream mb-3">
-                Start your logbook today
-              </h2>
-              <p className="text-cockpit-muted mb-6">
-                Free to begin. No credit card required.
-              </p>
-              <Link
-                to="/register"
-                className="inline-flex items-center px-6 py-3 rounded-xl bg-cockpit-amber text-cockpit-bg font-semibold hover:shadow-lg hover:shadow-cockpit-amber/30 hover:-translate-y-0.5 transition-all"
-              >
-                Get the app <ArrowRight className="w-4 h-4 ml-2" />
-              </Link>
-            </div>
-          </div>
+          <h2 className="font-heading text-3xl font-bold text-cockpit-cream mb-6">Talk to us.</h2>
+          <a
+            href="mailto:hello@pilothobb.com"
+            className="inline-flex items-center px-6 py-3 rounded-xl bg-cockpit-amber text-cockpit-bg font-semibold hover:shadow-lg hover:shadow-cockpit-amber/30 hover:-translate-y-0.5 transition-all"
+          >
+            hello@pilothobb.com
+          </a>
+          <p className="text-xs text-cockpit-muted mt-6">
+            PilotHobb · a Linkzone Global FZCO venture
+          </p>
         </ScrollReveal>
       </section>
     </>
