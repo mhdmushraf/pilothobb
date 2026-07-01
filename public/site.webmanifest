@@ -7,7 +7,7 @@
   "background_color": "#0A0E17",
   "theme_color": "#0A0E17",
   "icons": [
-    { "src": "https://media.base44.com/images/public/6a455fc5475b58bb52305622/56072796f_pilothobb-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "https://media.base44.com/images/public/6a455fc5475b58bb52305622/f62467c46_pilothobb-icon-playstore-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    { "src": "https://media.base44.com/images/public/6a455fc5475b58bb52305622/75663be9b_pilothobb-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "https://media.base44.com/images/public/6a455fc5475b58bb52305622/32d0642a5_pilothobb-icon-playstore-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ]
 }
