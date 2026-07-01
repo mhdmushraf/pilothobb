@@ -1,9 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
-import HobbsCounter from "@/components/HobbsCounter";
 import ScrollReveal from "@/components/ScrollReveal";
-import { BRAND_ASSETS } from "@/components/Logo";
+import PhonePreview from "@/components/PhonePreview";
 
 function AppStoreBadge() {
   return (
@@ -40,92 +37,6 @@ function QuickStat({ children }) {
     <div className="flex items-center gap-2">
       <div className="w-1.5 h-1.5 rounded-full bg-cockpit-amber shrink-0" />
       <span className="text-xs sm:text-sm text-cockpit-muted leading-tight">{children}</span>
-    </div>
-  );
-}
-
-function PhoneMockup() {
-  return (
-    <div className="relative mx-auto" style={{ width: 300 }}>
-      {/* Phone frame */}
-      <div className="rounded-[2.5rem] bg-gradient-to-b from-[#1A2336] to-[#0A0E17] border border-cockpit-border p-2.5 shadow-2xl shadow-black/50">
-        {/* Notch */}
-        <div className="absolute top-2.5 left-1/2 -translate-x-1/2 w-20 h-5 bg-[#0A0E17] rounded-b-2xl z-10" />
-        {/* Screen */}
-        <div className="rounded-[2rem] bg-cockpit-bg overflow-hidden" style={{ minHeight: 540 }}>
-          {/* Status bar */}
-          <div className="flex items-center justify-between px-6 pt-3 pb-1">
-            <span className="text-[10px] font-mono text-cockpit-cream">9:41</span>
-            <div className="flex items-center gap-1">
-              <div className="w-3 h-2 rounded-sm border border-cockpit-cream/40" />
-            </div>
-          </div>
-          {/* App content */}
-          <div className="px-4 pt-2">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <p className="text-[10px] text-cockpit-muted">Good afternoon</p>
-                <p className="text-sm font-bold text-cockpit-cream">Captain Reed</p>
-              </div>
-              <div className="flex items-center gap-1">
-                <img src={BRAND_ASSETS.mark} alt="PilotHobb" style={{ height: 14, width: "auto" }} />
-                <span className="text-[11px] font-bold font-heading">
-                  <span className="text-cockpit-muted">Pilot</span>
-                  <span className="text-cockpit-cream">Hobb</span>
-                </span>
-              </div>
-            </div>
-
-            {/* Total Time card */}
-            <div className="rounded-2xl bg-cockpit-panel border border-cockpit-border p-4 mb-3">
-              <p className="text-[9px] font-medium text-cockpit-muted uppercase tracking-widest mb-3">Total Time</p>
-              <div className="flex justify-center">
-                <HobbsCounter target={159.3} duration={2500} />
-              </div>
-              <p className="text-center text-[10px] text-cockpit-muted mt-2 font-mono">
-                HOURS · <span className="text-cockpit-cream">142</span> LANDINGS
-              </p>
-            </div>
-
-            {/* Currency chips */}
-            <p className="text-[9px] font-medium text-cockpit-muted uppercase tracking-widest mb-2">Currency</p>
-            <div className="flex gap-1.5 mb-3">
-              <div className="flex-1 rounded-lg bg-cockpit-valid/10 border border-cockpit-valid/20 p-2 text-center">
-                <p className="text-[8px] text-cockpit-muted truncate">Medical</p>
-                <p className="font-mono text-sm font-bold text-cockpit-valid">184d</p>
-              </div>
-              <div className="flex-1 rounded-lg bg-cockpit-warning/10 border border-cockpit-warning/20 p-2 text-center">
-                <p className="text-[8px] text-cockpit-muted truncate">Night</p>
-                <p className="font-mono text-sm font-bold text-cockpit-warning">12d</p>
-              </div>
-              <div className="flex-1 rounded-lg bg-cockpit-valid/10 border border-cockpit-valid/20 p-2 text-center">
-                <p className="text-[8px] text-cockpit-muted truncate">IR</p>
-                <p className="font-mono text-sm font-bold text-cockpit-valid">61d</p>
-              </div>
-            </div>
-
-            {/* Recent flights preview */}
-            <p className="text-[9px] font-medium text-cockpit-muted uppercase tracking-widest mb-2">Recent Flights</p>
-            <div className="rounded-xl bg-cockpit-panel border border-cockpit-border px-3 py-1">
-              {[
-                { route: "FAGG–FAOH", time: "1.4", role: "PIC" },
-                { route: "FAOH–FALA", time: "0.8", role: "Dual" },
-              ].map((f, i) => (
-                <div key={i} className="flex items-center gap-2 py-2 border-b border-cockpit-border last:border-0">
-                  <div className="w-6 h-6 rounded bg-cockpit-panel-light border border-cockpit-border flex items-center justify-center shrink-0">
-                    <span className="text-[8px] text-cockpit-amber">✈</span>
-                  </div>
-                  <span className="font-mono text-[10px] font-semibold text-cockpit-cream flex-1">{f.route}</span>
-                  <span className="text-[7px] text-cockpit-amber bg-cockpit-amber/10 px-1 rounded">{f.role}</span>
-                  <span className="font-mono text-[10px] font-bold text-cockpit-cream">{f.time}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* Amber glow behind phone */}
-      <div className="absolute inset-0 -z-10 bg-cockpit-amber/10 rounded-full blur-3xl scale-110" />
     </div>
   );
 }
@@ -174,7 +85,7 @@ export default function Hero() {
 
         {/* Right column — phone */}
         <ScrollReveal delay={200} className="flex-1 w-full flex justify-center">
-          <PhoneMockup />
+          <PhonePreview />
         </ScrollReveal>
       </div>
     </section>
