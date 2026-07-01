@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { LayoutDashboard, BookOpen, Plane, MoreHorizontal, Plus } from "lucide-react";
 
 const tabs = [
-  { path: "/", label: "Dashboard", icon: LayoutDashboard },
+  { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { path: "/logbook", label: "Logbook", icon: BookOpen },
   { path: "/add-flight", label: "Add", icon: Plus, isFab: true },
   { path: "/fleet", label: "Fleet", icon: Plane },

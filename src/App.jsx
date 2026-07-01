@@ -14,6 +14,13 @@ import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
 import ResetPassword from '@/pages/ResetPassword';
 
+// Marketing pages
+import MarketingLayout from '@/components/MarketingLayout';
+import Landing from '@/pages/Landing';
+import Features from '@/pages/Features';
+import Pricing from '@/pages/Pricing';
+import About from '@/pages/About';
+
 // App pages
 import AppLayout from '@/components/AppLayout';
 import Dashboard from '@/pages/Dashboard';
@@ -47,14 +54,24 @@ const AuthenticatedApp = () => {
 
   return (
     <Routes>
+      {/* Auth */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
 
+      {/* Marketing (public) */}
+      <Route element={<MarketingLayout />}>
+        <Route path="/" element={<Landing />} />
+        <Route path="/features" element={<Features />} />
+        <Route path="/pricing" element={<Pricing />} />
+        <Route path="/about" element={<About />} />
+      </Route>
+
+      {/* App (protected) */}
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
         <Route element={<AppLayout />}>
-          <Route path="/" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/logbook" element={<Logbook />} />
           <Route path="/add-flight" element={<AddFlight />} />
           <Route path="/fleet" element={<Fleet />} />
