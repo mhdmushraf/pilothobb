@@ -46,7 +46,7 @@ export default function Hero() {
     <section className="px-4 sm:px-6 pt-24 pb-16 max-w-6xl mx-auto">
       <div className="flex flex-col-reverse md:flex-row items-center gap-10 md:gap-8 lg:gap-12">
         {/* Left column */}
-        <div className="flex-1 w-full">
+        <div className="hero-copy flex-1 w-full">
           <ScrollReveal>
             <span className="inline-block text-[11px] font-semibold text-cockpit-amber uppercase tracking-[0.15em] mb-4">
               Digital Pilot Logbook · Worldwide
@@ -84,7 +84,7 @@ export default function Hero() {
         </div>
 
         {/* Right column — phone */}
-        <ScrollReveal delay={200} className="flex-1 w-full flex justify-center">
+        <ScrollReveal delay={200} className="hero-visual flex-1 w-full flex justify-center">
           <PhonePreview />
         </ScrollReveal>
       </div>

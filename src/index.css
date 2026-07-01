@@ -126,6 +126,12 @@
 ::-webkit-scrollbar-track { background: #0A0E17; }
 ::-webkit-scrollbar-thumb { background: #243049; border-radius: 4px; }
 
+/* ===== Hero responsive stacking ===== */
+@media (max-width: 1024px) {
+  .hero-copy { order: 1; }
+  .hero-visual { order: 2; margin-top: 32px; margin-inline: auto; max-width: 100%; }
+}
+
 /* ===== Reduced motion ===== */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
