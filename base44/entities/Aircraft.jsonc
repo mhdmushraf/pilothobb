@@ -1,0 +1,48 @@
+{
+  "name": "Aircraft",
+  "type": "object",
+  "properties": {
+    "registration": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "time_source": {
+      "type": "string",
+      "enum": [
+        "Hobbs",
+        "Tach"
+      ]
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "SEP",
+        "MEP",
+        "Helicopter",
+        "Other"
+      ]
+    },
+    "pic_time": {
+      "type": "number",
+      "default": 0
+    },
+    "dual_time": {
+      "type": "number",
+      "default": 0
+    },
+    "total_time": {
+      "type": "number",
+      "default": 0
+    },
+    "last_flown": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+  "required": [
+    "registration",
+    "type"
+  ]
+}

@@ -59,7 +59,19 @@ module.exports = {
   				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
   				border: 'hsl(var(--sidebar-border))',
   				ring: 'hsl(var(--sidebar-ring))'
-  			}
+  			},
+        cockpit: {
+          bg: '#0A0E17',
+          panel: '#141B2B',
+          'panel-light': '#1A2336',
+          border: '#243049',
+          amber: '#FF9D2E',
+          cream: '#F3ECDD',
+          muted: '#8893A8',
+          valid: '#6FE0A6',
+          warning: '#F5B73C',
+          expired: '#FF6B6B',
+        }
   		},
   		fontFamily: {
   			heading: ['var(--font-heading)'],
@@ -69,20 +81,12 @@ module.exports = {
   		},
   		keyframes: {
   			'accordion-down': {
-  				from: {
-  					height: '0'
-  				},
-  				to: {
-  					height: 'var(--radix-accordion-content-height)'
-  				}
+  				from: { height: '0' },
+  				to: { height: 'var(--radix-accordion-content-height)' }
   			},
   			'accordion-up': {
-  				from: {
-  					height: 'var(--radix-accordion-content-height)'
-  				},
-  				to: {
-  					height: '0'
-  				}
+  				from: { height: 'var(--radix-accordion-content-height)' },
+  				to: { height: '0' }
   			}
   		},
   		animation: {

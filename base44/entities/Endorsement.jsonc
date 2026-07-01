@@ -1,0 +1,23 @@
+{
+  "name": "Endorsement",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "description": {
+      "type": "string"
+    },
+    "page_image": {
+      "type": "string",
+      "format": "image"
+    }
+  },
+  "required": [
+    "title"
+  ]
+}

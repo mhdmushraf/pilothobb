@@ -1,0 +1,41 @@
+{
+  "name": "Exam",
+  "type": "object",
+  "properties": {
+    "subject": {
+      "type": "string",
+      "enum": [
+        "PPL",
+        "CPL",
+        "IR",
+        "Restricted Radio",
+        "General Radio",
+        "Night Rating",
+        "ATPL",
+        "Other"
+      ]
+    },
+    "date_written": {
+      "type": "string",
+      "format": "date"
+    },
+    "marks": {
+      "type": "number"
+    },
+    "passed": {
+      "type": "boolean"
+    },
+    "valid_18_months": {
+      "type": "string",
+      "format": "date"
+    },
+    "valid_36_months": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+  "required": [
+    "subject",
+    "date_written"
+  ]
+}

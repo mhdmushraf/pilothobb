@@ -1,0 +1,86 @@
+{
+  "name": "Flight",
+  "type": "object",
+  "properties": {
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "aircraft": {
+      "type": "string",
+      "relationType": "reference",
+      "referenceEntity": "Aircraft"
+    },
+    "from_aerodrome": {
+      "type": "string"
+    },
+    "to_aerodrome": {
+      "type": "string"
+    },
+    "route": {
+      "type": "string"
+    },
+    "reading_before": {
+      "type": "number"
+    },
+    "reading_after": {
+      "type": "number"
+    },
+    "flight_time": {
+      "type": "number"
+    },
+    "landings": {
+      "type": "number"
+    },
+    "takeoffs": {
+      "type": "number"
+    },
+    "night_landings": {
+      "type": "number",
+      "default": 0
+    },
+    "pilot_role": {
+      "type": "string",
+      "enum": [
+        "PIC",
+        "Dual",
+        "PICUS",
+        "Co-pilot"
+      ]
+    },
+    "pic_time": {
+      "type": "number",
+      "default": 0
+    },
+    "dual_time": {
+      "type": "number",
+      "default": 0
+    },
+    "xc_time": {
+      "type": "number",
+      "default": 0
+    },
+    "night_time": {
+      "type": "number",
+      "default": 0
+    },
+    "instrument_actual": {
+      "type": "number",
+      "default": 0
+    },
+    "instrument_sim": {
+      "type": "number",
+      "default": 0
+    },
+    "remarks": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "date",
+    "aircraft",
+    "from_aerodrome",
+    "to_aerodrome",
+    "flight_time"
+  ]
+}

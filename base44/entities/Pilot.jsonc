@@ -1,0 +1,70 @@
+{
+  "name": "Pilot",
+  "type": "object",
+  "properties": {
+    "full_name": {
+      "type": "string"
+    },
+    "authority": {
+      "type": "string",
+      "enum": [
+        "FAA",
+        "EASA",
+        "UK CAA",
+        "SACAA",
+        "CASA",
+        "Other"
+      ]
+    },
+    "licence_type": {
+      "type": "string",
+      "enum": [
+        "Student",
+        "PPL",
+        "CPL",
+        "ATPL"
+      ]
+    },
+    "english_level": {
+      "type": "number"
+    },
+    "english_valid_until": {
+      "type": "string",
+      "format": "date"
+    },
+    "home_aerodrome": {
+      "type": "string"
+    },
+    "total_time": {
+      "type": "number",
+      "default": 0
+    },
+    "total_pic": {
+      "type": "number",
+      "default": 0
+    },
+    "total_dual": {
+      "type": "number",
+      "default": 0
+    },
+    "total_xc": {
+      "type": "number",
+      "default": 0
+    },
+    "total_night": {
+      "type": "number",
+      "default": 0
+    },
+    "total_instrument": {
+      "type": "number",
+      "default": 0
+    },
+    "total_landings": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "full_name"
+  ]
+}
