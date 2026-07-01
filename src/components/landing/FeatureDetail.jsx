@@ -6,7 +6,7 @@ export default function FeatureDetail({ icon: Icon, title, description, reverse,
     <div
       className={`flex flex-col ${
         reverse ? "md:flex-row-reverse" : "md:flex-row"
-      } gap-8 md:gap-12 items-center`}
+      } gap-8 lg:gap-12 items-center`}
     >
       <ScrollReveal className="flex-1">
         <div className="w-12 h-12 rounded-xl bg-cockpit-amber/10 border border-cockpit-amber/20 flex items-center justify-center mb-4">

@@ -44,7 +44,7 @@ function QuickStat({ children }) {
 export default function Hero() {
   return (
     <section className="px-4 sm:px-6 pt-24 pb-16 max-w-6xl mx-auto">
-      <div className="flex flex-col-reverse md:flex-row items-center gap-10 md:gap-12">
+      <div className="flex flex-col-reverse md:flex-row items-center gap-10 md:gap-8 lg:gap-12">
         {/* Left column */}
         <div className="flex-1 w-full">
           <ScrollReveal>

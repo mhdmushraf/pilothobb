@@ -78,6 +78,12 @@ const faqs = [
   },
 ];
 
+const tabletClasses = [
+  "md:order-2 lg:order-none",
+  "md:order-1 md:col-span-2 lg:order-none lg:col-span-1",
+  "md:order-3 lg:order-none",
+];
+
 export default function Pricing() {
   return (
     <>
@@ -89,9 +95,9 @@ export default function Pricing() {
 
       {/* Pricing cards */}
       <section className="px-4 sm:px-6 py-6 max-w-5xl mx-auto">
-        <div className="grid md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {tiers.map((tier, i) => (
-            <ScrollReveal key={tier.name} delay={i * 100}>
+            <ScrollReveal key={tier.name} delay={i * 100} className={tabletClasses[i]}>
               <div
                 className={`rounded-2xl p-6 h-full flex flex-col ${
                   tier.highlighted
@@ -144,7 +150,7 @@ export default function Pricing() {
             Frequently asked
           </h2>
         </ScrollReveal>
-        <div className="grid sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {faqs.map((faq, i) => (
             <ScrollReveal key={i} delay={i * 80}>
               <div className="rounded-2xl bg-cockpit-panel border border-cockpit-border p-5 h-full">

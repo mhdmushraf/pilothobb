@@ -370,7 +370,7 @@ export default function PhonePreview() {
   };
 
   return (
-    <div className="relative mx-auto" style={{ width: 300 }}>
+    <div className="relative mx-auto w-full" style={{ maxWidth: 300 }}>
       <div className="rounded-[2.5rem] bg-gradient-to-b from-[#1A2336] to-[#0A0E17] border border-cockpit-border p-2.5 shadow-2xl shadow-black/50">
         <div className="absolute top-2.5 left-1/2 -translate-x-1/2 w-20 h-5 bg-[#0A0E17] rounded-b-2xl z-10" />
         <div className="rounded-[2rem] bg-cockpit-bg overflow-hidden flex flex-col" style={{ minHeight: 540 }}>

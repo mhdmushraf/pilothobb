@@ -29,11 +29,11 @@ export default function WhySection() {
           The paperwork of flying, finally handled.
         </h2>
       </ScrollReveal>
-      <div className="grid sm:grid-cols-3 gap-4 mb-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
         {cards.map((c, i) => {
           const Icon = c.icon;
           return (
-            <ScrollReveal key={c.title} delay={i * 100}>
+            <ScrollReveal key={c.title} delay={i * 100} className={i === 2 ? "md:col-span-2 lg:col-span-1" : ""}>
               <div className="rounded-2xl bg-cockpit-panel border border-cockpit-border p-6 hover:border-cockpit-amber/30 transition-colors h-full">
                 <div className="w-12 h-12 rounded-xl bg-cockpit-amber/10 border border-cockpit-amber/20 flex items-center justify-center mb-4">
                   <Icon className="w-6 h-6 text-cockpit-amber" />

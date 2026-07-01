@@ -47,11 +47,11 @@ export default function About() {
 
       {/* Values */}
       <section className="px-4 sm:px-6 py-16 max-w-5xl mx-auto">
-        <div className="grid sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {values.map((v, i) => {
             const Icon = v.icon;
             return (
-              <ScrollReveal key={v.title} delay={i * 100}>
+              <ScrollReveal key={v.title} delay={i * 100} className={i === 2 ? "md:col-span-2 lg:col-span-1" : ""}>
                 <div className="rounded-2xl bg-cockpit-panel border border-cockpit-border p-6 h-full">
                   <div className="w-12 h-12 rounded-xl bg-cockpit-amber/10 border border-cockpit-amber/20 flex items-center justify-center mb-4">
                     <Icon className="w-6 h-6 text-cockpit-amber" />
@@ -73,7 +73,7 @@ export default function About() {
           <div className="rounded-3xl bg-cockpit-panel border border-cockpit-amber/30 p-8 sm:p-10 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-cockpit-amber/10 to-transparent pointer-events-none" />
             <div className="absolute -top-20 -right-20 w-64 h-64 bg-cockpit-amber/10 rounded-full blur-3xl pointer-events-none" />
-            <div className="relative flex flex-col md:flex-row gap-8 items-center">
+            <div className="relative flex flex-col lg:flex-row gap-8 items-center">
               <div className="flex-1">
                 <span className="inline-block text-[11px] font-semibold text-cockpit-amber uppercase tracking-[0.15em] mb-3">
                   For Partners & Investors
