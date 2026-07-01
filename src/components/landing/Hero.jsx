@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import HobbsCounter from "@/components/HobbsCounter";
 import ScrollReveal from "@/components/ScrollReveal";
+import { BRAND_ASSETS } from "@/components/Logo";
 
 function AppStoreBadge() {
   return (
@@ -66,7 +67,13 @@ function PhoneMockup() {
                 <p className="text-[10px] text-cockpit-muted">Good afternoon</p>
                 <p className="text-sm font-bold text-cockpit-cream">Captain Reed</p>
               </div>
-              <span className="text-xs font-bold text-cockpit-amber font-heading">PilotHobb</span>
+              <div className="flex items-center gap-1">
+                <img src={BRAND_ASSETS.mark} alt="PilotHobb" style={{ height: 14, width: "auto" }} />
+                <span className="text-[11px] font-bold font-heading">
+                  <span className="text-cockpit-muted">Pilot</span>
+                  <span className="text-cockpit-cream">Hobb</span>
+                </span>
+              </div>
             </div>
 
             {/* Total Time card */}
