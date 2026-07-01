@@ -371,26 +371,61 @@ export default function PhonePreview() {
 
   return (
     <div className="relative mx-auto w-full" style={{ maxWidth: 300 }}>
-      <div className="rounded-[2.5rem] bg-gradient-to-b from-[#1A2336] to-[#0A0E17] border border-cockpit-border p-2.5 shadow-2xl shadow-black/50">
-        <div className="absolute top-2.5 left-1/2 -translate-x-1/2 w-20 h-5 bg-[#0A0E17] rounded-b-2xl z-10" />
-        <div className="rounded-[2rem] bg-cockpit-bg overflow-hidden flex flex-col" style={{ minHeight: 540 }}>
+      {/* Outer body — titanium bezel */}
+      <div
+        className="relative mx-auto"
+        style={{
+          aspectRatio: "9 / 19.5",
+          background: "#05070b",
+          borderRadius: 48,
+          padding: 12,
+          outline: "1px solid #1c2436",
+          boxShadow: "0 40px 80px -30px rgba(0,0,0,.7)",
+        }}
+      >
+        {/* Screen — clipped to rounded corners */}
+        <div
+          className="relative w-full h-full overflow-hidden bg-cockpit-bg"
+          style={{ borderRadius: 40 }}
+        >
+          {/* Dynamic Island */}
+          <div
+            className="absolute left-1/2 -translate-x-1/2 z-30 bg-[#05070b]"
+            style={{ top: 14, width: 110, height: 30, borderRadius: 999 }}
+          />
+
           {/* Status bar */}
-          <div className="flex items-center justify-between px-6 pt-3 pb-1 shrink-0">
-            <span className="text-[10px] font-mono text-cockpit-cream">9:41</span>
-            <div className="flex items-center gap-1">
+          <div className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between" style={{ paddingLeft: 22, paddingRight: 22, paddingTop: 16, paddingBottom: 6 }}>
+            <span className="text-[11px] font-mono font-semibold text-cockpit-cream">9:41</span>
+            <div className="flex items-center gap-1.5">
+              {/* Cellular bars */}
               <div className="flex items-end gap-[2px]">
                 <div className="w-[3px] h-1.5 rounded-sm bg-cockpit-cream/50" />
                 <div className="w-[3px] h-2 rounded-sm bg-cockpit-cream/70" />
                 <div className="w-[3px] h-2.5 rounded-sm bg-cockpit-cream" />
+                <div className="w-[3px] h-3 rounded-sm bg-cockpit-cream" />
               </div>
-              <div className="w-5 h-2.5 rounded-[3px] border border-cockpit-cream/40 relative ml-1">
-                <div className="absolute inset-[1px] right-[5px] rounded-[1px] bg-cockpit-cream/80" />
+              {/* WiFi */}
+              <svg viewBox="0 0 16 12" className="w-[15px] h-[11px] text-cockpit-cream/90" fill="currentColor">
+                <path d="M8 0C4.9 0 2.1 1.2 0 3.1l1.5 1.6C3.2 3 5.5 2 8 2s4.8 1 6.5 2.7L16 3.1C13.9 1.2 11.1 0 8 0z" opacity="0.9"/>
+                <path d="M3.5 6.2l1.6 1.6C5.9 7 6.9 6.5 8 6.5s2.1.5 2.9 1.3l1.6-1.6C11.2 5 9.6 4.5 8 4.5s-3.2.5-4.5 1.7z" opacity="0.9"/>
+                <circle cx="8" cy="10" r="1.5" opacity="0.9"/>
+              </svg>
+              {/* Battery */}
+              <div className="relative flex items-center">
+                <div className="w-[22px] h-[11px] rounded-[3px] border border-cockpit-cream/50 relative">
+                  <div className="absolute inset-[1.5px] right-[6px] rounded-[1px] bg-cockpit-cream" />
+                </div>
+                <div className="w-[1.5px] h-[4px] rounded-r-sm bg-cockpit-cream/50 ml-[1px]" />
               </div>
             </div>
           </div>
 
-          {/* Screen content — cross-fade */}
-          <div className="flex-1 relative overflow-hidden">
+          {/* Screen content — cross-fade, inset to clear status bar and tab bar */}
+          <div
+            className="absolute left-0 right-0 overflow-hidden"
+            style={{ top: 44, bottom: 64 }}
+          >
             {reducedMotion ? (
               <div className="absolute inset-0">{renderScreen("dashboard")}</div>
             ) : (
@@ -413,9 +448,9 @@ export default function PhonePreview() {
             )}
           </div>
 
-          {/* Page dots */}
+          {/* Page dots — sit above content, below tab bar */}
           {!reducedMotion && (
-            <div className="flex justify-center gap-1.5 py-1.5 shrink-0">
+            <div className="absolute left-0 right-0 flex justify-center gap-1.5 z-10" style={{ bottom: 56 }}>
               {SCREENS.map((_, i) => (
                 <div
                   key={i}
@@ -425,10 +460,19 @@ export default function PhonePreview() {
             </div>
           )}
 
-          {/* Tab bar */}
-          <TabBar activeScreen={active} />
+          {/* Tab bar — pinned to bottom of screen */}
+          <div className="absolute bottom-0 left-0 right-0 z-20">
+            <TabBar activeScreen={active} />
+          </div>
+
+          {/* Home indicator */}
+          <div
+            className="absolute left-1/2 -translate-x-1/2 z-30 bg-cockpit-cream/40"
+            style={{ bottom: 8, width: 120, height: 5, borderRadius: 999 }}
+          />
         </div>
       </div>
+      {/* Amber glow behind phone */}
       <div className="absolute inset-0 -z-10 bg-cockpit-amber/10 rounded-full blur-3xl scale-110" />
     </div>
   );
