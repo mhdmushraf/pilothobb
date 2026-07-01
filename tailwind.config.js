@@ -71,6 +71,9 @@ module.exports = {
           valid: '#6FE0A6',
           warning: '#F5B73C',
           expired: '#FF6B6B',
+          'amber-hi': '#FFC062',
+          'amber-lo': '#F2761A',
+          'glow-blue': '#4A90D9',
         }
   		},
   		fontFamily: {
