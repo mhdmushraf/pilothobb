@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Home, BookOpen, User, Plus } from "lucide-react";
+import { Home, BookOpen, User, Plus, Plane } from "lucide-react";
 import { BRAND_ASSETS } from "@/components/Logo";
 
 const SCREENS = ["dashboard", "addflight", "logbook", "career"];
@@ -111,6 +111,7 @@ function TabBar({ activeScreen }) {
           <Plus className="w-5 h-5 text-cockpit-bg" />
         </div>
       </div>
+      <TabIcon icon={Plane} label="Fleet" active={highlightTab === "fleet"} />
       <TabIcon icon={User} label="Career" active={highlightTab === "career"} />
     </div>
   );
