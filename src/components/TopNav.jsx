@@ -8,6 +8,7 @@ const links = [
   { path: "/features", label: "Features" },
   { path: "/pricing", label: "Pricing" },
   { path: "/about", label: "About" },
+  { path: "/contact", label: "Contact" },
 ];
 
 export default function TopNav() {
