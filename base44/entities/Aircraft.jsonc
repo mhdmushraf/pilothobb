@@ -39,6 +39,10 @@
     "last_flown": {
       "type": "string",
       "format": "date"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000
     }
   },
   "required": [
