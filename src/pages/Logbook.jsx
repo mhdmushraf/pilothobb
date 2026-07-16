@@ -1,84 +1,345 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { BookOpen, Plane } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
+import usePilot from "@/hooks/usePilot";
+import { computeTotals } from "@/lib/flightTotals";
+import {
+  Select, SelectTrigger, SelectValue, SelectContent, SelectItem,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import {
+  BookOpen, Plane, Trash2, X, FileDown, BarChart3, Loader2, ChevronRight,
+} from "lucide-react";
 import EmptyState from "@/components/EmptyState";
 import SkeletonCard from "@/components/SkeletonCard";
 
 const PAGE_SIZE = 20;
 
+const ROLE_CHIPS = ["All", "PIC", "Dual", "PICUS", "Co-pilot", "RPAS"];
+const PERIODS = ["All", "30d", "90d", "1y"];
+
+const PERIOD_DAYS = { "30d": 30, "90d": 90, "1y": 365 };
+
+function periodStart(period) {
+  if (period === "All") return null;
+  const d = new Date();
+  d.setDate(d.getDate() - PERIOD_DAYS[period]);
+  return d.toISOString().split("T")[0];
+}
+
+function dedupe(list) {
+  const seen = new Set();
+  return list.filter((f) => {
+    if (seen.has(f.id)) return false;
+    seen.add(f.id);
+    return true;
+  });
+}
+
+function DetailRow({ label, value }) {
+  if (value === undefined || value === null || value === "") return null;
+  return (
+    <div className="flex justify-between items-center py-1.5 border-b border-cockpit-border last:border-0">
+      <span className="text-xs text-cockpit-muted uppercase tracking-wider">{label}</span>
+      <span className="text-sm text-cockpit-cream font-mono text-right">{value}</span>
+    </div>
+  );
+}
+
+function FlightDetail({ flight, aircraftReg, onClose, onDelete, deleting }) {
+  const date = flight.date ? new Date(flight.date).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) : "—";
+  return (
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 p-0 sm:p-4" onClick={onClose}>
+      <div
+        className="w-full sm:max-w-md max-h-[85vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl bg-cockpit-panel border border-cockpit-border p-5"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <p className="font-mono text-base font-bold text-cockpit-cream">
+              {flight.route || `${flight.from_aerodrome}–${flight.to_aerodrome}`}
+            </p>
+            <p className="text-xs text-cockpit-muted font-mono">{date}</p>
+          </div>
+          <button onClick={onClose} className="p-1 text-cockpit-muted hover:text-cockpit-cream">
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        <div className="rounded-xl bg-cockpit-panel-light border border-cockpit-border p-4 mb-4">
+          <DetailRow label="Aircraft" value={aircraftReg} />
+          <DetailRow label="Flight time" value={`${(flight.flight_time ?? 0).toFixed(1)} h`} />
+          <DetailRow label="Role" value={flight.pilot_role} />
+          <DetailRow label="From" value={flight.from_aerodrome} />
+          <DetailRow label="To" value={flight.to_aerodrome} />
+          <DetailRow label="Takeoffs" value={flight.takeoffs} />
+          <DetailRow label="Landings" value={flight.landings} />
+          <DetailRow label="Touch & go" value={flight.touch_and_go} />
+          <DetailRow label="Reading before" value={flight.reading_before} />
+          <DetailRow label="Reading after" value={flight.reading_after} />
+          <DetailRow label="PIC time" value={flight.pic_time?.toFixed?.(1)} />
+          <DetailRow label="Dual time" value={flight.dual_time?.toFixed?.(1)} />
+          <DetailRow label="PICUS time" value={flight.picus_time?.toFixed?.(1)} />
+          <DetailRow label="Co-pilot time" value={flight.co_pilot_time?.toFixed?.(1)} />
+          <DetailRow label="XC time" value={flight.xc_time?.toFixed?.(1)} />
+          <DetailRow label="Night time" value={flight.night_time?.toFixed?.(1)} />
+          <DetailRow label="Night landings" value={flight.night_landings} />
+          <DetailRow label="Night takeoffs" value={flight.night_takeoffs} />
+          <DetailRow label="Instrument actual" value={flight.instrument_actual?.toFixed?.(1)} />
+          <DetailRow label="Instrument sim" value={flight.instrument_sim?.toFixed?.(1)} />
+          <DetailRow label="Sim time" value={flight.sim_time?.toFixed?.(1)} />
+          <DetailRow label="Autorotations" value={flight.autorotations} />
+          <DetailRow label="Hoist cycles" value={flight.hoist_cycles} />
+          {flight.is_rpas && <DetailRow label="RPAS" value="Yes" />}
+          <DetailRow label="Mission type" value={flight.mission_type} />
+          <DetailRow label="Operation" value={flight.operation_category} />
+          <DetailRow label="Battery cycles" value={flight.battery_cycles} />
+          <DetailRow label="Observer" value={flight.observer} />
+        </div>
+
+        {flight.remarks && (
+          <div className="rounded-xl bg-cockpit-panel-light border border-cockpit-border p-4 mb-4">
+            <p className="text-xs text-cockpit-muted uppercase tracking-wider mb-1">Remarks</p>
+            <p className="text-sm text-cockpit-cream">{flight.remarks}</p>
+          </div>
+        )}
+
+        <Button
+          onClick={onDelete}
+          disabled={deleting}
+          variant="outline"
+          className="w-full border-cockpit-expired/30 text-cockpit-expired hover:bg-cockpit-expired/10"
+        >
+          {deleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+          {deleting ? "Deleting…" : "Delete flight — reverses totals"}
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 export default function Logbook() {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const { pilot } = usePilot();
+
   const [flights, setFlights] = useState(null);
   const [hasMore, setHasMore] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [page, setPage] = useState(0);
 
-  const loadFlights = useCallback(async (skip = 0) => {
-    const result = await base44.entities.Flight.list("-date", PAGE_SIZE + 1);
-    setHasMore(result.length > PAGE_SIZE);
-    setFlights(result.slice(0, PAGE_SIZE));
-  }, []);
+  const [roleFilter, setRoleFilter] = useState("All");
+  const [aircraftFilter, setAircraftFilter] = useState("All");
+  const [periodFilter, setPeriodFilter] = useState("All");
+  const [aircraftList, setAircraftList] = useState([]);
 
-  useEffect(() => { loadFlights(); }, [loadFlights]);
+  const [selected, setSelected] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
-  const loadMore = async () => {
-    if (loadingMore || !hasMore || !flights) return;
-    setLoadingMore(true);
+  const activeFilters = useMemo(() => {
+    const f = {};
+    if (roleFilter === "RPAS") f.is_rpas = true;
+    else if (roleFilter !== "All") f.pilot_role = roleFilter;
+    if (aircraftFilter !== "All") f.aircraft = aircraftFilter;
+    const start = periodStart(periodFilter);
+    if (start) f.date = { $gte: start };
+    return f;
+  }, [roleFilter, aircraftFilter, periodFilter]);
+
+  const loadPage = async (pageNum, append) => {
+    if (!append) setFlights(null);
+    else setLoadingMore(true);
     try {
       const result = await base44.entities.Flight.filter(
-        { created_date: { $lt: flights[flights.length - 1].created_date } },
-        "-date",
-        PAGE_SIZE + 1
+        activeFilters, "-date", PAGE_SIZE + 1, pageNum * PAGE_SIZE
       );
       setHasMore(result.length > PAGE_SIZE);
-      setFlights((prev) => [...prev, ...result.slice(0, PAGE_SIZE)]);
+      const slice = result.slice(0, PAGE_SIZE);
+      setFlights((prev) => (append ? dedupe([...(prev || []), ...slice]) : slice));
+    } catch {
+      if (!append) setFlights([]);
     } finally {
       setLoadingMore(false);
     }
   };
 
+  useEffect(() => {
+    loadPage(0, false);
+    setPage(0);
+  }, [activeFilters]);
+
+  useEffect(() => {
+    base44.entities.Aircraft.list().then(setAircraftList).catch(() => setAircraftList([]));
+  }, []);
+
+  const loadMore = () => {
+    if (loadingMore || !hasMore) return;
+    const next = page + 1;
+    setPage(next);
+    loadPage(next, true);
+  };
+
+  const updateFilter = (setter) => (val) => {
+    setter(val);
+    setPage(0);
+  };
+
+  const totalTime = useMemo(
+    () => (flights || []).reduce((s, f) => s + (Number(f.flight_time) || 0), 0),
+    [flights]
+  );
+
+  const aircraftRegFor = (flight) => {
+    const id = typeof flight.aircraft === "string" ? flight.aircraft : flight.aircraft?.id;
+    const ac = aircraftList.find((a) => a.id === id);
+    return ac?.registration || id || "—";
+  };
+
+  const handleDelete = async () => {
+    if (!selected || !pilot) return;
+    setDeleting(true);
+    try {
+      const flight = selected;
+      const aircraftId = typeof flight.aircraft === "string" ? flight.aircraft : flight.aircraft?.id;
+      let ac = aircraftList.find((a) => a.id === aircraftId);
+      if (!ac && aircraftId) {
+        ac = await base44.entities.Aircraft.get(aircraftId);
+      }
+      const { pilotPatch, aircraftPatch } = computeTotals(flight, pilot, ac, -1);
+      await base44.entities.Pilot.update(pilot.id, pilotPatch);
+      if (ac) await base44.entities.Aircraft.update(ac.id, aircraftPatch);
+      await base44.entities.Flight.delete(flight.id);
+
+      setFlights((prev) => (prev || []).filter((f) => f.id !== flight.id));
+      setSelected(null);
+      toast({ title: "Flight deleted", description: "Totals reversed." });
+    } catch (e) {
+      toast({ title: "Delete failed", description: e.message, variant: "destructive" });
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   return (
-    <div className="px-4 pt-6">
+    <div className="px-4 pt-6 pb-4">
       <h1 className="text-xl font-bold text-cockpit-cream mb-4 flex items-center gap-2">
         <BookOpen className="w-5 h-5 text-cockpit-amber" /> Logbook
       </h1>
 
+      {/* Filters */}
+      <div className="mb-4 space-y-3">
+        <div className="flex flex-wrap gap-2">
+          {ROLE_CHIPS.map((r) => (
+            <button
+              key={r}
+              onClick={() => updateFilter(setRoleFilter)(r)}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
+                roleFilter === r
+                  ? "bg-cockpit-amber/15 border-cockpit-amber/40 text-cockpit-amber"
+                  : "bg-cockpit-panel border-cockpit-border text-cockpit-muted"
+              }`}
+            >
+              {r}
+            </button>
+          ))}
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          <Select value={aircraftFilter} onValueChange={updateFilter(setAircraftFilter)}>
+            <SelectTrigger className="bg-cockpit-panel border-cockpit-border text-cockpit-cream h-9">
+              <SelectValue placeholder="Aircraft" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="All">All aircraft</SelectItem>
+              {aircraftList.map((a) => (
+                <SelectItem key={a.id} value={a.id}>{a.registration}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select value={periodFilter} onValueChange={updateFilter(setPeriodFilter)}>
+            <SelectTrigger className="bg-cockpit-panel border-cockpit-border text-cockpit-cream h-9">
+              <SelectValue placeholder="Period" />
+            </SelectTrigger>
+            <SelectContent>
+              {PERIODS.map((p) => (
+                <SelectItem key={p} value={p}>{p === "All" ? "All time" : p}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      {/* Count + toolbar */}
+      {flights !== null && flights.length > 0 && (
+        <div className="mb-3">
+          <p className="text-xs text-cockpit-muted mb-2">
+            {flights.length} flight{flights.length !== 1 ? "s" : ""} · {totalTime.toFixed(1)} h shown
+          </p>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="border-cockpit-border text-cockpit-muted hover:text-cockpit-cream h-8"
+              onClick={() => toast({ title: "SACAA logbook PDF exported" })}
+            >
+              <FileDown className="w-3.5 h-3.5" /> Export PDF
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="border-cockpit-border text-cockpit-muted hover:text-cockpit-cream h-8"
+              onClick={() => navigate("/career")}
+            >
+              <BarChart3 className="w-3.5 h-3.5" /> Career summary
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* Flight list */}
       {flights === null ? (
-        <div className="space-y-3">
+        <div className="space-y-2">
           {[1, 2, 3].map((i) => <SkeletonCard key={i} lines={2} />)}
         </div>
       ) : flights.length === 0 ? (
         <EmptyState
           icon={BookOpen}
-          title="No flights yet"
-          description="Log your first flight to start building your logbook"
+          title="No flights found"
+          description="Try adjusting filters or log your first flight"
         />
       ) : (
         <>
           <div className="space-y-2">
             {flights.map((f) => (
-              <div
+              <button
                 key={f.id}
-                className="rounded-xl bg-cockpit-panel border border-cockpit-border p-4"
+                onClick={() => setSelected(f)}
+                className="w-full text-left rounded-xl bg-cockpit-panel border border-cockpit-border p-4 hover:border-cockpit-amber/20 transition-colors"
               >
                 <div className="flex items-center justify-between mb-1">
                   <span className="font-mono text-sm font-semibold text-cockpit-cream">
                     {f.route || `${f.from_aerodrome}–${f.to_aerodrome}`}
                   </span>
-                  <span className="font-mono text-sm font-bold text-cockpit-amber">
-                    {(f.flight_time ?? 0).toFixed(1)}h
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-sm font-bold text-cockpit-amber">
+                      {(f.flight_time ?? 0).toFixed(1)}h
+                    </span>
+                    <ChevronRight className="w-4 h-4 text-cockpit-muted" />
+                  </div>
                 </div>
                 <div className="flex items-center gap-3 text-xs text-cockpit-muted">
                   <span className="font-mono">
                     {f.date ? new Date(f.date).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) : ""}
                   </span>
-                  {f.pilot_role && (
-                    <span className="text-cockpit-amber bg-cockpit-amber/10 px-1.5 py-0.5 rounded font-medium text-[10px]">
-                      {f.pilot_role}
-                    </span>
-                  )}
+                  {f.is_rpas ? (
+                    <span className="text-cockpit-glow-blue bg-cockpit-glow-blue/10 px-1.5 py-0.5 rounded font-medium text-[10px]">RPAS</span>
+                  ) : f.pilot_role ? (
+                    <span className="text-cockpit-amber bg-cockpit-amber/10 px-1.5 py-0.5 rounded font-medium text-[10px]">{f.pilot_role}</span>
+                  ) : null}
+                  <span className="font-mono">{aircraftRegFor(f)}</span>
                   <span>{f.landings ?? 0} ldg</span>
                 </div>
-              </div>
+              </button>
             ))}
           </div>
           {hasMore && (
@@ -91,6 +352,17 @@ export default function Logbook() {
             </button>
           )}
         </>
+      )}
+
+      {/* Flight detail modal */}
+      {selected && (
+        <FlightDetail
+          flight={selected}
+          aircraftReg={aircraftRegFor(selected)}
+          onClose={() => setSelected(null)}
+          onDelete={handleDelete}
+          deleting={deleting}
+        />
       )}
     </div>
   );
