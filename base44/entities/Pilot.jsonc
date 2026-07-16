@@ -92,6 +92,10 @@
       "type": "number",
       "default": 0
     },
+    "onboarded": {
+      "type": "boolean",
+      "default": false
+    },
     "description": {
       "type": "string",
       "maxLength": 1000

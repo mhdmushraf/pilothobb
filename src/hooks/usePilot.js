@@ -15,6 +15,7 @@ export default function usePilot() {
       } else {
         const newPilot = await base44.entities.Pilot.create({
           full_name: user.full_name || "Pilot",
+          onboarded: false,
           total_time: 0,
           total_pic: 0,
           total_dual: 0,
