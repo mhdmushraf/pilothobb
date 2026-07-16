@@ -1,12 +1,13 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, BookOpen, Plane, MoreHorizontal, Plus } from "lucide-react";
+import { LayoutDashboard, BookOpen, Plane, MoreHorizontal, Plus, Radar } from "lucide-react";
 
 const tabs = [
   { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { path: "/logbook", label: "Logbook", icon: BookOpen },
   { path: "/add-flight", label: "Add", icon: Plus, isFab: true },
   { path: "/fleet", label: "Fleet", icon: Plane },
+  { path: "/tracking", label: "Track", icon: Radar },
   { path: "/more", label: "More", icon: MoreHorizontal },
 ];
 

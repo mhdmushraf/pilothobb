@@ -33,6 +33,7 @@ import Documents from '@/pages/Documents';
 import Career from '@/pages/Career';
 import Settings from '@/pages/Settings';
 import More from '@/pages/More';
+import Tracking from '@/pages/Tracking';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -82,6 +83,7 @@ const AuthenticatedApp = () => {
           <Route path="/career" element={<Career />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/more" element={<More />} />
+          <Route path="/tracking" element={<Tracking />} />
         </Route>
       </Route>
 
