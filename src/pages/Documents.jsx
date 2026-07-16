@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { FileText, Award, Heart } from "lucide-react";
+import { FileText, Award, Heart, Plane } from "lucide-react";
 import SkeletonCard from "@/components/SkeletonCard";
 import EmptyState from "@/components/EmptyState";
+import LicenceDetail, { ExpiryRing, dayDiff } from "@/components/documents/LicenceDetail";
 
 function DocSection({ title, icon: Icon, items, loading, emptyText, renderItem }) {
   return (
@@ -25,20 +26,53 @@ function DocSection({ title, icon: Icon, items, loading, emptyText, renderItem }
   );
 }
 
+function LicenceCard({ licence, onClick }) {
+  const days = dayDiff(licence.expiry_date);
+  return (
+    <button
+      onClick={onClick}
+      className="w-full text-left rounded-xl bg-cockpit-panel border border-cockpit-border p-3 hover:border-cockpit-amber/20 transition-colors"
+    >
+      <div className="flex items-center gap-3">
+        <ExpiryRing days={days} size={44} stroke={4} />
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-semibold text-cockpit-cream truncate">{licence.name}</p>
+          <div className="flex items-center gap-1.5 mt-1">
+            {licence.framework && (
+              <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-cockpit-valid/10 text-cockpit-valid">
+                {licence.framework}
+              </span>
+            )}
+            <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-cockpit-amber/10 text-cockpit-amber">
+              {licence.category}
+            </span>
+          </div>
+          <p className="text-[11px] text-cockpit-muted mt-1">
+            {days === null ? "No expiry" : days <= 0 ? "Expired" : `${days} days left`}
+          </p>
+        </div>
+      </div>
+    </button>
+  );
+}
+
 export default function Documents() {
   const [exams, setExams] = useState(null);
-  const [licencesRatings, setLicencesRatings] = useState(null);
-  const [medicals, setMedicals] = useState(null);
+  const [manned, setManned] = useState(null);
+  const [rpas, setRpas] = useState(null);
+  const [selected, setSelected] = useState(null);
 
   useEffect(() => {
     base44.entities.Exam.list("-date_written", 30).then(setExams).catch(() => setExams([]));
-    base44.entities.Licence.list("-expiry_date", 30).then((all) => {
-      setLicencesRatings(all.filter((l) => l.category !== "Medical"));
-      setMedicals(all.filter((l) => l.category === "Medical"));
-    }).catch(() => { setLicencesRatings([]); setMedicals([]); });
+    base44.entities.Licence.list("expiry_date", 100)
+      .then((all) => {
+        setManned(all.filter((l) => l.discipline !== "RPAS"));
+        setRpas(all.filter((l) => l.discipline === "RPAS"));
+      })
+      .catch(() => { setManned([]); setRpas([]); });
   }, []);
 
-  const expiryColor = (dateStr) => {
+  const examColor = (dateStr) => {
     if (!dateStr) return "text-cockpit-muted";
     const days = Math.ceil((new Date(dateStr) - new Date()) / (1000 * 60 * 60 * 24));
     if (days <= 0) return "text-cockpit-expired";
@@ -68,7 +102,7 @@ export default function Documents() {
             </div>
             <div className="flex gap-3 text-xs text-cockpit-muted font-mono">
               <span>{exam.date_written ? new Date(exam.date_written).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) : "—"}</span>
-              <span className={expiryColor(exam.valid_18_months)}>
+              <span className={examColor(exam.valid_18_months)}>
                 18m: {exam.valid_18_months ? new Date(exam.valid_18_months).toLocaleDateString("en-GB", { month: "short", year: "2-digit" }) : "—"}
               </span>
             </div>
@@ -77,47 +111,30 @@ export default function Documents() {
       />
 
       <DocSection
-        title="Licences & Ratings"
+        title="Manned"
         icon={Award}
-        items={licencesRatings || []}
-        loading={licencesRatings === null}
-        emptyText="No licences or ratings tracked yet"
+        items={manned || []}
+        loading={manned === null}
+        emptyText="No manned licences or ratings tracked yet"
         renderItem={(l) => (
-          <div key={l.id} className="rounded-xl bg-cockpit-panel border border-cockpit-border p-3">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-sm font-semibold text-cockpit-cream">{l.name}</span>
-              <span className={`text-[10px] font-medium px-2 py-0.5 rounded ${l.category === "Rating" ? "bg-cockpit-amber/10 text-cockpit-amber" : "bg-cockpit-valid/10 text-cockpit-valid"}`}>
-                {l.category}
-              </span>
-            </div>
-            {l.expiry_date && (
-              <p className={`text-xs font-mono ${expiryColor(l.expiry_date)}`}>
-                Expires {new Date(l.expiry_date).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
-              </p>
-            )}
-          </div>
+          <LicenceCard key={l.id} licence={l} onClick={() => setSelected(l)} />
         )}
       />
 
       <DocSection
-        title="Medical"
-        icon={Heart}
-        items={medicals || []}
-        loading={medicals === null}
-        emptyText="No medical certificates tracked yet"
-        renderItem={(m) => (
-          <div key={m.id} className="rounded-xl bg-cockpit-panel border border-cockpit-border p-3">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-sm font-semibold text-cockpit-cream">{m.name}</span>
-            </div>
-            {m.expiry_date && (
-              <p className={`text-xs font-mono ${expiryColor(m.expiry_date)}`}>
-                Expires {new Date(m.expiry_date).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
-              </p>
-            )}
-          </div>
+        title="RPAS — drone credentials"
+        icon={Plane}
+        items={rpas || []}
+        loading={rpas === null}
+        emptyText="No RPAS credentials tracked yet"
+        renderItem={(l) => (
+          <LicenceCard key={l.id} licence={l} onClick={() => setSelected(l)} />
         )}
       />
+
+      {selected && (
+        <LicenceDetail licence={selected} onClose={() => setSelected(null)} />
+      )}
     </div>
   );
 }
