@@ -12,7 +12,8 @@
       "type": "string",
       "enum": [
         "Hobbs",
-        "Tach"
+        "Tach",
+        "Manual"
       ]
     },
     "category": {
@@ -21,6 +22,7 @@
         "SEP",
         "MEP",
         "Helicopter",
+        "Drone (RPAS)",
         "Other"
       ]
     },
@@ -40,6 +42,24 @@
       "type": "string",
       "format": "date"
     },
+    "current_reading": {
+      "type": "number",
+      "default": 0
+    },
+    "serial_number": {
+      "type": "string"
+    },
+    "weight_class": {
+      "type": "string",
+      "enum": [
+        "< 250 g",
+        "250 g \u2013 2 kg",
+        "2 \u2013 7 kg",
+        "7 \u2013 25 kg",
+        "> 25 kg",
+        "Manned"
+      ]
+    },
     "description": {
       "type": "string",
       "maxLength": 1000
@@ -48,5 +68,44 @@
   "required": [
     "registration",
     "type"
-  ]
+  ],
+  "rls": {
+    "create": true,
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
 }

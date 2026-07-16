@@ -74,6 +74,66 @@
     },
     "remarks": {
       "type": "string"
+    },
+    "touch_and_go": {
+      "type": "number",
+      "default": 0
+    },
+    "night_takeoffs": {
+      "type": "number",
+      "default": 0
+    },
+    "sim_time": {
+      "type": "number",
+      "default": 0
+    },
+    "picus_time": {
+      "type": "number",
+      "default": 0
+    },
+    "co_pilot_time": {
+      "type": "number",
+      "default": 0
+    },
+    "autorotations": {
+      "type": "number",
+      "default": 0
+    },
+    "hoist_cycles": {
+      "type": "number",
+      "default": 0
+    },
+    "is_rpas": {
+      "type": "boolean",
+      "default": false
+    },
+    "mission_type": {
+      "type": "string",
+      "enum": [
+        "Training",
+        "Commercial",
+        "Recreational",
+        "Survey/Mapping",
+        "Inspection",
+        "Photography/Film",
+        "Agriculture",
+        "Other"
+      ]
+    },
+    "operation_category": {
+      "type": "string",
+      "enum": [
+        "VLOS",
+        "EVLOS",
+        "BVLOS"
+      ]
+    },
+    "battery_cycles": {
+      "type": "number",
+      "default": 0
+    },
+    "observer": {
+      "type": "string"
     }
   },
   "required": [
@@ -82,5 +142,44 @@
     "from_aerodrome",
     "to_aerodrome",
     "flight_time"
-  ]
+  ],
+  "rls": {
+    "create": true,
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
 }
