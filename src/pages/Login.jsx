@@ -60,7 +60,7 @@ export default function Login() {
           <div className="w-full border-t border-border" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-card px-3 text-muted-foreground">or</span>
+          <span className="bg-cockpit-panel px-3 text-muted-foreground">or</span>
         </div>
       </div>
 
