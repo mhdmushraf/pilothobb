@@ -1,20 +1,152 @@
-import React from "react";
-import { Briefcase } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { base44 } from "@/api/base44Client";
+import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
+import usePilot from "@/hooks/usePilot";
+import { Briefcase, Clock, Plane, Moon, Compass, Download, Activity } from "lucide-react";
+import SkeletonCard from "@/components/SkeletonCard";
+
+function StatCard({ icon: Icon, label, value, accent }) {
+  return (
+    <div className="rounded-xl bg-cockpit-panel border border-cockpit-border p-3">
+      <div className="flex items-center gap-1.5 mb-1">
+        <Icon className="w-3.5 h-3.5 text-cockpit-muted" />
+        <span className="text-[10px] text-cockpit-muted uppercase tracking-wider">{label}</span>
+      </div>
+      <p className={`font-mono text-lg font-bold ${accent || "text-cockpit-cream"}`}>
+        {(value ?? 0).toFixed(1)}<span className="text-xs font-normal text-cockpit-muted ml-1">h</span>
+      </p>
+    </div>
+  );
+}
+
+function TypeRow({ type, pic, dual, lastFlown }) {
+  return (
+    <div className="flex items-center justify-between py-2.5 border-b border-cockpit-border last:border-0">
+      <span className="text-sm font-medium text-cockpit-cream truncate">{type}</span>
+      <div className="flex items-center gap-4 font-mono text-xs shrink-0">
+        <span className="text-cockpit-muted">PIC <span className="text-cockpit-cream">{pic.toFixed(1)}</span></span>
+        <span className="text-cockpit-muted">Dual <span className="text-cockpit-cream">{dual.toFixed(1)}</span></span>
+        <span className="text-cockpit-muted w-20 text-right">{lastFlown}</span>
+      </div>
+    </div>
+  );
+}
 
 export default function Career() {
+  const { pilot, loading } = usePilot();
+  const { toast } = useToast();
+  const navigate = useNavigate();
+  const [typeStats, setTypeStats] = useState(null);
+
+  useEffect(() => {
+    Promise.all([
+      base44.entities.Flight.list("-date", 500),
+      base44.entities.Aircraft.list(),
+    ])
+      .then(([flights, aircraft]) => {
+        const acMap = {};
+        aircraft.forEach((a) => { acMap[a.id] = a.type; });
+        const stats = {};
+        flights
+          .filter((f) => !f.is_rpas && f.aircraft)
+          .forEach((f) => {
+            const type = acMap[f.aircraft] || "Unknown";
+            if (!stats[type]) stats[type] = { pic: 0, dual: 0, last: null };
+            stats[type].pic += f.pic_time || 0;
+            stats[type].dual += f.dual_time || 0;
+            if (!f.date) return;
+            const d = f.date;
+            if (!stats[type].last || d > stats[type].last) stats[type].last = d;
+          });
+        setTypeStats(stats);
+      })
+      .catch(() => setTypeStats({}));
+  }, []);
+
+  const fmtDate = (d) => d
+    ? new Date(d).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "2-digit" })
+    : "—";
+
   return (
-    <div className="px-4 pt-6">
+    <div className="px-4 pt-6 pb-8">
       <h1 className="text-xl font-bold text-cockpit-cream mb-4 flex items-center gap-2">
         <Briefcase className="w-5 h-5 text-cockpit-amber" /> Career
       </h1>
-      <div className="flex flex-col items-center justify-center py-20 text-center">
-        <div className="w-16 h-16 rounded-full bg-cockpit-panel border border-cockpit-border flex items-center justify-center mb-4">
-          <Briefcase className="w-7 h-7 text-cockpit-muted" />
+
+      {/* Header */}
+      {loading ? (
+        <SkeletonCard lines={2} />
+      ) : (
+        <div className="rounded-xl bg-cockpit-panel border border-cockpit-border p-4 mb-4">
+          <p className="text-lg font-bold text-cockpit-cream">{pilot?.full_name || "Pilot"}</p>
+          <div className="flex gap-2 mt-1.5">
+            {pilot?.authority && (
+              <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-cockpit-amber/10 text-cockpit-amber">
+                {pilot.authority}
+              </span>
+            )}
+            {pilot?.licence_type && (
+              <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-cockpit-valid/10 text-cockpit-valid">
+                {pilot.licence_type}
+              </span>
+            )}
+          </div>
         </div>
-        <h3 className="text-lg font-semibold text-cockpit-cream mb-1">Coming soon</h3>
-        <p className="text-sm text-cockpit-muted max-w-xs">
-          Career tracking and milestones are on the way.
-        </p>
+      )}
+
+      {/* Summary stat grid */}
+      <div className="grid grid-cols-2 gap-2 mb-6">
+        <StatCard icon={Clock} label="Total time" value={pilot?.total_time} accent="text-cockpit-amber" />
+        <StatCard icon={Plane} label="RPAS total" value={pilot?.rpas_total_time} accent="text-cockpit-glow-blue" />
+        <StatCard icon={Plane} label="PIC" value={pilot?.total_pic} />
+        <StatCard icon={Plane} label="Dual" value={pilot?.total_dual} />
+        <StatCard icon={Moon} label="Night" value={pilot?.total_night} />
+        <StatCard icon={Compass} label="Cross-country" value={pilot?.total_xc} />
+      </div>
+
+      {/* Hours by type */}
+      <div className="mb-6">
+        <h2 className="text-sm font-semibold text-cockpit-muted uppercase tracking-wider mb-3">
+          Hours by type
+        </h2>
+        {typeStats === null ? (
+          <SkeletonCard lines={3} />
+        ) : Object.keys(typeStats).length === 0 ? (
+          <div className="rounded-xl bg-cockpit-panel border border-cockpit-border p-4 text-center">
+            <p className="text-xs text-cockpit-muted">No manned flights logged yet</p>
+          </div>
+        ) : (
+          <div className="rounded-xl bg-cockpit-panel border border-cockpit-border px-4">
+            {Object.entries(typeStats)
+              .sort((a, b) => b[1].pic + b[1].dual - a[1].pic - a[1].dual)
+              .map(([type, s]) => (
+                <TypeRow
+                  key={type}
+                  type={type}
+                  pic={s.pic}
+                  dual={s.dual}
+                  lastFlown={fmtDate(s.last)}
+                />
+              ))}
+          </div>
+        )}
+      </div>
+
+      {/* Action buttons */}
+      <div className="flex flex-col gap-2">
+        <button
+          onClick={() => toast({ title: "Coming soon", description: "Career résumé PDF export will be available shortly." })}
+          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-cockpit-amber/15 border border-cockpit-amber/30 text-cockpit-amber text-sm font-medium hover:bg-cockpit-amber/20 transition-colors"
+        >
+          <Download className="w-4 h-4" /> Export career résumé (PDF)
+        </button>
+        <button
+          onClick={() => navigate("/tracking")}
+          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-cockpit-panel border border-cockpit-border text-cockpit-cream text-sm font-medium hover:border-cockpit-glow-blue/30 transition-colors"
+        >
+          <Activity className="w-4 h-4 text-cockpit-glow-blue" /> Live tracking
+        </button>
       </div>
     </div>
   );
