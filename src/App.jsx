@@ -21,6 +21,7 @@ import Features from '@/pages/Features';
 import Pricing from '@/pages/Pricing';
 import About from '@/pages/About';
 import Contact from '@/pages/Contact';
+import RootEntry from '@/components/RootEntry';
 
 // App pages
 import AppLayout from '@/components/AppLayout';
@@ -63,7 +64,7 @@ const AuthenticatedApp = () => {
 
       {/* Marketing (public) */}
       <Route element={<MarketingLayout />}>
-        <Route path="/" element={<Landing />} />
+        <Route path="/" element={<RootEntry />} />
         <Route path="/features" element={<Features />} />
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/about" element={<About />} />
