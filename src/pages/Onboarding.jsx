@@ -1,0 +1,369 @@
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { base44 } from "@/api/base44Client";
+import usePilot from "@/hooks/usePilot";
+import Logo from "@/components/Logo";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight, Check } from "lucide-react";
+
+const TOTAL_STEPS = 5;
+
+const TRACK_OPTIONS = [
+  "Flight hours",
+  "Documents & currency",
+  "Theory exams",
+  "Fleet & maintenance",
+  "RPAS / Drone",
+  "Career summary",
+];
+
+export default function Onboarding() {
+  const navigate = useNavigate();
+  const { pilot, loading } = usePilot();
+
+  const [step, setStep] = useState(0);
+  const [direction, setDirection] = useState("next");
+
+  const [fullName, setFullName] = useState("");
+  const [authority, setAuthority] = useState("");
+  const [licenceType, setLicenceType] = useState("");
+  const [homeAerodrome, setHomeAerodrome] = useState("");
+  const [englishLevel, setEnglishLevel] = useState("");
+  const [englishValidUntil, setEnglishValidUntil] = useState("");
+  const [tracking, setTracking] = useState([]);
+  const [submitting, setSubmitting] = useState(false);
+
+  // prefill once the pilot record is available
+  useEffect(() => {
+    if (pilot) {
+      setFullName(pilot.full_name || "");
+      setAuthority(pilot.authority || "");
+      setLicenceType(pilot.licence_type || "");
+      setHomeAerodrome(pilot.home_aerodrome || "");
+      setEnglishLevel(
+        pilot.english_level != null ? String(pilot.english_level) : ""
+      );
+      setEnglishValidUntil(pilot.english_valid_until || "");
+    }
+  }, [pilot]);
+
+  const toggleTracking = (label) => {
+    setTracking((prev) =>
+      prev.includes(label) ? prev.filter((t) => t !== label) : [...prev, label]
+    );
+  };
+
+  const goNext = () => {
+    setDirection("next");
+    setStep((s) => Math.min(TOTAL_STEPS - 1, s + 1));
+  };
+  const goBack = () => {
+    setDirection("back");
+    setStep((s) => Math.max(0, s - 1));
+  };
+
+  const canContinue = () => {
+    if (step === 0) return fullName.trim().length > 0;
+    if (step === 1) return !!authority && !!licenceType;
+    return true;
+  };
+
+  const handleFinish = async () => {
+    setSubmitting(true);
+    try {
+      await base44.entities.Pilot.update(pilot.id, {
+        full_name: fullName.trim(),
+        authority,
+        licence_type: licenceType,
+        home_aerodrome: homeAerodrome || undefined,
+        english_level: Number(englishLevel) || undefined,
+        english_valid_until: englishValidUntil || undefined,
+        onboarded: true,
+      });
+      navigate("/dashboard");
+    } catch (e) {
+      console.error("Onboarding failed", e);
+      setSubmitting(false);
+    }
+  };
+
+  const fadeIn = direction === "next" ? "ob-fade-next" : "ob-fade-back";
+
+  return (
+    <div
+      className="min-h-screen w-full overflow-hidden relative flex flex-col items-center px-4 py-8"
+      style={{
+        background:
+          "radial-gradient(120% 60% at 50% -10%, rgba(255,157,46,.10), transparent 55%), #0A0E17",
+      }}
+    >
+      <div className="w-full max-w-md">
+        {/* Logo */}
+        <div className="flex justify-center mb-6">
+          <Logo size={42} />
+        </div>
+
+        {/* Progress dots */}
+        <div className="flex items-center justify-center gap-2 mb-8">
+          {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
+            <span
+              key={i}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                i === step
+                  ? "w-8 bg-cockpit-amber"
+                  : i < step
+                  ? "w-3 bg-cockpit-amber/60"
+                  : "w-3 bg-cockpit-border"
+              }`}
+            />
+          ))}
+        </div>
+
+        {/* Step card */}
+        <div className="rounded-3xl border border-cockpit-border bg-cockpit-panel/90 backdrop-blur-sm p-6 shadow-2xl shadow-black/40">
+          {loading ? (
+            <div className="flex items-center justify-center py-16">
+              <div className="w-7 h-7 border-4 border-cockpit-border border-t-cockpit-amber rounded-full animate-spin" />
+            </div>
+          ) : (
+            <div key={step} className={fadeIn}>
+              {step === 0 && (
+                <Step
+                  title="Welcome to PilotHobb"
+                  subtitle="Let's set up your logbook"
+                >
+                  <div className="space-y-2">
+                    <Label htmlFor="full_name" className="text-cockpit-muted">
+                      Full name
+                    </Label>
+                    <Input
+                      id="full_name"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      placeholder="Your name"
+                      className="rounded-2xl bg-cockpit-bg border-cockpit-border text-cockpit-cream"
+                    />
+                  </div>
+                </Step>
+              )}
+
+              {step === 1 && (
+                <Step
+                  title="Your credentials"
+                  subtitle="Tell us about your licence"
+                >
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label className="text-cockpit-muted">Authority</Label>
+                      <Select value={authority} onValueChange={setAuthority}>
+                        <SelectTrigger className="rounded-2xl bg-cockpit-bg border-cockpit-border text-cockpit-cream">
+                          <SelectValue placeholder="Select authority" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-cockpit-panel border-cockpit-border text-cockpit-cream">
+                          {["FAA", "EASA", "UK CAA", "SACAA", "CASA", "Other"].map(
+                            (a) => (
+                              <SelectItem key={a} value={a}>
+                                {a}
+                              </SelectItem>
+                            )
+                          )}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-cockpit-muted">Licence type</Label>
+                      <Select value={licenceType} onValueChange={setLicenceType}>
+                        <SelectTrigger className="rounded-2xl bg-cockpit-bg border-cockpit-border text-cockpit-cream">
+                          <SelectValue placeholder="Select licence type" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-cockpit-panel border-cockpit-border text-cockpit-cream">
+                          {["Student", "PPL", "CPL", "ATPL", "RPL"].map((l) => (
+                            <SelectItem key={l} value={l}>
+                              {l}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </Step>
+              )}
+
+              {step === 2 && (
+                <Step
+                  title="Base & language"
+                  subtitle="Optional, but useful for currency reminders"
+                >
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label className="text-cockpit-muted">Home aerodrome</Label>
+                      <Input
+                        value={homeAerodrome}
+                        onChange={(e) => setHomeAerodrome(e.target.value)}
+                        placeholder="e.g. FAGM"
+                        className="rounded-2xl bg-cockpit-bg border-cockpit-border text-cockpit-cream font-mono uppercase tracking-wide"
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="space-y-2">
+                        <Label className="text-cockpit-muted">English level</Label>
+                        <Input
+                          type="number"
+                          min={1}
+                          max={6}
+                          value={englishLevel}
+                          onChange={(e) => setEnglishLevel(e.target.value)}
+                          placeholder="1–6"
+                          className="rounded-2xl bg-cockpit-bg border-cockpit-border text-cockpit-cream font-mono"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-cockpit-muted">Valid until</Label>
+                        <Input
+                          type="date"
+                          value={englishValidUntil}
+                          onChange={(e) => setEnglishValidUntil(e.target.value)}
+                          className="rounded-2xl bg-cockpit-bg border-cockpit-border text-cockpit-cream font-mono"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </Step>
+              )}
+
+              {step === 3 && (
+                <Step
+                  title="What do you want to track?"
+                  subtitle="Pick anything that matters to you"
+                >
+                  <div className="flex flex-wrap gap-2">
+                    {TRACK_OPTIONS.map((opt) => {
+                      const active = tracking.includes(opt);
+                      return (
+                        <button
+                          key={opt}
+                          type="button"
+                          onClick={() => toggleTracking(opt)}
+                          className={`rounded-full px-4 py-2 text-sm border transition-all duration-200 ${
+                            active
+                              ? "bg-cockpit-amber text-cockpit-bg border-cockpit-amber"
+                              : "bg-cockpit-bg text-cockpit-muted border-cockpit-border hover:border-cockpit-amber/60"
+                          }`}
+                        >
+                          {active && <Check className="inline w-3.5 h-3.5 mr-1 -mt-0.5" />}
+                          {opt}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </Step>
+              )}
+
+              {step === 4 && (
+                <Step title="Review & finish" subtitle="Confirm your details">
+                  <div className="space-y-3 text-sm">
+                    <ReviewRow label="Full name" value={fullName} />
+                    <ReviewRow label="Authority" value={authority} />
+                    <ReviewRow label="Licence" value={licenceType} />
+                    <ReviewRow
+                      label="Home aerodrome"
+                      value={homeAerodrome || "—"}
+                    />
+                    <ReviewRow
+                      label="English level"
+                      value={englishLevel ? `${englishLevel} / 6` : "—"}
+                    />
+                    <ReviewRow
+                      label="English valid until"
+                      value={englishValidUntil || "—"}
+                    />
+                    <ReviewRow
+                      label="Tracking"
+                      value={tracking.length ? tracking.join(", ") : "—"}
+                    />
+                  </div>
+                </Step>
+              )}
+            </div>
+          )}
+
+          {/* Nav buttons */}
+          {!loading && (
+            <div className="flex items-center justify-between mt-6">
+              <Button
+                variant="ghost"
+                onClick={goBack}
+                disabled={step === 0}
+                className="text-cockpit-muted hover:text-cockpit-cream disabled:opacity-30"
+              >
+                <ChevronLeft className="w-4 h-4" />
+                Back
+              </Button>
+
+              {step < TOTAL_STEPS - 1 ? (
+                <Button
+                  onClick={goNext}
+                  disabled={!canContinue()}
+                  className="bg-cockpit-amber text-cockpit-bg hover:bg-cockpit-amber/90 rounded-xl"
+                >
+                  Continue
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
+              ) : (
+                <Button
+                  onClick={handleFinish}
+                  disabled={submitting}
+                  className="bg-cockpit-amber text-cockpit-bg hover:bg-cockpit-amber/90 rounded-xl"
+                >
+                  {submitting ? "Saving…" : "Finish setup"}
+                  <Check className="w-4 h-4" />
+                </Button>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+
+      <style>{`
+        .ob-fade-next { animation: obFadeNext .35s ease-out; }
+        .ob-fade-back { animation: obFadeBack .35s ease-out; }
+        @keyframes obFadeNext {
+          from { opacity: 0; transform: translateX(18px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes obFadeBack {
+          from { opacity: 0; transform: translateX(-18px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+function Step({ title, subtitle, children }) {
+  return (
+    <div>
+      <h2 className="text-2xl font-heading font-bold text-cockpit-cream">{title}</h2>
+      {subtitle && <p className="text-cockpit-muted text-sm mt-1 mb-5">{subtitle}</p>}
+      <div className="mt-1">{children}</div>
+    </div>
+  );
+}
+
+function ReviewRow({ label, value }) {
+  return (
+    <div className="flex items-center justify-between gap-4 py-2 border-b border-cockpit-border last:border-0">
+      <span className="text-cockpit-muted">{label}</span>
+      <span className="text-cockpit-cream text-right font-medium">{value}</span>
+    </div>
+  );
+}

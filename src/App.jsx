@@ -34,6 +34,7 @@ import Career from '@/pages/Career';
 import Settings from '@/pages/Settings';
 import More from '@/pages/More';
 import Tracking from '@/pages/Tracking';
+import Onboarding from '@/pages/Onboarding';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -74,6 +75,7 @@ const AuthenticatedApp = () => {
 
       {/* App (protected) */}
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
+        <Route path="/onboarding" element={<Onboarding />} />
         <Route element={<AppLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/logbook" element={<Logbook />} />
