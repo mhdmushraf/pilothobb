@@ -6,6 +6,7 @@ import usePilot from "@/hooks/usePilot";
 import SkeletonCard from "@/components/SkeletonCard";
 import EmptyState from "@/components/EmptyState";
 import HobbsCounter from "@/components/HobbsCounter";
+import Logo from "@/components/Logo";
 
 function initials(name = "") {
   const parts = name.trim().split(/\s+/).filter(Boolean);
@@ -77,7 +78,7 @@ function CurrencyRing({ licence }) {
 
 function StatCard({ label, value, accent }) {
   return (
-    <div className="flex-1 rounded-2xl bg-cockpit-panel border border-cockpit-border p-4">
+    <div className="flex-1 rounded-2xl border border-cockpit-border p-4 shadow-lg shadow-black/20" style={{ background: "linear-gradient(180deg,#141B2B,#111725)" }}>
       <p className="text-[11px] text-cockpit-muted uppercase tracking-widest mb-1">{label}</p>
       <p className={`font-mono text-3xl font-bold ${accent}`}>{(value ?? 0).toFixed(1)}</p>
       <p className="text-[10px] text-cockpit-muted uppercase mt-1">hours</p>
@@ -160,14 +161,9 @@ export default function Dashboard() {
 
   return (
     <div className="px-4 pt-6 pb-4">
-      {/* 1. Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="min-w-0">
-          <p className="text-sm text-cockpit-muted">{greeting}, Captain</p>
-          <h1 className="text-xl font-bold text-cockpit-cream truncate">
-            {pilotLoading ? "…" : (pilot?.full_name || "Pilot")}
-          </h1>
-        </div>
+      {/* 1. App bar */}
+      <div className="flex items-center justify-between mb-4">
+        <Logo size={30} />
         <Link
           to="/career"
           className="shrink-0 w-11 h-11 rounded-full bg-cockpit-panel border border-cockpit-border flex items-center justify-center hover:border-cockpit-amber/40 transition-colors"
@@ -177,26 +173,58 @@ export default function Dashboard() {
           </span>
         </Link>
       </div>
+      <div className="mb-6">
+        <p className="text-sm text-cockpit-muted">{greeting}, Captain</p>
+        <h1 className="text-2xl font-heading font-bold text-cockpit-cream truncate">
+          {pilotLoading ? "…" : (pilot?.full_name || "Pilot")}
+        </h1>
+      </div>
 
       {/* 2. Total Time */}
       {pilotLoading ? (
         <SkeletonCard lines={2} className="mb-4" />
       ) : (
-        <div className="rounded-2xl bg-cockpit-panel border border-cockpit-border p-5 mb-4">
-          <p className="text-xs font-medium text-cockpit-muted uppercase tracking-widest mb-3">Total Time</p>
-          <div className="flex justify-center">
-            <HobbsCounter target={pilot?.total_time ?? 0} />
+        <div
+          className="relative overflow-hidden rounded-3xl border border-cockpit-border p-6 mb-4"
+          style={{ background: "linear-gradient(180deg,#141B2B,#0d1220)" }}
+        >
+          <div
+            className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 w-64 h-40"
+            style={{ background: "radial-gradient(circle, rgba(255,157,46,.22), transparent 70%)" }}
+          />
+          <svg
+            className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-40"
+            width="200" height="200" viewBox="0 0 200 200"
+          >
+            <circle cx="100" cy="100" r="90" fill="none" stroke="#2b3855" strokeWidth="1" />
+            {Array.from({ length: 12 }).map((_, i) => {
+              const a = (i * 30 - 90) * Math.PI / 180;
+              return (
+                <line key={i}
+                  x1={100 + 80 * Math.cos(a)} y1={100 + 80 * Math.sin(a)}
+                  x2={100 + 90 * Math.cos(a)} y2={100 + 90 * Math.sin(a)}
+                  stroke="#2b3855" strokeWidth="2"
+                />
+              );
+            })}
+          </svg>
+          <div className="relative">
+            <p className="text-xs font-medium text-cockpit-muted uppercase tracking-widest mb-3 text-center">Total Time</p>
+            <div className="flex justify-center">
+              <HobbsCounter target={pilot?.total_time ?? 0} />
+            </div>
+            <p className="text-center text-sm text-cockpit-muted mt-3 font-mono">
+              HOURS · <span className="text-cockpit-cream">{pilot?.total_landings ?? 0}</span> LDG · <span className="text-cockpit-cream">{pilot?.total_takeoffs ?? 0}</span> T/O
+            </p>
           </div>
-          <p className="text-center text-sm text-cockpit-muted mt-3 font-mono">
-            HOURS · <span className="text-cockpit-cream">{pilot?.total_landings ?? 0}</span> LDG · <span className="text-cockpit-cream">{pilot?.total_takeoffs ?? 0}</span> T/O
-          </p>
         </div>
       )}
 
       {/* 3. RPAS card */}
       <Link
         to="/fleet"
-        className="block rounded-2xl bg-cockpit-panel border border-cockpit-border p-4 mb-4 hover:border-cockpit-glow-blue/40 transition-colors"
+        className="block rounded-2xl border border-cockpit-border p-4 mb-4 shadow-lg shadow-black/20 hover:border-cockpit-glow-blue/40 transition-colors"
+        style={{ background: "linear-gradient(180deg,#141B2B,#111725)" }}
       >
         <div className="flex items-center justify-between">
           <div>
@@ -222,7 +250,8 @@ export default function Dashboard() {
       {showBanner && (
         <button
           onClick={() => navigate("/documents")}
-          className="w-full text-left rounded-2xl bg-cockpit-warning/10 border border-cockpit-warning/30 p-4 mb-5 flex items-center gap-3 hover:border-cockpit-warning/50 transition-colors"
+          className="w-full text-left rounded-2xl border border-cockpit-warning/30 p-4 mb-5 flex items-center gap-3 shadow-lg shadow-black/20 hover:border-cockpit-warning/50 transition-colors"
+          style={{ background: "linear-gradient(180deg,#141B2B,#111725)" }}
         >
           <Shield className="w-5 h-5 text-cockpit-warning shrink-0" />
           <div className="flex-1 min-w-0">
@@ -251,8 +280,12 @@ export default function Dashboard() {
             </div>
           </div>
         ) : licences.length === 0 ? (
-          <div className="rounded-xl bg-cockpit-panel border border-cockpit-border p-4 text-center">
-            <p className="text-xs text-cockpit-muted">No licences or ratings tracked yet</p>
+          <div className="rounded-2xl border border-cockpit-border p-6 text-center shadow-lg shadow-black/20" style={{ background: "linear-gradient(180deg,#141B2B,#111725)" }}>
+            <Shield className="w-6 h-6 text-cockpit-muted mx-auto mb-2" />
+            <p className="text-xs text-cockpit-muted mb-2">No licences or ratings tracked yet</p>
+            <Link to="/documents" className="text-xs font-medium text-cockpit-amber">
+              Add in Documents
+            </Link>
           </div>
         ) : (
           <div className="rounded-2xl bg-cockpit-panel border border-cockpit-border px-4">
