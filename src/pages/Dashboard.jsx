@@ -88,12 +88,14 @@ function CurrencyRing({ licence }) {
   );
 }
 
-function StatCard({ label, value, accent }) {
+function StatCard({ label, value, accent, bar }) {
   return (
-    <div className="flex-1 rounded-2xl border border-cockpit-border p-4 shadow-lg shadow-black/20" style={{ background: "linear-gradient(180deg,#141B2B,#111725)" }}>
+    <div className="relative flex-1 overflow-hidden rounded-2xl border border-cockpit-border p-4 shadow-lg shadow-black/20"
+         style={{ background: "linear-gradient(180deg,#141B2B,#111725)" }}>
+      <div className="absolute top-0 left-0 right-0 h-0.5" style={{ background: bar }} />
       <p className="text-[11px] text-cockpit-muted uppercase tracking-widest mb-1">{label}</p>
-      <p className={`font-mono text-3xl font-bold ${accent}`}>{(value ?? 0).toFixed(1)}</p>
-      <p className="text-[10px] text-cockpit-muted uppercase mt-1">hours</p>
+      <p className={`font-mono text-4xl font-bold leading-none ${accent}`}>{(value ?? 0).toFixed(1)}</p>
+      <p className="text-[10px] text-cockpit-muted uppercase mt-1.5">hours</p>
     </div>
   );
 }
@@ -176,12 +178,12 @@ export default function Dashboard() {
       {/* 1. App bar */}
       <div className="flex items-center justify-between mb-4">
         <Logo size={30} />
-        <Link
-          to="/career"
-          className="shrink-0 w-11 h-11 rounded-full bg-cockpit-panel border border-cockpit-border flex items-center justify-center hover:border-cockpit-amber/40 transition-colors"
-        >
-          <span className="font-heading text-sm font-bold text-cockpit-amber">
-            {initials(pilot?.full_name)}
+        <Link to="/career" className="shrink-0 rounded-full p-[1.5px]"
+              style={{ background: "linear-gradient(135deg,#FF9D2E,#4A90D9)" }}>
+          <span className="flex w-11 h-11 rounded-full bg-cockpit-panel items-center justify-center">
+            <span className="font-heading text-sm font-bold text-cockpit-amber">
+              {initials(pilot?.full_name)}
+            </span>
           </span>
         </Link>
       </div>
@@ -210,17 +212,19 @@ export default function Dashboard() {
             style={{ background: "radial-gradient(circle, rgba(255,157,46,.22), transparent 70%)" }}
           />
           <svg
-            className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-40"
-            width="200" height="200" viewBox="0 0 200 200"
+            className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-50"
+            width="220" height="220" viewBox="0 0 220 220"
           >
-            <circle cx="100" cy="100" r="90" fill="none" stroke="#2b3855" strokeWidth="1" />
+            <circle cx="110" cy="110" r="100" fill="none" stroke="#2b3855" strokeWidth="1" />
+            <circle cx="110" cy="110" r="82" fill="none" stroke="#FF9D2E" strokeWidth="1" strokeDasharray="3 7" opacity="0.5" />
+            <path d="M110 6 l5 9 h-10 z" fill="#FF9D2E" />
             {Array.from({ length: 12 }).map((_, i) => {
               const a = (i * 30 - 90) * Math.PI / 180;
               return (
                 <line key={i}
-                  x1={100 + 80 * Math.cos(a)} y1={100 + 80 * Math.sin(a)}
-                  x2={100 + 90 * Math.cos(a)} y2={100 + 90 * Math.sin(a)}
-                  stroke="#2b3855" strokeWidth="2"
+                  x1={110 + 88 * Math.cos(a)} y1={110 + 88 * Math.sin(a)}
+                  x2={110 + 100 * Math.cos(a)} y2={110 + 100 * Math.sin(a)}
+                  stroke="#2b3855" strokeWidth={i % 3 === 0 ? 2.5 : 1.5}
                 />
               );
             })}
@@ -253,14 +257,17 @@ export default function Dashboard() {
               {pilot?.rpas_launches ?? 0} launches
             </p>
           </div>
-          <DroneIcon className="w-6 h-6 text-cockpit-glow-blue/70" />
+          <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
+               style={{ background: "rgba(74,144,217,.12)", border: "1px solid rgba(74,144,217,.25)" }}>
+            <DroneIcon className="w-5 h-5 text-cockpit-glow-blue" />
+          </div>
         </div>
       </Link>
 
       {/* 4. Stat cards */}
       <div className="flex gap-3 mb-5">
-        <StatCard label="PIC" value={pilot?.total_pic} accent="text-cockpit-amber" />
-        <StatCard label="Dual" value={pilot?.total_dual} accent="text-cockpit-cream" />
+        <StatCard label="PIC" value={pilot?.total_pic} accent="text-cockpit-amber" bar="#FF9D2E" />
+        <StatCard label="Dual" value={pilot?.total_dual} accent="text-cockpit-cream" bar="#243049" />
       </div>
 
       {/* 5. Reminder banner */}
