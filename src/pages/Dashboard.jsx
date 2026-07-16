@@ -1,12 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { Plane, ChevronRight, Shield, Clock, Plus, Bot as Drone } from "lucide-react";
+import { Plane, ChevronRight, Shield, Clock, Plus } from "lucide-react";
 import usePilot from "@/hooks/usePilot";
 import SkeletonCard from "@/components/SkeletonCard";
 import EmptyState from "@/components/EmptyState";
 import HobbsCounter from "@/components/HobbsCounter";
 import Logo from "@/components/Logo";
+
+function DroneIcon({ className }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"
+         strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <circle cx="5" cy="5" r="2.3" /><circle cx="19" cy="5" r="2.3" />
+      <circle cx="5" cy="19" r="2.3" /><circle cx="19" cy="19" r="2.3" />
+      <path d="M7 7l3 3m4-4l-3 3m0 4l-3 3m8 0l-3-3" />
+      <rect x="9.5" y="9.5" width="5" height="5" rx="1" />
+    </svg>
+  );
+}
 
 function initials(name = "") {
   const parts = name.trim().split(/\s+/).filter(Boolean);
@@ -94,7 +106,7 @@ function FlightRow({ flight }) {
     >
       <div className="w-9 h-9 rounded-lg bg-cockpit-panel-light border border-cockpit-border flex items-center justify-center shrink-0">
         {flight.is_rpas ? (
-          <Drone className="w-4 h-4 text-cockpit-glow-blue" />
+          <DroneIcon className="w-4 h-4 text-cockpit-glow-blue" />
         ) : (
           <Plane className="w-4 h-4 text-cockpit-amber" />
         )}
@@ -175,9 +187,14 @@ export default function Dashboard() {
       </div>
       <div className="mb-6">
         <p className="text-sm text-cockpit-muted">{greeting}, Captain</p>
-        <h1 className="text-2xl font-heading font-bold text-cockpit-cream truncate">
+        <h1 className="text-xl font-heading font-bold text-cockpit-cream leading-tight">
           {pilotLoading ? "…" : (pilot?.full_name || "Pilot")}
         </h1>
+        {!pilotLoading && pilot && (pilot.authority || pilot.licence_type) && (
+          <p className="text-xs text-cockpit-muted mt-1 font-mono uppercase tracking-wider">
+            {[pilot.authority, pilot.licence_type].filter(Boolean).join(" · ")}
+          </p>
+        )}
       </div>
 
       {/* 2. Total Time */}
@@ -236,7 +253,7 @@ export default function Dashboard() {
               {pilot?.rpas_launches ?? 0} launches
             </p>
           </div>
-          <Drone className="w-6 h-6 text-cockpit-glow-blue/70" />
+          <DroneIcon className="w-6 h-6 text-cockpit-glow-blue/70" />
         </div>
       </Link>
 
