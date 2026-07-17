@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { useToast } from "@/components/ui/use-toast";
@@ -86,6 +86,8 @@ export default function AddFlight() {
   const [aircraft, setAircraft] = useState(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
+  const [scanning, setScanning] = useState(false);
+  const fileRef = useRef(null);
 
   const [form, setForm] = useState({
     reading_before: 0,
@@ -135,6 +137,35 @@ export default function AddFlight() {
       flight_time: 0,
       reading_after: ac?.current_reading ?? 0,
     }));
+  };
+
+  const handleScan = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setScanning(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: "This is a photo of an aircraft Hobbs or Tachometer meter. Read the number shown on the counter, including the tenths digit. Return only the numeric reading.",
+        file_urls: [file_url],
+        response_json_schema: {
+          type: "object",
+          properties: {
+            reading: { type: "number" },
+            confidence: { type: "string", enum: ["high", "medium", "low"] },
+          },
+          required: ["reading"],
+        },
+      });
+      const reading = r1(result.reading);
+      set("reading_after", reading);
+      toast({ title: `Meter read: ${reading} (${result.confidence || "—"})` });
+    } catch {
+      toast({ title: "Couldn't read the meter — enter it manually." });
+    } finally {
+      setScanning(false);
+      e.target.value = "";
+    }
   };
 
   const touchAndGo = form.stops.reduce((s, st) => s + (Number(st.tg) || 0), 0);
@@ -339,9 +370,12 @@ export default function AddFlight() {
           onChange={(e) => set("reading_after", e.target.value)}
           className="bg-cockpit-panel-light border-cockpit-border text-cockpit-cream font-mono" />
       </Field>
-      <button type="button"
-        className="w-full rounded-xl border border-dashed border-cockpit-border bg-cockpit-panel py-3 flex items-center justify-center gap-2 text-cockpit-muted text-sm">
-        <Camera className="w-4 h-4" /> Scan Hobbs with camera
+      <input ref={fileRef} type="file" accept="image/*" capture="environment"
+        className="hidden" onChange={handleScan} />
+      <button type="button" disabled={scanning} onClick={() => fileRef.current?.click()}
+        className="w-full rounded-xl border border-dashed border-cockpit-border bg-cockpit-panel py-3 flex items-center justify-center gap-2 text-cockpit-muted text-sm disabled:opacity-50">
+        {scanning ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4" />}
+        {scanning ? "Reading meter…" : "Scan Hobbs with camera"}
       </button>
       <div className="rounded-xl bg-cockpit-amber/5 border border-cockpit-amber/20 p-4 text-center">
         <p className="text-xs text-cockpit-muted uppercase tracking-wider mb-1">Flight time</p>
