@@ -61,6 +61,14 @@ export default function MeterScanner({ onClose, onManualEnter, onCapture }) {
     };
   }, [stopCamera]);
 
+  useEffect(() => {
+    const v = videoRef.current;
+    if (v && streamRef.current && v.srcObject !== streamRef.current) {
+      v.srcObject = streamRef.current;
+      v.play().catch(() => {});
+    }
+  }, [cameraReady]);
+
   const captureFromVideo = async () => {
     setReading(true);
     try {
@@ -138,24 +146,25 @@ export default function MeterScanner({ onClose, onManualEnter, onCapture }) {
 
       {/* Camera preview */}
       <div className="relative flex-1 overflow-hidden">
-        {cameraReady ? (
-          <video
-            ref={videoRef}
-            playsInline
-            muted
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-        ) : cameraError ? (
+        <video
+          ref={videoRef}
+          playsInline
+          autoPlay
+          muted
+          className="absolute inset-0 w-full h-full object-cover bg-black"
+        />
+        {!cameraReady && !cameraError && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Loader2 className="w-8 h-8 text-cockpit-amber animate-spin" />
+          </div>
+        )}
+        {cameraError && (
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center px-8">
               <Camera className="w-12 h-12 text-cockpit-muted mx-auto mb-3" />
               <p className="text-sm text-cockpit-muted">Camera unavailable</p>
               <p className="text-xs text-cockpit-muted mt-1">Use the gallery button to pick a photo</p>
             </div>
-          </div>
-        ) : (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <Loader2 className="w-8 h-8 text-cockpit-amber animate-spin" />
           </div>
         )}
 
