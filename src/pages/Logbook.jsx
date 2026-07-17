@@ -13,6 +13,8 @@ import {
 } from "lucide-react";
 import EmptyState from "@/components/EmptyState";
 import SkeletonCard from "@/components/SkeletonCard";
+import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
 
 const PAGE_SIZE = 20;
 
@@ -136,6 +138,7 @@ export default function Logbook() {
 
   const [selected, setSelected] = useState(null);
   const [deleting, setDeleting] = useState(false);
+  const [exporting, setExporting] = useState(false);
 
   const activeFilters = useMemo(() => {
     const f = {};
@@ -194,6 +197,81 @@ export default function Logbook() {
     const id = typeof flight.aircraft === "string" ? flight.aircraft : flight.aircraft?.id;
     const ac = aircraftList.find((a) => a.id === id);
     return ac?.registration || id || "—";
+  };
+
+  const handleExportPDF = async () => {
+    if (!pilot) return;
+    setExporting(true);
+    try {
+      const hasFilters = Object.keys(activeFilters).length > 0;
+      const allFlights = hasFilters
+        ? await base44.entities.Flight.filter(activeFilters, "-date", 1000)
+        : await base44.entities.Flight.list("-date", 1000);
+
+      const acMap = {};
+      aircraftList.forEach((a) => { acMap[a.id] = a.registration || "—"; });
+
+      const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(16);
+      doc.setTextColor(255, 157, 46);
+      doc.text("PilotHobb — Flight Log", 14, 15);
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(11);
+      doc.setTextColor(60, 60, 60);
+      doc.text(pilot.full_name || "Pilot", 14, 22);
+
+      doc.setFontSize(9);
+      doc.text(
+        `Total: ${(pilot.total_time || 0).toFixed(1)}h  ·  PIC: ${(pilot.total_pic || 0).toFixed(1)}h  ·  Dual: ${(pilot.total_dual || 0).toFixed(1)}h  ·  Night: ${(pilot.total_night || 0).toFixed(1)}h  ·  XC: ${(pilot.total_xc || 0).toFixed(1)}h`,
+        14, 28
+      );
+
+      autoTable(doc, {
+        startY: 33,
+        head: [["Date", "Aircraft", "Route", "Hobbs Bef", "Hobbs Aft", "Total", "PIC", "Dual", "Night", "Ldg", "Remarks"]],
+        body: allFlights.map((f) => {
+          const acId = typeof f.aircraft === "string" ? f.aircraft : f.aircraft?.id;
+          const reg = acMap[acId] || acId || "—";
+          const route = f.route || `${f.from_aerodrome || ""}–${f.to_aerodrome || ""}`;
+          const date = f.date ? new Date(f.date).toLocaleDateString("en-GB") : "—";
+          return [
+            date,
+            reg,
+            route,
+            f.reading_before ?? "",
+            f.reading_after ?? "",
+            (f.flight_time ?? 0).toFixed(1),
+            (f.pic_time ?? 0).toFixed(1),
+            (f.dual_time ?? 0).toFixed(1),
+            (f.night_time ?? 0).toFixed(1),
+            f.landings ?? 0,
+            (f.remarks || "").slice(0, 50),
+          ];
+        }),
+        headStyles: {
+          fillColor: [255, 157, 46],
+          textColor: [10, 14, 23],
+          fontStyle: "bold",
+        },
+        bodyStyles: {
+          font: "courier",
+          fontSize: 8,
+          textColor: [40, 40, 40],
+        },
+        alternateRowStyles: { fillColor: [245, 245, 245] },
+        margin: { left: 14, right: 14 },
+      });
+
+      doc.save("pilothobb-logbook.pdf");
+      toast({ title: "Logbook PDF exported" });
+    } catch (e) {
+      toast({ title: "Export failed", description: e.message, variant: "destructive" });
+    } finally {
+      setExporting(false);
+    }
   };
 
   const handleDelete = async () => {
@@ -280,9 +358,11 @@ export default function Logbook() {
               variant="outline"
               size="sm"
               className="border-cockpit-border text-cockpit-muted hover:text-cockpit-cream h-8"
-              onClick={() => toast({ title: "SACAA logbook PDF exported" })}
+              onClick={handleExportPDF}
+              disabled={exporting}
             >
-              <FileDown className="w-3.5 h-3.5" /> Export PDF
+              {exporting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <FileDown className="w-3.5 h-3.5" />}
+              {exporting ? "Generating…" : "Export PDF"}
             </Button>
             <Button
               variant="outline"
