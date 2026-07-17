@@ -21,6 +21,9 @@ export default function AddAircraftModal({ onClose, onSaved }) {
     category: "SEP",
     time_source: "Hobbs",
     current_reading: 0,
+    engine_hours: 0,
+    mpi_due_reading: "",
+    oil_due_reading: "",
     weight_class: "",
     serial_number: "",
   });
@@ -53,6 +56,9 @@ export default function AddAircraftModal({ onClose, onSaved }) {
         category: form.category,
         time_source: form.time_source,
         current_reading: Number(form.current_reading) || 0,
+        engine_hours: Number(form.engine_hours) || 0,
+        mpi_due_reading: form.mpi_due_reading !== "" ? Number(form.mpi_due_reading) : undefined,
+        oil_due_reading: form.oil_due_reading !== "" ? Number(form.oil_due_reading) : undefined,
         weight_class: isDrone ? form.weight_class || undefined : undefined,
         serial_number: isDrone ? form.serial_number || undefined : undefined,
       });
@@ -111,9 +117,23 @@ export default function AddAircraftModal({ onClose, onSaved }) {
             {isDrone && <p className="text-[11px] text-cockpit-muted">Auto-set to Manual for drones</p>}
           </div>
           <div className="space-y-1.5">
-            <Label className="text-xs text-cockpit-muted uppercase tracking-wider">Current reading (hrs)</Label>
-            <Input type="number" step="0.1" value={form.current_reading}
-              onChange={(e) => set("current_reading", e.target.value)}
+            <Label className="text-xs text-cockpit-muted uppercase tracking-wider">Engine hours</Label>
+            <Input type="number" step="0.1" value={form.engine_hours}
+              onChange={(e) => set("engine_hours", e.target.value)}
+              className="bg-cockpit-panel-light border-cockpit-border text-cockpit-cream font-mono" />
+          </div>
+          <div className="space-y-1.5">
+            <Label className="text-xs text-cockpit-muted uppercase tracking-wider">Next MPI due at (reading)</Label>
+            <Input type="number" step="0.1" value={form.mpi_due_reading}
+              onChange={(e) => set("mpi_due_reading", e.target.value)}
+              placeholder="e.g. 2400"
+              className="bg-cockpit-panel-light border-cockpit-border text-cockpit-cream font-mono" />
+          </div>
+          <div className="space-y-1.5">
+            <Label className="text-xs text-cockpit-muted uppercase tracking-wider">Next oil change due at (reading)</Label>
+            <Input type="number" step="0.1" value={form.oil_due_reading}
+              onChange={(e) => set("oil_due_reading", e.target.value)}
+              placeholder="e.g. 2350"
               className="bg-cockpit-panel-light border-cockpit-border text-cockpit-cream font-mono" />
           </div>
           {isDrone && (

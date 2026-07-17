@@ -46,6 +46,16 @@
       "type": "number",
       "default": 0
     },
+    "engine_hours": {
+      "type": "number",
+      "default": 0
+    },
+    "mpi_due_reading": {
+      "type": "number"
+    },
+    "oil_due_reading": {
+      "type": "number"
+    },
     "serial_number": {
       "type": "string"
     },
