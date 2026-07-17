@@ -9,6 +9,7 @@ import {
   Select, SelectTrigger, SelectValue, SelectContent, SelectItem,
 } from "@/components/ui/select";
 import { Loader2, Trash2 } from "lucide-react";
+import { tap } from "@/lib/haptic";
 
 const CATEGORIES = ["Licence", "Rating", "Medical", "Operator Approval"];
 const DISCIPLINES = ["Manned", "RPAS"];
@@ -30,6 +31,7 @@ export default function LicenceForm({ licence, onClose, onSaved, onDeleted }) {
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
   const handleSave = async () => {
+    tap();
     if (!form.name.trim()) { toast({ title: "Name is required" }); return; }
     setSaving(true);
     try {

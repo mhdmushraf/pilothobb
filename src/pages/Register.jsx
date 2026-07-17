@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
+import { useAuth } from "@/lib/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,6 +18,8 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [showOtp, setShowOtp] = useState(false);
   const [otpCode, setOtpCode] = useState("");
+  const navigate = useNavigate();
+  const { checkUserAuth } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -44,7 +47,8 @@ export default function Register() {
       if (result?.access_token) {
         base44.auth.setToken(result.access_token);
       }
-      window.location.href = "/";
+      await checkUserAuth();
+      navigate("/dashboard");
     } catch (err) {
       setError(err.message || "Invalid verification code");
     } finally {

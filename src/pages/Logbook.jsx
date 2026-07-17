@@ -13,6 +13,8 @@ import {
 } from "lucide-react";
 import EmptyState from "@/components/EmptyState";
 import SkeletonCard from "@/components/SkeletonCard";
+import BottomSheet from "@/components/BottomSheet";
+import { usePullToRefresh } from "@/hooks/usePullToRefresh";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import AppHeader from "@/components/AppHeader";
@@ -54,11 +56,7 @@ function DetailRow({ label, value }) {
 function FlightDetail({ flight, aircraftReg, onClose, onDelete, onEdit, deleting }) {
   const date = flight.date ? new Date(flight.date).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) : "—";
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 p-0 sm:p-4" onClick={onClose}>
-      <div
-        className="w-full sm:max-w-md max-h-[85vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl bg-cockpit-panel border border-cockpit-border p-5"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <BottomSheet onClose={onClose}>
         <div className="flex items-center justify-between mb-4">
           <div>
             <p className="font-mono text-base font-bold text-cockpit-cream">
@@ -127,8 +125,7 @@ function FlightDetail({ flight, aircraftReg, onClose, onDelete, onEdit, deleting
             {deleting ? "Deleting…" : "Delete"}
           </Button>
         </div>
-      </div>
-    </div>
+    </BottomSheet>
   );
 }
 
@@ -193,6 +190,21 @@ export default function Logbook() {
     setPage(next);
     loadPage(next, true);
   };
+
+  const refreshData = async () => {
+    try {
+      const result = await base44.entities.Flight.filter(
+        activeFilters, "-date", PAGE_SIZE + 1, 0
+      );
+      setHasMore(result.length > PAGE_SIZE);
+      setFlights(result.slice(0, PAGE_SIZE));
+      setPage(0);
+    } catch {
+      // keep existing data on error
+    }
+  };
+
+  const { onTouchStart, onTouchMove, onTouchEnd, pullIndicator } = usePullToRefresh(refreshData);
 
   const updateFilter = (setter) => (val) => {
     setter(val);
@@ -311,7 +323,8 @@ export default function Logbook() {
   };
 
   return (
-    <div className="px-4 pt-6 pb-4">
+    <div className="px-4 pt-6 pb-4" onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}>
+      {pullIndicator}
       <AppHeader
         icon={BookOpen}
         title="Logbook"
@@ -394,7 +407,7 @@ export default function Logbook() {
               <button
                 key={f.id}
                 onClick={() => setSelected(f)}
-                className="relative w-full text-left ph-card p-4 pl-5 hover:border-cockpit-amber/20 transition-colors overflow-hidden"
+                className="relative w-full text-left ph-card p-4 pl-5 hover:border-cockpit-amber/20 transition-all active:scale-[0.98] overflow-hidden"
               >
                 <span className={`absolute left-0 top-0 bottom-0 w-[3px] ${f.is_rpas ? "bg-cockpit-glow-blue" : "bg-cockpit-amber"}`} />
                 <div className="flex items-center justify-between mb-1">

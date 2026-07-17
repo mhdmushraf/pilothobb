@@ -15,6 +15,7 @@ import {
   Plus, ChevronLeft, ChevronRight, Camera, Plane, Check, Minus, Loader2, Shield, Pencil,
 } from "lucide-react";
 import SkeletonCard from "@/components/SkeletonCard";
+import { tap } from "@/lib/haptic";
 
 const r1 = (n) => Math.round((Number(n) || 0) * 10) / 10;
 const todayStr = () => new Date().toISOString().split("T")[0];
@@ -242,6 +243,7 @@ export default function AddFlight() {
   };
 
   const handleSave = async () => {
+    tap();
     setSaving(true);
     setError(null);
     let created = null;
@@ -332,7 +334,7 @@ export default function AddFlight() {
       ) : (
         aircraftList.map((ac) => (
           <button key={ac.id} type="button" onClick={() => selectAircraft(ac)}
-            className={`w-full text-left rounded-xl p-4 border transition-all ${
+            className={`w-full text-left rounded-xl p-4 border transition-all active:scale-[0.98] ${
               aircraft?.id === ac.id
                 ? "ph-chip-active"
                 : "bg-cockpit-panel-light border-cockpit-border hover:border-cockpit-amber/20"

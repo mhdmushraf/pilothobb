@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2, Trash2, Upload, Image as ImageIcon } from "lucide-react";
+import { tap } from "@/lib/haptic";
 
 export default function EndorsementForm({ endorsement, onClose, onSaved, onDeleted }) {
   const { toast } = useToast();
@@ -38,6 +39,7 @@ export default function EndorsementForm({ endorsement, onClose, onSaved, onDelet
   };
 
   const handleSave = async () => {
+    tap();
     if (!form.title.trim()) { toast({ title: "Title is required" }); return; }
     setSaving(true);
     try {

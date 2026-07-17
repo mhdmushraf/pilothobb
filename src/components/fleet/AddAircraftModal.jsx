@@ -7,6 +7,8 @@ import {
   Select, SelectTrigger, SelectValue, SelectContent, SelectItem,
 } from "@/components/ui/select";
 import { X, Plus, Loader2 } from "lucide-react";
+import BottomSheet from "@/components/BottomSheet";
+import { tap } from "@/lib/haptic";
 
 const CATEGORIES = ["SEP", "MEP", "Helicopter", "Drone (RPAS)", "Other"];
 const TIME_SOURCES = ["Hobbs", "Tach", "Manual"];
@@ -37,6 +39,7 @@ export default function AddAircraftModal({ onClose, onSaved }) {
   };
 
   const handleSave = async () => {
+    tap();
     setError(null);
     if (!form.registration || !form.type) {
       setError("Registration and type are required.");
@@ -61,11 +64,7 @@ export default function AddAircraftModal({ onClose, onSaved }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 p-0 sm:p-4" onClick={onClose}>
-      <div
-        className="w-full sm:max-w-md max-h-[85vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl bg-cockpit-panel border border-cockpit-border p-5"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <BottomSheet onClose={onClose}>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-base font-bold text-cockpit-cream flex items-center gap-2">
             <Plus className="w-4 h-4 text-cockpit-amber" /> Add Aircraft
@@ -151,7 +150,6 @@ export default function AddAircraftModal({ onClose, onSaved }) {
             {saving ? "Saving…" : "Add aircraft"}
           </Button>
         </div>
-      </div>
-    </div>
+    </BottomSheet>
   );
 }

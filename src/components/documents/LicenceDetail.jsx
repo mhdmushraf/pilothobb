@@ -2,6 +2,7 @@ import React from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { X, Bell, Stethoscope, RefreshCw } from "lucide-react";
+import BottomSheet from "@/components/BottomSheet";
 
 export function dayDiff(dateStr) {
   if (!dateStr) return null;
@@ -63,11 +64,7 @@ export default function LicenceDetail({ licence, onClose }) {
   const fmt = (d) => d ? new Date(d).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) : "—";
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 p-0 sm:p-4" onClick={onClose}>
-      <div
-        className="w-full sm:max-w-md max-h-[85vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl bg-cockpit-panel border border-cockpit-border p-5"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <BottomSheet onClose={onClose}>
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
             <ExpiryRing days={days} size={72} stroke={5} />
@@ -121,7 +118,6 @@ export default function LicenceDetail({ licence, onClose }) {
             <RefreshCw className="w-4 h-4" /> Mark as renewed
           </Button>
         </div>
-      </div>
-    </div>
+    </BottomSheet>
   );
 }

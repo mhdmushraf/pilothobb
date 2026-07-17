@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { LayoutDashboard, BookOpen, Plane, MoreHorizontal, Plus, Radar } from "lucide-react";
+import { tap } from "@/lib/haptic";
 
 const tabs = [
   { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -26,6 +27,7 @@ export default function BottomNav() {
               <Link
                 key={tab.path}
                 to={tab.path}
+                onClick={() => tap()}
                 className="relative -top-4 flex items-center justify-center w-14 h-14 rounded-full bg-cockpit-amber shadow-lg shadow-cockpit-amber/30 active:scale-95 transition-transform"
               >
                 <Icon className="w-7 h-7 text-cockpit-bg" strokeWidth={2.5} />

@@ -9,6 +9,7 @@ import {
   Select, SelectTrigger, SelectValue, SelectContent, SelectItem,
 } from "@/components/ui/select";
 import { Loader2, Trash2 } from "lucide-react";
+import { tap } from "@/lib/haptic";
 
 const SUBJECTS = ["PPL", "CPL", "IR", "Restricted Radio", "General Radio", "Night Rating", "ATPL", "RPL", "Other"];
 
@@ -27,6 +28,7 @@ export default function ExamForm({ exam, onClose, onSaved, onDeleted }) {
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
   const handleSave = async () => {
+    tap();
     if (!form.date_written) { toast({ title: "Date written is required" }); return; }
     setSaving(true);
     try {

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
+import { useAuth } from "@/lib/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,6 +13,8 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const { checkUserAuth } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,7 +22,8 @@ export default function Login() {
     setLoading(true);
     try {
       await base44.auth.loginViaEmailPassword(email, password);
-      window.location.href = "/";
+      await checkUserAuth();
+      navigate("/dashboard");
     } catch (err) {
       setError(err.message || "Invalid email or password");
     } finally {

@@ -7,6 +7,7 @@ import SkeletonCard from "@/components/SkeletonCard";
 import EmptyState from "@/components/EmptyState";
 import HobbsCounter from "@/components/HobbsCounter";
 import Logo from "@/components/Logo";
+import { usePullToRefresh } from "@/hooks/usePullToRefresh";
 
 function DroneIcon({ className }) {
   return (
@@ -151,16 +152,24 @@ export default function Dashboard() {
   const [flights, setFlights] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
+  const loadData = async () => {
     const today = new Date().toISOString().split("T")[0];
-    base44.entities.Licence.filter({ expiry_date: { $gte: today } }, "expiry_date", 3)
-      .then(setLicences)
-      .catch(() => setLicences([]));
+    try {
+      const [lic, fl] = await Promise.all([
+        base44.entities.Licence.filter({ expiry_date: { $gte: today } }, "expiry_date", 3),
+        base44.entities.Flight.list("-date", 4),
+      ]);
+      setLicences(lic);
+      setFlights(fl);
+    } catch {
+      setLicences([]);
+      setFlights([]);
+    }
+  };
 
-    base44.entities.Flight.list("-date", 4)
-      .then(setFlights)
-      .catch(() => setFlights([]));
-  }, []);
+  useEffect(() => { loadData(); }, []);
+
+  const { onTouchStart, onTouchMove, onTouchEnd, pullIndicator } = usePullToRefresh(loadData);
 
   const greeting = (() => {
     const h = new Date().getHours();
@@ -174,7 +183,8 @@ export default function Dashboard() {
   const showBanner = bannerLicence && bannerDays !== null && bannerDays <= 90;
 
   return (
-    <div className="px-4 pt-6 pb-4">
+    <div className="px-4 pt-6 pb-4" onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}>
+      {pullIndicator}
       {/* 1. App bar */}
       <div className="flex items-center justify-between mb-4">
         <Logo size={30} />
@@ -244,7 +254,7 @@ export default function Dashboard() {
       {/* 3. RPAS card */}
       <Link
         to="/fleet"
-        className="block rounded-2xl border border-cockpit-border p-4 mb-4 shadow-lg shadow-black/20 hover:border-cockpit-glow-blue/40 transition-colors"
+        className="block rounded-2xl border border-cockpit-border p-4 mb-4 shadow-lg shadow-black/20 hover:border-cockpit-glow-blue/40 transition-all active:scale-[0.98]"
         style={{ background: "linear-gradient(180deg,#141B2B,#111725)" }}
       >
         <div className="flex items-center justify-between">
@@ -274,7 +284,7 @@ export default function Dashboard() {
       {showBanner && (
         <button
           onClick={() => navigate("/documents")}
-          className="w-full text-left rounded-2xl border border-cockpit-warning/30 p-4 mb-5 flex items-center gap-3 shadow-lg shadow-black/20 hover:border-cockpit-warning/50 transition-colors"
+          className="w-full text-left rounded-2xl border border-cockpit-warning/30 p-4 mb-5 flex items-center gap-3 shadow-lg shadow-black/20 hover:border-cockpit-warning/50 transition-all active:scale-[0.98]"
           style={{ background: "linear-gradient(180deg,#141B2B,#111725)" }}
         >
           <Shield className="w-5 h-5 text-cockpit-warning shrink-0" />
