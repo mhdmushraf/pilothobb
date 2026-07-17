@@ -54,23 +54,16 @@ function Stepper({ value, onChange }) {
 
 function StepDots({ step, isRpas }) {
   const steps = isRpas ? [1, 2, 4, 5] : [1, 2, 3, 4, 5];
-  const labels = { 1: "Aircraft", 2: "Time", 3: "Route", 4: "Role", 5: "Review" };
+  const current = steps.indexOf(step);
   return (
-    <div className="flex items-center gap-1.5 mb-6">
-      {steps.map((s, i) => (
-        <React.Fragment key={s}>
-          <div className={`flex items-center gap-1.5 ${s === step ? "text-cockpit-amber" : s < step ? "text-cockpit-valid" : "text-cockpit-muted"}`}>
-            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-bold border ${
-              s === step ? "bg-cockpit-amber/15 border-cockpit-amber text-cockpit-amber"
-              : s < step ? "bg-cockpit-valid/15 border-cockpit-valid text-cockpit-valid"
-              : "bg-cockpit-panel border-cockpit-border"
-            }`}>
-              {s < step ? <Check className="w-3 h-3" /> : s}
-            </div>
-            <span className="text-[11px] hidden sm:inline">{labels[s]}</span>
-          </div>
-          {i < steps.length - 1 && <div className="flex-1 h-px bg-cockpit-border" />}
-        </React.Fragment>
+    <div className="flex gap-1 mb-6">
+      {steps.map((_, i) => (
+        <div
+          key={i}
+          className={`flex-1 h-1.5 rounded-full transition-all duration-300 ${
+            i <= current ? "bg-cockpit-amber" : "bg-cockpit-border"
+          }`}
+        />
       ))}
     </div>
   );
@@ -339,10 +332,10 @@ export default function AddFlight() {
       ) : (
         aircraftList.map((ac) => (
           <button key={ac.id} type="button" onClick={() => selectAircraft(ac)}
-            className={`w-full text-left rounded-xl p-4 border transition-colors ${
+            className={`w-full text-left rounded-xl p-4 border transition-all ${
               aircraft?.id === ac.id
-                ? "bg-cockpit-amber/10 border-cockpit-amber/40"
-                : "bg-cockpit-panel border-cockpit-border hover:border-cockpit-amber/20"
+                ? "ph-chip-active"
+                : "bg-cockpit-panel-light border-cockpit-border hover:border-cockpit-amber/20"
             }`}>
             <div className="flex items-center justify-between">
               <div>
@@ -653,7 +646,11 @@ export default function AddFlight() {
 
       <StepDots step={step} isRpas={isRpas} />
 
-      {isEdit && !originalFlight ? <SkeletonCard lines={4} /> : stepContent}
+      {isEdit && !originalFlight ? <SkeletonCard lines={4} /> : (
+        <div key={step} className="ph-card p-5 step-fade-in">
+          {stepContent}
+        </div>
+      )}
 
       {error && (
         <div className="mt-4 rounded-xl bg-cockpit-expired/10 border border-cockpit-expired/30 p-3">
@@ -663,25 +660,61 @@ export default function AddFlight() {
 
       <div className="flex items-center gap-3 mt-6">
         {step > 1 && (
-          <Button variant="outline" onClick={prevStep} disabled={saving}
-            className="border-cockpit-border text-cockpit-muted hover:text-cockpit-cream">
+          <Button variant="ghost" onClick={prevStep} disabled={saving}
+            className="ph-btn-ghost">
             <ChevronLeft className="w-4 h-4" /> Back
           </Button>
         )}
-        <div className="flex-1" />
         {step < 5 ? (
           <Button onClick={nextStep} disabled={!canContinue()}
-            className="bg-cockpit-amber text-cockpit-bg hover:bg-cockpit-amber-hi">
+            className="flex-1 ph-btn-primary">
             Continue <ChevronRight className="w-4 h-4" />
           </Button>
         ) : (
           <Button onClick={handleSave} disabled={saving || pilotLoading}
-            className="bg-cockpit-valid text-cockpit-bg hover:bg-cockpit-valid/90">
+            className="flex-1 ph-btn-primary">
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
             {saving ? "Saving…" : isEdit ? "Save changes" : "Save flight"}
           </Button>
         )}
       </div>
+
+      <style>{`
+        .ph-btn-primary {
+          background: linear-gradient(180deg, #FFC062, #FF9D2E);
+          color: #0A0E17;
+          border: none;
+          box-shadow: 0 4px 16px rgba(255,157,46,0.3);
+          font-weight: 600;
+          border-radius: 0.75rem;
+          height: 2.75rem;
+        }
+        .ph-btn-primary:hover { filter: brightness(1.05); }
+        .ph-btn-primary:disabled { opacity: 0.5; }
+        .ph-btn-ghost {
+          background: #1A2336;
+          border: 1px solid #243049;
+          color: #8893A8;
+          border-radius: 0.75rem;
+          height: 2.75rem;
+        }
+        .ph-btn-ghost:hover { color: #F3ECDD; }
+        .ph-chip-active {
+          background: linear-gradient(180deg, #FFC062, #FF9D2E);
+          color: #0A0E17;
+          border-color: transparent;
+        }
+        .ph-chip-active .text-cockpit-cream,
+        .ph-chip-active .text-cockpit-muted,
+        .ph-chip-active .text-cockpit-amber {
+          color: #0A0E17;
+        }
+        .step-fade-in { animation: stepFade .3s ease-out; }
+        @keyframes stepFade {
+          from { opacity: 0; transform: translateY(8px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </div>
   );
 }

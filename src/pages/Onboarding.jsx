@@ -112,24 +112,20 @@ export default function Onboarding() {
           <Logo size={42} />
         </div>
 
-        {/* Progress dots */}
-        <div className="flex items-center justify-center gap-2 mb-8">
+        {/* Progress bar */}
+        <div className="flex gap-1 mb-8">
           {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
-            <span
+            <div
               key={i}
-              className={`h-1.5 rounded-full transition-all duration-300 ${
-                i === step
-                  ? "w-8 bg-cockpit-amber"
-                  : i < step
-                  ? "w-3 bg-cockpit-amber/60"
-                  : "w-3 bg-cockpit-border"
+              className={`flex-1 h-1.5 rounded-full transition-all duration-300 ${
+                i <= step ? "bg-cockpit-amber" : "bg-cockpit-border"
               }`}
             />
           ))}
         </div>
 
         {/* Step card */}
-        <div className="rounded-3xl border border-cockpit-border bg-cockpit-panel/90 backdrop-blur-sm p-6 shadow-2xl shadow-black/40">
+        <div className="ph-card p-6">
           {loading ? (
             <div className="flex items-center justify-center py-16">
               <div className="w-7 h-7 border-4 border-cockpit-border border-t-cockpit-amber rounded-full animate-spin" />
@@ -255,8 +251,8 @@ export default function Onboarding() {
                           onClick={() => toggleTracking(opt)}
                           className={`rounded-full px-4 py-2 text-sm border transition-all duration-200 ${
                             active
-                              ? "bg-cockpit-amber text-cockpit-bg border-cockpit-amber"
-                              : "bg-cockpit-bg text-cockpit-muted border-cockpit-border hover:border-cockpit-amber/60"
+                              ? "ph-chip-active border-transparent"
+                              : "bg-cockpit-panel-light text-cockpit-muted border-cockpit-border hover:border-cockpit-amber/60"
                           }`}
                         >
                           {active && <Check className="inline w-3.5 h-3.5 mr-1 -mt-0.5" />}
@@ -298,12 +294,12 @@ export default function Onboarding() {
 
           {/* Nav buttons */}
           {!loading && (
-            <div className="flex items-center justify-between mt-6">
+            <div className="flex items-center gap-3 mt-6">
               <Button
                 variant="ghost"
                 onClick={goBack}
                 disabled={step === 0}
-                className="text-cockpit-muted hover:text-cockpit-cream disabled:opacity-30"
+                className="ph-btn-ghost disabled:opacity-30"
               >
                 <ChevronLeft className="w-4 h-4" />
                 Back
@@ -313,7 +309,7 @@ export default function Onboarding() {
                 <Button
                   onClick={goNext}
                   disabled={!canContinue()}
-                  className="bg-cockpit-amber text-cockpit-bg hover:bg-cockpit-amber/90 rounded-xl"
+                  className="flex-1 ph-btn-primary"
                 >
                   Continue
                   <ChevronRight className="w-4 h-4" />
@@ -322,7 +318,7 @@ export default function Onboarding() {
                 <Button
                   onClick={handleFinish}
                   disabled={submitting}
-                  className="bg-cockpit-amber text-cockpit-bg hover:bg-cockpit-amber/90 rounded-xl"
+                  className="flex-1 ph-btn-primary"
                 >
                   {submitting ? "Saving…" : "Finish setup"}
                   <Check className="w-4 h-4" />
@@ -343,6 +339,30 @@ export default function Onboarding() {
         @keyframes obFadeBack {
           from { opacity: 0; transform: translateX(-18px); }
           to { opacity: 1; transform: translateX(0); }
+        }
+        .ph-btn-primary {
+          background: linear-gradient(180deg, #FFC062, #FF9D2E);
+          color: #0A0E17;
+          border: none;
+          box-shadow: 0 4px 16px rgba(255,157,46,0.3);
+          font-weight: 600;
+          border-radius: 0.75rem;
+          height: 2.75rem;
+        }
+        .ph-btn-primary:hover { filter: brightness(1.05); }
+        .ph-btn-primary:disabled { opacity: 0.5; }
+        .ph-btn-ghost {
+          background: #1A2336;
+          border: 1px solid #243049;
+          color: #8893A8;
+          border-radius: 0.75rem;
+          height: 2.75rem;
+        }
+        .ph-btn-ghost:hover { color: #F3ECDD; }
+        .ph-chip-active {
+          background: linear-gradient(180deg, #FFC062, #FF9D2E);
+          color: #0A0E17;
+          border-color: transparent;
         }
       `}</style>
     </div>
