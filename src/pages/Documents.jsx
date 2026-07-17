@@ -142,6 +142,30 @@ export default function Documents() {
     loadEndorsements();
   }, []);
 
+  const handleLicenceSaved = (record, isEdit) => {
+    if (isEdit) { loadLicences(); return; }
+    if (record.discipline === "RPAS") setRpas((prev) => [record, ...(prev || [])]);
+    else setManned((prev) => [record, ...(prev || [])]);
+  };
+  const handleLicenceDeleted = (id) => {
+    setManned((prev) => (prev || []).filter((l) => l.id !== id));
+    setRpas((prev) => (prev || []).filter((l) => l.id !== id));
+  };
+  const handleExamSaved = (record, isEdit) => {
+    if (isEdit) { loadExams(); return; }
+    setExams((prev) => [record, ...(prev || [])]);
+  };
+  const handleExamDeleted = (id) => {
+    setExams((prev) => (prev || []).filter((e) => e.id !== id));
+  };
+  const handleEndorsementSaved = (record, isEdit) => {
+    if (isEdit) { loadEndorsements(); return; }
+    setEndorsements((prev) => [record, ...(prev || [])]);
+  };
+  const handleEndorsementDeleted = (id) => {
+    setEndorsements((prev) => (prev || []).filter((e) => e.id !== id));
+  };
+
   const examColor = (dateStr) => {
     if (!dateStr) return "text-cockpit-muted";
     const days = Math.ceil((new Date(dateStr) - new Date()) / (1000 * 60 * 60 * 24));
@@ -213,24 +237,24 @@ export default function Documents() {
         <LicenceForm
           licence={licenceModal.id ? licenceModal : null}
           onClose={() => setLicenceModal(null)}
-          onSaved={loadLicences}
-          onDeleted={loadLicences}
+          onSaved={handleLicenceSaved}
+          onDeleted={handleLicenceDeleted}
         />
       )}
       {examModal && (
         <ExamForm
           exam={examModal.id ? examModal : null}
           onClose={() => setExamModal(null)}
-          onSaved={loadExams}
-          onDeleted={loadExams}
+          onSaved={handleExamSaved}
+          onDeleted={handleExamDeleted}
         />
       )}
       {endorsementModal && (
         <EndorsementForm
           endorsement={endorsementModal.id ? endorsementModal : null}
           onClose={() => setEndorsementModal(null)}
-          onSaved={loadEndorsements}
-          onDeleted={loadEndorsements}
+          onSaved={handleEndorsementSaved}
+          onDeleted={handleEndorsementDeleted}
         />
       )}
     </div>

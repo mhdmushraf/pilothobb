@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { useToast } from "@/components/ui/use-toast";
 import usePilot from "@/hooks/usePilot";
@@ -131,10 +131,19 @@ function FlightDetail({ flight, aircraftReg, onClose, onDelete, onEdit, deleting
 
 export default function Logbook() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
   const { pilot } = usePilot();
 
-  const [flights, setFlights] = useState(null);
+  const [flights, setFlights] = useState(
+    location.state?.optimisticFlight ? [location.state.optimisticFlight] : null
+  );
+
+  useEffect(() => {
+    if (location.state?.optimisticFlight) {
+      window.history.replaceState({}, "");
+    }
+  }, []);
   const [hasMore, setHasMore] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [page, setPage] = useState(0);
@@ -159,8 +168,7 @@ export default function Logbook() {
   }, [roleFilter, aircraftFilter, periodFilter]);
 
   const loadPage = async (pageNum, append) => {
-    if (!append) setFlights(null);
-    else setLoadingMore(true);
+    if (append) setLoadingMore(true);
     try {
       const result = await base44.entities.Flight.filter(
         activeFilters, "-date", PAGE_SIZE + 1, pageNum * PAGE_SIZE
@@ -169,7 +177,7 @@ export default function Logbook() {
       const slice = result.slice(0, PAGE_SIZE);
       setFlights((prev) => (append ? dedupe([...(prev || []), ...slice]) : slice));
     } catch {
-      if (!append) setFlights([]);
+      setFlights((prev) => prev ?? []);
     } finally {
       setLoadingMore(false);
     }

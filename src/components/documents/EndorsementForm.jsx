@@ -43,13 +43,11 @@ export default function EndorsementForm({ endorsement, onClose, onSaved, onDelet
     if (!form.title.trim()) { toast({ title: "Title is required" }); return; }
     setSaving(true);
     try {
-      if (endorsement?.id) {
-        await base44.entities.Endorsement.update(endorsement.id, form);
-      } else {
-        await base44.entities.Endorsement.create(form);
-      }
+      const saved = endorsement?.id
+        ? await base44.entities.Endorsement.update(endorsement.id, form)
+        : await base44.entities.Endorsement.create(form);
       toast({ title: endorsement?.id ? "Endorsement updated" : "Endorsement added" });
-      onSaved?.();
+      onSaved?.(saved, !!endorsement?.id);
       onClose();
     } catch (e) {
       toast({ title: "Failed to save", description: e.message });
@@ -64,7 +62,7 @@ export default function EndorsementForm({ endorsement, onClose, onSaved, onDelet
     try {
       await base44.entities.Endorsement.delete(endorsement.id);
       toast({ title: "Endorsement deleted" });
-      onDeleted?.();
+      onDeleted?.(endorsement.id);
       onClose();
     } catch (e) {
       toast({ title: "Failed to delete", description: e.message });

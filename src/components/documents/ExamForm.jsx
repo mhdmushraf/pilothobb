@@ -33,13 +33,11 @@ export default function ExamForm({ exam, onClose, onSaved, onDeleted }) {
     setSaving(true);
     try {
       const payload = { ...form, marks: form.marks === "" ? null : Number(form.marks) };
-      if (exam?.id) {
-        await base44.entities.Exam.update(exam.id, payload);
-      } else {
-        await base44.entities.Exam.create(payload);
-      }
+      const saved = exam?.id
+        ? await base44.entities.Exam.update(exam.id, payload)
+        : await base44.entities.Exam.create(payload);
       toast({ title: exam?.id ? "Exam updated" : "Exam added" });
-      onSaved?.();
+      onSaved?.(saved, !!exam?.id);
       onClose();
     } catch (e) {
       toast({ title: "Failed to save", description: e.message });
@@ -54,7 +52,7 @@ export default function ExamForm({ exam, onClose, onSaved, onDeleted }) {
     try {
       await base44.entities.Exam.delete(exam.id);
       toast({ title: "Exam deleted" });
-      onDeleted?.();
+      onDeleted?.(exam.id);
       onClose();
     } catch (e) {
       toast({ title: "Failed to delete", description: e.message });

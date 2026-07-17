@@ -35,13 +35,11 @@ export default function LicenceForm({ licence, onClose, onSaved, onDeleted }) {
     if (!form.name.trim()) { toast({ title: "Name is required" }); return; }
     setSaving(true);
     try {
-      if (licence?.id) {
-        await base44.entities.Licence.update(licence.id, form);
-      } else {
-        await base44.entities.Licence.create(form);
-      }
+      const saved = licence?.id
+        ? await base44.entities.Licence.update(licence.id, form)
+        : await base44.entities.Licence.create(form);
       toast({ title: licence?.id ? "Document updated" : "Document added" });
-      onSaved?.();
+      onSaved?.(saved, !!licence?.id);
       onClose();
     } catch (e) {
       toast({ title: "Failed to save", description: e.message });
@@ -56,7 +54,7 @@ export default function LicenceForm({ licence, onClose, onSaved, onDeleted }) {
     try {
       await base44.entities.Licence.delete(licence.id);
       toast({ title: "Document deleted" });
-      onDeleted?.();
+      onDeleted?.(licence.id);
       onClose();
     } catch (e) {
       toast({ title: "Failed to delete", description: e.message });

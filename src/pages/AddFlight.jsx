@@ -306,13 +306,12 @@ export default function AddFlight() {
         navigate("/logbook");
       } else {
         created = await base44.entities.Flight.create(flightData);
+        toast({ title: "Flight saved" });
+        navigate("/logbook", { state: { optimisticFlight: created } });
 
         const { pilotPatch, aircraftPatch } = computeTotals(created, pilot, aircraft, 1);
         await base44.entities.Pilot.update(pilot.id, pilotPatch);
         await base44.entities.Aircraft.update(aircraft.id, aircraftPatch);
-
-        toast({ title: "Flight saved" });
-        navigate("/logbook");
       }
     } catch (e) {
       if (created) {

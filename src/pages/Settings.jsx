@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { Settings as SettingsIcon, Save, LogOut, BarChart3 } from "lucide-react";
+import { Settings as SettingsIcon, Save, LogOut, BarChart3, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -10,6 +10,7 @@ import SkeletonCard from "@/components/SkeletonCard";
 import AppHeader from "@/components/AppHeader";
 import SectionTitle from "@/components/SectionTitle";
 import ProfilePhoto from "@/components/ProfilePhoto";
+import DeleteAccountDialog from "@/components/DeleteAccountDialog";
 
 const AUTHORITIES = ["FAA", "EASA", "UK CAA", "SACAA", "CASA", "Other"];
 const LICENCE_TYPES = ["Student", "PPL", "CPL", "ATPL"];
@@ -19,6 +20,7 @@ export default function Settings() {
   const { toast } = useToast();
   const [form, setForm] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
 
   useEffect(() => {
     if (pilot) {
@@ -55,6 +57,10 @@ export default function Settings() {
   };
 
   const handleLogout = () => {
+    base44.auth.logout("/login");
+  };
+
+  const handleAccountDeleted = () => {
     base44.auth.logout("/login");
   };
 
@@ -180,7 +186,28 @@ export default function Settings() {
         >
           <LogOut className="w-4 h-4 mr-2" /> Log out
         </Button>
+
+        <div className="rounded-2xl border border-cockpit-expired/20 bg-cockpit-expired/5 p-4 mt-6">
+          <p className="text-sm font-semibold text-cockpit-cream mb-1">Delete account</p>
+          <p className="text-xs text-cockpit-muted mb-3">
+            Permanently remove your account and all flight data. This cannot be undone.
+          </p>
+          <Button
+            variant="outline"
+            onClick={() => setShowDelete(true)}
+            className="w-full border-cockpit-expired/40 text-cockpit-expired hover:bg-cockpit-expired/10"
+          >
+            <Trash2 className="w-4 h-4 mr-2" /> Delete my account
+          </Button>
+        </div>
       </div>
+
+      {showDelete && (
+        <DeleteAccountDialog
+          onClose={() => setShowDelete(false)}
+          onDeleted={handleAccountDeleted}
+        />
+      )}
     </div>
   );
 }
