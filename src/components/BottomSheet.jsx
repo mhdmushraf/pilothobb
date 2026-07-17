@@ -1,31 +1,45 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, useDragControls } from "framer-motion";
+import { pushOverlay, popOverlay } from "@/lib/overlayHistory";
 
 const prefersReducedMotion =
   typeof window !== "undefined" &&
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-export default function BottomSheet({ onClose, children, className = "" }) {
+export default function BottomSheet({ onClose, children, className = "", backDismisses = true }) {
   const [visible, setVisible] = useState(false);
   const dragControls = useDragControls();
+  const closingRef = useRef(false);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
 
   useEffect(() => {
     setVisible(true);
   }, []);
 
-  const handleClose = () => {
+  const startClose = () => {
+    if (closingRef.current) return;
+    closingRef.current = true;
     setVisible(false);
-    setTimeout(onClose, prefersReducedMotion ? 0 : 200);
+    setTimeout(() => onCloseRef.current(), prefersReducedMotion ? 0 : 200);
   };
 
+  // Register with the overlay history so the back button dismisses this sheet.
+  useEffect(() => {
+    if (!backDismisses) return;
+    pushOverlay(startClose);
+    return () => popOverlay(startClose);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [backDismisses]);
+
   const handleDragEnd = (_, info) => {
-    if (info.offset.y > 100 || info.velocity.y > 500) handleClose();
+    if (info.offset.y > 100 || info.velocity.y > 500) startClose();
   };
 
   return (
     <div
       className="fixed inset-0 z-50 flex items-end justify-center"
-      onClick={handleClose}
+      onClick={startClose}
     >
       <motion.div
         className="absolute inset-0 bg-black/60"

@@ -198,7 +198,7 @@ export default function AircraftDetail({ aircraft, onClose }) {
   };
 
   return (
-    <BottomSheet onClose={onClose} className="max-h-[92vh]">
+    <BottomSheet onClose={onClose} backDismisses={false} className="max-h-[92vh]">
       <div className="flex items-start justify-between mb-4">
         <div>
           <p className="font-mono text-lg font-bold text-cockpit-cream">{aircraft.registration}</p>

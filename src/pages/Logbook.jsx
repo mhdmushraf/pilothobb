@@ -56,7 +56,7 @@ function DetailRow({ label, value }) {
 function FlightDetail({ flight, aircraftReg, onClose, onDelete, onEdit, deleting }) {
   const date = flight.date ? new Date(flight.date).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) : "—";
   return (
-    <BottomSheet onClose={onClose}>
+    <BottomSheet onClose={onClose} backDismisses={false}>
         <div className="flex items-center justify-between mb-4">
           <div>
             <p className="font-mono text-base font-bold text-cockpit-cream">
