@@ -3,9 +3,25 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { X, Plane, Clock, Gauge, Wrench, Droplet, Hash, Settings } from "lucide-react";
+import { X, Plane, Clock, Gauge, Wrench, Droplet, Hash, Settings, FileText, Upload, Loader2, Trash2, ExternalLink, CalendarClock } from "lucide-react";
 import BottomSheet from "@/components/BottomSheet";
 import SkeletonCard from "@/components/SkeletonCard";
+
+function daysUntil(dateStr) {
+  if (!dateStr) return null;
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  const d = new Date(dateStr);
+  return Math.ceil((d - now) / 86400000);
+}
+
+function expiryBadge(dateStr) {
+  const days = daysUntil(dateStr);
+  if (days == null) return null;
+  if (days < 0) return { label: "Expired", cls: "text-cockpit-expired" };
+  if (days <= 30) return { label: `${days}d left`, cls: "text-cockpit-warning" };
+  return { label: new Date(dateStr).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }), cls: "text-cockpit-valid" };
+}
 
 function StatTile({ icon: Icon, label, value, accent }) {
   return (
@@ -82,16 +98,28 @@ function FlightMini({ flight }) {
 
 export default function AircraftDetail({ aircraft, onClose }) {
   const [flights, setFlights] = useState(null);
+  const [docs, setDocs] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [showDocForm, setShowDocForm] = useState(false);
+  const [docForm, setDocForm] = useState({ name: "", expiry_date: "" });
+  const [pendingFile, setPendingFile] = useState(null);
   const [editingMaint, setEditingMaint] = useState(null);
   const [maintForm, setMaintForm] = useState({ mpi_due_reading: "", oil_due_reading: "" });
 
   const isDrone = aircraft.category === "Drone (RPAS)";
   const isManned = !isDrone;
 
+  const loadDocs = () => {
+    base44.entities.AircraftDocument.filter({ aircraft: aircraft.id }, "-created_date")
+      .then(setDocs)
+      .catch(() => setDocs([]));
+  };
+
   useEffect(() => {
     base44.entities.Flight.filter({ aircraft: aircraft.id }, "-date", 20)
       .then(setFlights)
       .catch(() => setFlights([]));
+    loadDocs();
   }, [aircraft.id]);
 
   const lastFlown = aircraft.last_flown
@@ -111,6 +139,47 @@ export default function AircraftDetail({ aircraft, onClose }) {
       oil_due_reading: aircraft.oil_due_reading ?? "",
     });
     setEditingMaint(field);
+  };
+
+  const handleFilePick = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      setPendingFile(file_url);
+    } catch {
+      setPendingFile(null);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const saveDoc = async () => {
+    if (!docForm.name.trim() || !pendingFile) return;
+    try {
+      await base44.entities.AircraftDocument.create({
+        name: docForm.name.trim(),
+        aircraft: aircraft.id,
+        file_url: pendingFile,
+        expiry_date: docForm.expiry_date || undefined,
+      });
+      setShowDocForm(false);
+      setDocForm({ name: "", expiry_date: "" });
+      setPendingFile(null);
+      loadDocs();
+    } catch {
+      // keep form open on error
+    }
+  };
+
+  const deleteDoc = async (docId) => {
+    try {
+      await base44.entities.AircraftDocument.delete(docId);
+      loadDocs();
+    } catch {
+      // ignore
+    }
   };
 
   const saveMaint = async () => {
@@ -193,6 +262,80 @@ export default function AircraftDetail({ aircraft, onClose }) {
           <StatTile icon={Gauge} label="Weight class" value={aircraft.weight_class || "—"} />
         </div>
       )}
+
+      {/* Documents */}
+      <div className="mt-3">
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-xs font-semibold text-cockpit-muted uppercase tracking-wider">Documents</h3>
+          <Button size="sm" variant="outline" onClick={() => setShowDocForm((v) => !v)} className="h-7 px-3 text-xs border-cockpit-amber/30 text-cockpit-amber hover:bg-cockpit-amber/10">
+            <Upload className="w-3 h-3" /> Upload
+          </Button>
+        </div>
+
+        {showDocForm && (
+          <div className="rounded-xl bg-cockpit-panel border border-cockpit-border p-4 mb-2 space-y-3">
+            <div className="space-y-1.5">
+              <Label className="text-xs text-cockpit-muted uppercase tracking-wider">Document name *</Label>
+              <Input value={docForm.name} onChange={(e) => setDocForm((f) => ({ ...f, name: e.target.value }))}
+                placeholder="e.g. Certificate of Airworthiness"
+                className="bg-cockpit-panel-light border-cockpit-border text-cockpit-cream" />
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-xs text-cockpit-muted uppercase tracking-wider">Expiry date (optional)</Label>
+              <Input type="date" value={docForm.expiry_date} onChange={(e) => setDocForm((f) => ({ ...f, expiry_date: e.target.value }))}
+                className="bg-cockpit-panel-light border-cockpit-border text-cockpit-cream font-mono" />
+            </div>
+            {pendingFile ? (
+              <div className="flex items-center gap-2 text-xs text-cockpit-valid">
+                <FileText className="w-3.5 h-3.5" /> File ready to upload
+              </div>
+            ) : (
+              <label className="flex items-center justify-center gap-2 rounded-xl border border-dashed border-cockpit-border py-3 text-xs text-cockpit-muted cursor-pointer hover:border-cockpit-amber/40 transition-colors">
+                {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                {uploading ? "Uploading…" : "Choose or take a photo"}
+                <input type="file" accept="image/*,application/pdf" className="hidden" onChange={handleFilePick} />
+              </label>
+            )}
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" onClick={() => { setShowDocForm(false); setPendingFile(null); setDocForm({ name: "", expiry_date: "" }); }} className="flex-1 border-cockpit-border text-cockpit-muted">Cancel</Button>
+              <Button size="sm" onClick={saveDoc} disabled={!docForm.name.trim() || !pendingFile} className="flex-1 bg-cockpit-amber text-cockpit-bg hover:bg-cockpit-amber-hi disabled:opacity-40">Save</Button>
+            </div>
+          </div>
+        )}
+
+        {docs === null ? (
+          <SkeletonCard lines={2} />
+        ) : docs.length === 0 ? (
+          <div className="rounded-xl bg-cockpit-panel-light border border-cockpit-border p-4 text-center">
+            <p className="text-xs text-cockpit-muted">No documents uploaded yet</p>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {docs.map((doc) => {
+              const badge = expiryBadge(doc.expiry_date);
+              return (
+                <div key={doc.id} className="rounded-xl bg-cockpit-panel border border-cockpit-border p-3 flex items-center gap-3">
+                  <FileText className="w-4 h-4 text-cockpit-amber shrink-0" />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm text-cockpit-cream truncate">{doc.name}</p>
+                    {badge && (
+                      <p className={`text-[11px] font-medium ${badge.cls} flex items-center gap-1`}>
+                        <CalendarClock className="w-3 h-3" /> {badge.label}
+                      </p>
+                    )}
+                  </div>
+                  <a href={doc.file_url} target="_blank" rel="noopener noreferrer" className="p-1.5 text-cockpit-muted hover:text-cockpit-amber">
+                    <ExternalLink className="w-4 h-4" />
+                  </a>
+                  <button onClick={() => deleteDoc(doc.id)} className="p-1.5 text-cockpit-muted hover:text-cockpit-expired">
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
 
       {/* Flights */}
       <div className="mt-2">
