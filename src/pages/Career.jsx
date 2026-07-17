@@ -3,20 +3,21 @@ import { base44 } from "@/api/base44Client";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
 import usePilot from "@/hooks/usePilot";
-import { Briefcase, Clock, Plane, Moon, Compass, Download, Activity, Award } from "lucide-react";
+import { Briefcase, Clock, Plane, Moon, Compass, Download, Activity, Award, Plus } from "lucide-react";
 import SkeletonCard from "@/components/SkeletonCard";
 import AppHeader from "@/components/AppHeader";
 import SectionTitle from "@/components/SectionTitle";
 
-function StatCard({ icon: Icon, label, value, accent }) {
+function StatCard({ icon: Icon, label, value, accent, barColor }) {
   return (
-    <div className="rounded-xl bg-cockpit-panel border border-cockpit-border p-3">
+    <div className="relative ph-card p-3 pt-4 overflow-hidden">
+      <span className={`absolute top-0 left-0 right-0 h-[3px] ${barColor || "bg-cockpit-border"}`} />
       <div className="flex items-center gap-1.5 mb-1">
         <Icon className="w-3.5 h-3.5 text-cockpit-muted" />
         <span className="text-[10px] text-cockpit-muted uppercase tracking-wider">{label}</span>
       </div>
-      <p className={`font-mono text-lg font-bold ${accent || "text-cockpit-cream"}`}>
-        {(value ?? 0).toFixed(1)}<span className="text-xs font-normal text-cockpit-muted ml-1">h</span>
+      <p className={`font-mono text-2xl font-bold ${accent || "text-cockpit-cream"}`}>
+        {(value ?? 0).toFixed(1)}<span className="text-sm font-normal text-cockpit-muted ml-1">h</span>
       </p>
     </div>
   );
@@ -78,7 +79,7 @@ export default function Career() {
       {loading ? (
         <SkeletonCard lines={2} />
       ) : (
-        <div className="rounded-xl bg-cockpit-panel border border-cockpit-border p-4 mb-4">
+        <div className="ph-card p-4 mb-4">
           <p className="text-lg font-bold text-cockpit-cream">{pilot?.full_name || "Pilot"}</p>
           <div className="flex gap-2 mt-1.5">
             {pilot?.authority && (
@@ -97,12 +98,12 @@ export default function Career() {
 
       {/* Summary stat grid */}
       <div className="grid grid-cols-2 gap-2 mb-6">
-        <StatCard icon={Clock} label="Total time" value={pilot?.total_time} accent="text-cockpit-amber" />
-        <StatCard icon={Plane} label="RPAS total" value={pilot?.rpas_total_time} accent="text-cockpit-glow-blue" />
-        <StatCard icon={Plane} label="PIC" value={pilot?.total_pic} />
-        <StatCard icon={Plane} label="Dual" value={pilot?.total_dual} />
-        <StatCard icon={Moon} label="Night" value={pilot?.total_night} />
-        <StatCard icon={Compass} label="Cross-country" value={pilot?.total_xc} />
+        <StatCard icon={Clock} label="Total time" value={pilot?.total_time} accent="text-cockpit-amber" barColor="bg-cockpit-amber" />
+        <StatCard icon={Plane} label="RPAS total" value={pilot?.rpas_total_time} accent="text-cockpit-glow-blue" barColor="bg-cockpit-glow-blue" />
+        <StatCard icon={Plane} label="PIC" value={pilot?.total_pic} barColor="bg-cockpit-amber" />
+        <StatCard icon={Plane} label="Dual" value={pilot?.total_dual} barColor="bg-cockpit-amber" />
+        <StatCard icon={Moon} label="Night" value={pilot?.total_night} barColor="bg-cockpit-amber" />
+        <StatCard icon={Compass} label="Cross-country" value={pilot?.total_xc} barColor="bg-cockpit-amber" />
       </div>
 
       {/* Hours by type */}
@@ -111,11 +112,17 @@ export default function Career() {
         {typeStats === null ? (
           <SkeletonCard lines={3} />
         ) : Object.keys(typeStats).length === 0 ? (
-          <div className="rounded-xl bg-cockpit-panel border border-cockpit-border p-4 text-center">
-            <p className="text-xs text-cockpit-muted">No manned flights logged yet</p>
+          <div className="ph-card flex flex-col items-center text-center px-6 py-6">
+            <div className="w-12 h-12 rounded-full bg-cockpit-amber/10 border border-cockpit-amber/20 flex items-center justify-center mb-2">
+              <Plane className="w-5 h-5 text-cockpit-muted" />
+            </div>
+            <p className="text-xs text-cockpit-muted mb-2">No manned flights logged yet</p>
+            <button onClick={() => navigate("/add-flight")} className="inline-flex items-center gap-1.5 text-xs font-medium text-cockpit-amber hover:text-cockpit-amber-hi">
+              <Plus className="w-3 h-3" /> Log a flight
+            </button>
           </div>
         ) : (
-          <div className="rounded-xl bg-cockpit-panel border border-cockpit-border px-4">
+          <div className="ph-card px-4">
             {Object.entries(typeStats)
               .sort((a, b) => b[1].pic + b[1].dual - a[1].pic - a[1].dual)
               .map(([type, s]) => (

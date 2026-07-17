@@ -10,8 +10,9 @@ export default function AircraftCard({ ac, onClick }) {
   return (
     <button
       onClick={onClick}
-      className="w-full text-left rounded-xl bg-cockpit-panel border border-cockpit-border p-4 hover:border-cockpit-amber/20 transition-colors"
+      className="relative w-full text-left ph-card p-4 pl-5 hover:border-cockpit-amber/20 transition-colors overflow-hidden"
     >
+      <span className={`absolute left-0 top-0 bottom-0 w-[3px] ${isDrone ? "bg-cockpit-glow-blue" : "bg-cockpit-amber"}`} />
       <div className="flex items-center justify-between mb-1">
         <span className="font-mono text-base font-bold text-cockpit-cream">{ac.registration}</span>
         <div className="flex items-center gap-1.5">

@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import {
-  BookOpen, Plane, Trash2, X, FileDown, BarChart3, Loader2, ChevronRight, Pencil,
+  BookOpen, Plane, Trash2, X, FileDown, BarChart3, Loader2, ChevronRight, Pencil, Plus,
 } from "lucide-react";
 import EmptyState from "@/components/EmptyState";
 import SkeletonCard from "@/components/SkeletonCard";
@@ -381,6 +381,11 @@ export default function Logbook() {
           icon={BookOpen}
           title="No flights found"
           description="Try adjusting filters or log your first flight"
+          action={
+            <button onClick={() => navigate("/add-flight")} className="inline-flex items-center gap-1.5 text-sm font-medium text-cockpit-amber hover:text-cockpit-amber-hi">
+              <Plus className="w-4 h-4" /> Log your first flight
+            </button>
+          }
         />
       ) : (
         <>
@@ -389,8 +394,9 @@ export default function Logbook() {
               <button
                 key={f.id}
                 onClick={() => setSelected(f)}
-                className="w-full text-left rounded-xl bg-cockpit-panel border border-cockpit-border p-4 hover:border-cockpit-amber/20 transition-colors"
+                className="relative w-full text-left ph-card p-4 pl-5 hover:border-cockpit-amber/20 transition-colors overflow-hidden"
               >
+                <span className={`absolute left-0 top-0 bottom-0 w-[3px] ${f.is_rpas ? "bg-cockpit-glow-blue" : "bg-cockpit-amber"}`} />
                 <div className="flex items-center justify-between mb-1">
                   <span className="font-mono text-sm font-semibold text-cockpit-cream">
                     {f.route || `${f.from_aerodrome}–${f.to_aerodrome}`}

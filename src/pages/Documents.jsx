@@ -9,15 +9,19 @@ import EndorsementForm from "@/components/documents/EndorsementForm";
 import AppHeader from "@/components/AppHeader";
 import SectionTitle from "@/components/SectionTitle";
 
-function DocSection({ title, icon: Icon, action, items, loading, emptyText, renderItem }) {
+function DocSection({ title, icon: Icon, action, items, loading, emptyText, emptyAction, renderItem }) {
   return (
     <div className="mb-6">
       <SectionTitle icon={Icon} action={action}>{title}</SectionTitle>
       {loading ? (
         <SkeletonCard lines={2} />
       ) : items.length === 0 ? (
-        <div className="rounded-xl bg-cockpit-panel border border-cockpit-border p-4 text-center">
-          <p className="text-xs text-cockpit-muted">{emptyText}</p>
+        <div className="ph-card flex flex-col items-center text-center px-6 py-6">
+          <div className="w-12 h-12 rounded-full bg-cockpit-amber/10 border border-cockpit-amber/20 flex items-center justify-center mb-2">
+            <Icon className="w-5 h-5 text-cockpit-muted" />
+          </div>
+          <p className="text-xs text-cockpit-muted mb-2">{emptyText}</p>
+          {emptyAction}
         </div>
       ) : (
         <div className="space-y-2">
@@ -42,8 +46,9 @@ function LicenceCard({ licence, onClick }) {
   return (
     <button
       onClick={onClick}
-      className="w-full text-left rounded-xl bg-cockpit-panel border border-cockpit-border p-3 hover:border-cockpit-amber/20 transition-colors"
+      className="relative w-full text-left ph-card p-3 pl-4 hover:border-cockpit-amber/20 transition-colors overflow-hidden"
     >
+      <span className={`absolute left-0 top-0 bottom-0 w-[3px] ${licence.discipline === "RPAS" ? "bg-cockpit-glow-blue" : "bg-cockpit-amber"}`} />
       <div className="flex items-center gap-3">
         <ExpiryRing days={days} size={44} stroke={4} />
         <div className="flex-1 min-w-0">
@@ -70,7 +75,8 @@ function LicenceCard({ licence, onClick }) {
 function ExamCard({ exam, onClick, examColor }) {
   return (
     <button key={exam.id} onClick={onClick}
-      className="w-full text-left rounded-xl bg-cockpit-panel border border-cockpit-border p-3 hover:border-cockpit-amber/20 transition-colors">
+      className="relative w-full text-left ph-card p-3 pl-4 hover:border-cockpit-amber/20 transition-colors overflow-hidden">
+      <span className={`absolute left-0 top-0 bottom-0 w-[3px] ${exam.passed ? "bg-cockpit-valid" : "bg-cockpit-expired"}`} />
       <div className="flex items-center justify-between mb-1">
         <span className="text-sm font-semibold text-cockpit-cream">{exam.subject}</span>
         <span className={`font-mono text-sm font-bold ${exam.passed ? "text-cockpit-valid" : "text-cockpit-expired"}`}>
@@ -90,7 +96,8 @@ function ExamCard({ exam, onClick, examColor }) {
 function EndorsementCard({ endorsement, onClick }) {
   return (
     <button onClick={onClick}
-      className="w-full text-left rounded-xl bg-cockpit-panel border border-cockpit-border p-3 hover:border-cockpit-amber/20 transition-colors">
+      className="relative w-full text-left ph-card p-3 pl-4 hover:border-cockpit-amber/20 transition-colors overflow-hidden">
+      <span className="absolute left-0 top-0 bottom-0 w-[3px] bg-cockpit-valid" />
       <div className="flex items-center gap-3">
         <div className="w-11 h-11 rounded-lg bg-cockpit-valid/10 border border-cockpit-valid/20 flex items-center justify-center shrink-0">
           <ShieldCheck className="w-5 h-5 text-cockpit-valid" />
@@ -159,6 +166,7 @@ export default function Documents() {
         items={exams || []}
         loading={exams === null}
         emptyText="No exams recorded yet"
+        emptyAction={<AddButton label="Add exam" onClick={() => setExamModal({})} />}
         renderItem={(exam) => (
           <ExamCard key={exam.id} exam={exam} examColor={examColor} onClick={() => setExamModal(exam)} />
         )}
@@ -170,6 +178,7 @@ export default function Documents() {
         items={manned || []}
         loading={manned === null}
         emptyText="No manned licences or ratings tracked yet"
+        emptyAction={<AddButton label="Add licence" onClick={() => setLicenceModal({})} />}
         renderItem={(l) => (
           <LicenceCard key={l.id} licence={l} onClick={() => setLicenceModal(l)} />
         )}
@@ -181,6 +190,7 @@ export default function Documents() {
         items={rpas || []}
         loading={rpas === null}
         emptyText="No RPAS credentials tracked yet"
+        emptyAction={<AddButton label="Add licence" onClick={() => setLicenceModal({})} />}
         renderItem={(l) => (
           <LicenceCard key={l.id} licence={l} onClick={() => setLicenceModal(l)} />
         )}
@@ -193,6 +203,7 @@ export default function Documents() {
         items={endorsements || []}
         loading={endorsements === null}
         emptyText="No endorsements recorded yet"
+        emptyAction={<AddButton label="Add endorsement" onClick={() => setEndorsementModal({})} />}
         renderItem={(e) => (
           <EndorsementCard key={e.id} endorsement={e} onClick={() => setEndorsementModal(e)} />
         )}
