@@ -15,6 +15,8 @@ import EmptyState from "@/components/EmptyState";
 import SkeletonCard from "@/components/SkeletonCard";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
+import AppHeader from "@/components/AppHeader";
+import SectionTitle from "@/components/SectionTitle";
 
 const PAGE_SIZE = 20;
 
@@ -310,9 +312,22 @@ export default function Logbook() {
 
   return (
     <div className="px-4 pt-6 pb-4">
-      <h1 className="text-xl font-bold text-cockpit-cream mb-4 flex items-center gap-2">
-        <BookOpen className="w-5 h-5 text-cockpit-amber" /> Logbook
-      </h1>
+      <AppHeader
+        icon={BookOpen}
+        title="Logbook"
+        subtitle={flights ? `${flights.length} flight${flights.length !== 1 ? "s" : ""} · ${totalTime.toFixed(1)} h` : ""}
+        action={flights !== null && flights.length > 0 && (
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" className="border-cockpit-border text-cockpit-muted hover:text-cockpit-cream h-8" onClick={handleExportPDF} disabled={exporting}>
+              {exporting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <FileDown className="w-3.5 h-3.5" />}
+              {exporting ? "Generating…" : "Export PDF"}
+            </Button>
+            <Button variant="outline" size="sm" className="border-cockpit-border text-cockpit-muted hover:text-cockpit-cream h-8" onClick={() => navigate("/career")}>
+              <BarChart3 className="w-3.5 h-3.5" /> Career summary
+            </Button>
+          </div>
+        )}
+      />
 
       {/* Filters */}
       <div className="mb-4 space-y-3">
@@ -355,35 +370,6 @@ export default function Logbook() {
           </Select>
         </div>
       </div>
-
-      {/* Count + toolbar */}
-      {flights !== null && flights.length > 0 && (
-        <div className="mb-3">
-          <p className="text-xs text-cockpit-muted mb-2">
-            {flights.length} flight{flights.length !== 1 ? "s" : ""} · {totalTime.toFixed(1)} h shown
-          </p>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              className="border-cockpit-border text-cockpit-muted hover:text-cockpit-cream h-8"
-              onClick={handleExportPDF}
-              disabled={exporting}
-            >
-              {exporting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <FileDown className="w-3.5 h-3.5" />}
-              {exporting ? "Generating…" : "Export PDF"}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className="border-cockpit-border text-cockpit-muted hover:text-cockpit-cream h-8"
-              onClick={() => navigate("/career")}
-            >
-              <BarChart3 className="w-3.5 h-3.5" /> Career summary
-            </Button>
-          </div>
-        </div>
-      )}
 
       {/* Flight list */}
       {flights === null ? (

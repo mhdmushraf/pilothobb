@@ -6,6 +6,7 @@ import SkeletonCard from "@/components/SkeletonCard";
 import AircraftCard from "@/components/fleet/AircraftCard";
 import AddAircraftModal from "@/components/fleet/AddAircraftModal";
 import AircraftDetail from "@/components/fleet/AircraftDetail";
+import AppHeader from "@/components/AppHeader";
 
 const PAGE_SIZE = 20;
 
@@ -42,17 +43,19 @@ export default function Fleet() {
 
   return (
     <div className="px-4 pt-6">
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="text-xl font-bold text-cockpit-cream flex items-center gap-2">
-          <Plane className="w-5 h-5 text-cockpit-amber" /> Fleet
-        </h1>
-        <button
-          onClick={() => setShowAdd(true)}
-          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-cockpit-amber/15 border border-cockpit-amber/30 text-cockpit-amber text-sm font-medium hover:bg-cockpit-amber/20 transition-colors"
-        >
-          <Plus className="w-4 h-4" /> Add aircraft
-        </button>
-      </div>
+      <AppHeader
+        icon={Plane}
+        title="Fleet"
+        subtitle="Your aircraft & drones"
+        action={
+          <button
+            onClick={() => setShowAdd(true)}
+            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-cockpit-amber/15 border border-cockpit-amber/30 text-cockpit-amber text-sm font-medium hover:bg-cockpit-amber/20 transition-colors"
+          >
+            <Plus className="w-4 h-4" /> Add aircraft
+          </button>
+        }
+      />
 
       {aircraft === null ? (
         <div className="space-y-3">

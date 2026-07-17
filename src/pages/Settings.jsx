@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { Settings as SettingsIcon, Save, LogOut } from "lucide-react";
+import { Settings as SettingsIcon, Save, LogOut, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import usePilot from "@/hooks/usePilot";
 import SkeletonCard from "@/components/SkeletonCard";
+import AppHeader from "@/components/AppHeader";
+import SectionTitle from "@/components/SectionTitle";
 
 const AUTHORITIES = ["FAA", "EASA", "UK CAA", "SACAA", "CASA", "Other"];
 const LICENCE_TYPES = ["Student", "PPL", "CPL", "ATPL"];
@@ -65,9 +67,7 @@ export default function Settings() {
 
   return (
     <div className="px-4 pt-6 pb-8">
-      <h1 className="text-xl font-bold text-cockpit-cream mb-5 flex items-center gap-2">
-        <SettingsIcon className="w-5 h-5 text-cockpit-amber" /> Pilot Profile
-      </h1>
+      <AppHeader icon={SettingsIcon} title="Settings" />
 
       <div className="space-y-4">
         <div>
@@ -151,7 +151,7 @@ export default function Settings() {
 
         {/* Running totals (read-only) */}
         <div className="rounded-2xl bg-cockpit-panel border border-cockpit-border p-4 mt-6">
-          <p className="text-xs text-cockpit-muted uppercase tracking-wider mb-3">Running Totals</p>
+          <SectionTitle icon={BarChart3}>Running Totals</SectionTitle>
           <div className="grid grid-cols-2 gap-3 text-sm">
             {[
               ["Total Time", pilot.total_time],

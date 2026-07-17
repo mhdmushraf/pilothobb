@@ -3,8 +3,10 @@ import { base44 } from "@/api/base44Client";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
 import usePilot from "@/hooks/usePilot";
-import { Briefcase, Clock, Plane, Moon, Compass, Download, Activity } from "lucide-react";
+import { Briefcase, Clock, Plane, Moon, Compass, Download, Activity, Award } from "lucide-react";
 import SkeletonCard from "@/components/SkeletonCard";
+import AppHeader from "@/components/AppHeader";
+import SectionTitle from "@/components/SectionTitle";
 
 function StatCard({ icon: Icon, label, value, accent }) {
   return (
@@ -70,9 +72,7 @@ export default function Career() {
 
   return (
     <div className="px-4 pt-6 pb-8">
-      <h1 className="text-xl font-bold text-cockpit-cream mb-4 flex items-center gap-2">
-        <Briefcase className="w-5 h-5 text-cockpit-amber" /> Career
-      </h1>
+      <AppHeader icon={Award} title="Career" subtitle="Totals & experience" />
 
       {/* Header */}
       {loading ? (
@@ -107,9 +107,7 @@ export default function Career() {
 
       {/* Hours by type */}
       <div className="mb-6">
-        <h2 className="text-sm font-semibold text-cockpit-muted uppercase tracking-wider mb-3">
-          Hours by type
-        </h2>
+        <SectionTitle icon={Plane}>Hours by type</SectionTitle>
         {typeStats === null ? (
           <SkeletonCard lines={3} />
         ) : Object.keys(typeStats).length === 0 ? (

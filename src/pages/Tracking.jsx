@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Radar, Share2, Plane } from "lucide-react";
+import AppHeader from "@/components/AppHeader";
+import SectionTitle from "@/components/SectionTitle";
 
 const AERODROMES = [
   { code: "FAGM", x: 25, y: 30 },
@@ -160,9 +162,7 @@ export default function Tracking() {
 
   return (
     <div className="px-4 pt-6 pb-8">
-      <h1 className="text-xl font-bold text-cockpit-cream mb-4 flex items-center gap-2">
-        <Radar className="w-5 h-5 text-cockpit-amber" /> Live Tracking
-      </h1>
+      <AppHeader icon={Radar} title="Live Tracking" subtitle="You + nearby traffic" />
 
       <RadarMap />
 
@@ -175,9 +175,7 @@ export default function Tracking() {
 
       {/* Nearby traffic */}
       <div className="mt-6">
-        <h2 className="text-sm font-semibold text-cockpit-muted uppercase tracking-wider mb-3">
-          Nearby traffic
-        </h2>
+        <SectionTitle icon={Plane}>Nearby traffic</SectionTitle>
         <div className="rounded-xl bg-cockpit-panel border border-cockpit-border px-4">
           {TRAFFIC_DATA.map((t) => (
             <TrafficRow key={t.reg} traffic={t} />

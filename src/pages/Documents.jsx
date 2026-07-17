@@ -6,16 +6,13 @@ import { ExpiryRing, dayDiff } from "@/components/documents/LicenceDetail";
 import LicenceForm from "@/components/documents/LicenceForm";
 import ExamForm from "@/components/documents/ExamForm";
 import EndorsementForm from "@/components/documents/EndorsementForm";
+import AppHeader from "@/components/AppHeader";
+import SectionTitle from "@/components/SectionTitle";
 
 function DocSection({ title, icon: Icon, action, items, loading, emptyText, renderItem }) {
   return (
     <div className="mb-6">
-      <div className="flex items-center justify-between mb-3">
-        <h2 className="text-sm font-semibold text-cockpit-muted uppercase tracking-wider flex items-center gap-1.5">
-          <Icon className="w-3.5 h-3.5" /> {title}
-        </h2>
-        {action}
-      </div>
+      <SectionTitle icon={Icon} action={action}>{title}</SectionTitle>
       {loading ? (
         <SkeletonCard lines={2} />
       ) : items.length === 0 ? (
@@ -148,12 +145,12 @@ export default function Documents() {
 
   return (
     <div className="px-4 pt-6">
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="text-xl font-bold text-cockpit-cream flex items-center gap-2">
-          <FileText className="w-5 h-5 text-cockpit-amber" /> Documents
-        </h1>
-        <AddButton label="Add" onClick={() => setLicenceModal({})} />
-      </div>
+      <AppHeader
+        icon={FileText}
+        title="Documents"
+        subtitle="Licences · currency · exams"
+        action={<AddButton label="Add" onClick={() => setLicenceModal({})} />}
+      />
 
       <DocSection
         title="Exams"
