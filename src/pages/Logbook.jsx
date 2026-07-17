@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { useToast } from "@/components/ui/use-toast";
 import usePilot from "@/hooks/usePilot";
@@ -154,6 +154,27 @@ export default function Logbook() {
   const [aircraftList, setAircraftList] = useState([]);
 
   const [selected, setSelected] = useState(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const flightIdParam = searchParams.get("flightId");
+
+  const openFlight = (flight) => {
+    setSelected(flight);
+    setSearchParams({ flightId: flight.id });
+  };
+  const closeFlight = () => {
+    setSelected(null);
+    setSearchParams({}, { replace: true });
+  };
+
+  // Sync the detail sheet with the URL so the Android back button dismisses it.
+  useEffect(() => {
+    if (flightIdParam) {
+      const f = (flights || []).find((x) => x.id === flightIdParam);
+      if (f && (!selected || selected.id !== f.id)) setSelected(f);
+    } else if (selected) {
+      setSelected(null);
+    }
+  }, [flightIdParam, flights]);
   const [deleting, setDeleting] = useState(false);
   const [exporting, setExporting] = useState(false);
 
@@ -321,7 +342,7 @@ export default function Logbook() {
       await base44.entities.Flight.delete(flight.id);
 
       setFlights((prev) => (prev || []).filter((f) => f.id !== flight.id));
-      setSelected(null);
+      closeFlight();
       toast({ title: "Flight deleted", description: "Totals reversed." });
     } catch (e) {
       toast({ title: "Delete failed", description: e.message, variant: "destructive" });
@@ -414,7 +435,7 @@ export default function Logbook() {
             {flights.map((f) => (
               <button
                 key={f.id}
-                onClick={() => setSelected(f)}
+                onClick={() => openFlight(f)}
                 className="relative w-full text-left ph-card p-4 pl-5 hover:border-cockpit-amber/20 transition-all active:scale-[0.98] overflow-hidden"
               >
                 <span className={`absolute left-0 top-0 bottom-0 w-[3px] ${f.is_rpas ? "bg-cockpit-glow-blue" : "bg-cockpit-amber"}`} />
@@ -461,7 +482,7 @@ export default function Logbook() {
         <FlightDetail
           flight={selected}
           aircraftReg={aircraftRegFor(selected)}
-          onClose={() => setSelected(null)}
+          onClose={closeFlight}
           onDelete={handleDelete}
           onEdit={() => navigate(`/edit-flight/${selected.id}`)}
           deleting={deleting}

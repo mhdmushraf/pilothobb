@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { useSearchParams } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Plane, Plus } from "lucide-react";
 import EmptyState from "@/components/EmptyState";
@@ -16,6 +17,27 @@ export default function Fleet() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [selected, setSelected] = useState(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const aircraftIdParam = searchParams.get("aircraftId");
+
+  const openAircraft = (ac) => {
+    setSelected(ac);
+    setSearchParams({ aircraftId: ac.id });
+  };
+  const closeAircraft = () => {
+    setSelected(null);
+    setSearchParams({}, { replace: true });
+  };
+
+  // Sync the detail sheet with the URL so the Android back button dismisses it.
+  useEffect(() => {
+    if (aircraftIdParam) {
+      const ac = (aircraft || []).find((a) => a.id === aircraftIdParam);
+      if (ac && (!selected || selected.id !== ac.id)) setSelected(ac);
+    } else if (selected) {
+      setSelected(null);
+    }
+  }, [aircraftIdParam, aircraft]);
 
   const loadAircraft = useCallback(async () => {
     const result = await base44.entities.Aircraft.list("-created_date", PAGE_SIZE + 1);
@@ -79,7 +101,7 @@ export default function Fleet() {
         <>
           <div className="space-y-2">
             {aircraft.map((ac) => (
-              <AircraftCard key={ac.id} ac={ac} onClick={() => setSelected(ac)} />
+              <AircraftCard key={ac.id} ac={ac} onClick={() => openAircraft(ac)} />
             ))}
           </div>
           {hasMore && (
@@ -105,7 +127,7 @@ export default function Fleet() {
       )}
 
       {selected && (
-        <AircraftDetail aircraft={selected} onClose={() => setSelected(null)} />
+        <AircraftDetail aircraft={selected} onClose={closeAircraft} />
       )}
     </div>
   );

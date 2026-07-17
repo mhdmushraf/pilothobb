@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { LayoutDashboard, BookOpen, Plane, MoreHorizontal, Plus, Radar } from "lucide-react";
 import { tap } from "@/lib/haptic";
 
@@ -14,6 +14,19 @@ const tabs = [
 
 export default function BottomNav() {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+
+  const handleTabClick = (e, tab) => {
+    tap();
+    const active = tab.path === "/" ? pathname === "/" : pathname.startsWith(tab.path);
+    if (active) {
+      // Already on this tab: clear any open detail overlay (URL search params)
+      // and scroll back to the top — native tab-tap behaviour.
+      e.preventDefault();
+      navigate(tab.path, { replace: true });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-cockpit-panel/95 backdrop-blur-lg border-t-2 border-cockpit-border shadow-[0_-8px_24px_rgba(0,0,0,0.35)]">
@@ -39,6 +52,7 @@ export default function BottomNav() {
             <Link
               key={tab.path}
               to={tab.path}
+              onClick={(e) => handleTabClick(e, tab)}
               className="relative flex flex-col items-center pt-2 pb-1 px-3 min-w-[56px] active:scale-95 transition-transform"
             >
               {active && (
