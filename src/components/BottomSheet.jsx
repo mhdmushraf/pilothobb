@@ -56,7 +56,7 @@ export default function BottomSheet({ onClose, children, className = "" }) {
         >
           <div className="w-10 h-1 rounded-full bg-cockpit-border" />
         </div>
-        <div className="px-5 pb-6">{children}</div>
+        <div className="px-5 pb-28">{children}</div>
       </motion.div>
     </div>
   );

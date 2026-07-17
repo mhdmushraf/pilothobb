@@ -100,7 +100,7 @@ export default function Onboarding() {
 
   return (
     <div
-      className="min-h-screen w-full overflow-hidden relative flex flex-col items-center px-4 py-8"
+      className="min-h-screen w-full overflow-y-auto relative flex flex-col items-center px-4 py-8 pb-28"
       style={{
         background:
           "radial-gradient(120% 60% at 50% -10%, rgba(255,157,46,.10), transparent 55%), #0A0E17",

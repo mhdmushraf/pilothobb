@@ -121,10 +121,9 @@
   animation: shimmer 1.5s ease-in-out infinite;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: #0A0E17; }
-::-webkit-scrollbar-thumb { background: #243049; border-radius: 4px; }
+/* Hide all scrollbars (scrolling still works) */
+* { scrollbar-width: none; -ms-overflow-style: none; }
+*::-webkit-scrollbar { display: none; width: 0; height: 0; }
 
 /* ===== Hero responsive stacking ===== */
 @media (max-width: 1024px) {

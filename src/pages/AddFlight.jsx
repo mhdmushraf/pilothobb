@@ -640,7 +640,7 @@ export default function AddFlight() {
   const stepContent = { 1: Step1, 2: Step2, 3: Step3, 4: Step4, 5: Step5 }[step];
 
   return (
-    <div className="px-4 pt-6 pb-4 max-w-lg mx-auto">
+    <div className="px-4 pt-6 pb-28 max-w-lg mx-auto">
       <div className="flex items-center gap-2 mb-5">
         {isEdit ? <Pencil className="w-5 h-5 text-cockpit-amber" /> : <Plus className="w-5 h-5 text-cockpit-amber" />}
         <h1 className="text-xl font-bold text-cockpit-cream">{isEdit ? "Edit Flight" : "Add Flight"}</h1>
@@ -660,7 +660,10 @@ export default function AddFlight() {
         </div>
       )}
 
-      <div className="flex items-center gap-3 mt-6">
+      <div
+        className="flex items-center gap-3 mt-6 pt-3 -mx-4 px-4 border-t border-cockpit-border"
+        style={{ position: "sticky", bottom: "calc(84px + env(safe-area-inset-bottom))", background: "linear-gradient(180deg, transparent, #0A0E17 30%)" }}
+      >
         {step > 1 && (
           <Button variant="ghost" onClick={prevStep} disabled={saving}
             className="ph-btn-ghost">
