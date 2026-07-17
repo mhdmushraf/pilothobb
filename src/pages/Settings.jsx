@@ -9,6 +9,7 @@ import usePilot from "@/hooks/usePilot";
 import SkeletonCard from "@/components/SkeletonCard";
 import AppHeader from "@/components/AppHeader";
 import SectionTitle from "@/components/SectionTitle";
+import ProfilePhoto from "@/components/ProfilePhoto";
 
 const AUTHORITIES = ["FAA", "EASA", "UK CAA", "SACAA", "CASA", "Other"];
 const LICENCE_TYPES = ["Student", "PPL", "CPL", "ATPL"];
@@ -68,6 +69,8 @@ export default function Settings() {
   return (
     <div className="px-4 pt-6 pb-8">
       <AppHeader icon={SettingsIcon} title="Settings" />
+
+      <ProfilePhoto pilot={pilot} onUpdated={reload} />
 
       <div className="space-y-4">
         <div>

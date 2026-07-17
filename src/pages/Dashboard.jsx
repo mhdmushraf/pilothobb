@@ -7,6 +7,7 @@ import SkeletonCard from "@/components/SkeletonCard";
 import EmptyState from "@/components/EmptyState";
 import HobbsCounter from "@/components/HobbsCounter";
 import Logo from "@/components/Logo";
+import Avatar from "@/components/Avatar";
 import { usePullToRefresh } from "@/hooks/usePullToRefresh";
 
 function DroneIcon({ className }) {
@@ -190,11 +191,7 @@ export default function Dashboard() {
         <Logo size={30} />
         <Link to="/career" className="shrink-0 rounded-full p-[1.5px]"
               style={{ background: "linear-gradient(135deg,#FF9D2E,#4A90D9)" }}>
-          <span className="flex w-11 h-11 rounded-full bg-cockpit-panel items-center justify-center">
-            <span className="font-heading text-sm font-bold text-cockpit-amber">
-              {initials(pilot?.full_name)}
-            </span>
-          </span>
+          <Avatar pilot={pilot} size={44} />
         </Link>
       </div>
       <div className="mb-6">

@@ -6,6 +6,7 @@ import usePilot from "@/hooks/usePilot";
 import { Briefcase, Clock, Plane, Moon, Compass, Download, Activity, Award, Plus } from "lucide-react";
 import SkeletonCard from "@/components/SkeletonCard";
 import AppHeader from "@/components/AppHeader";
+import Avatar from "@/components/Avatar";
 import SectionTitle from "@/components/SectionTitle";
 
 function StatCard({ icon: Icon, label, value, accent, barColor }) {
@@ -79,19 +80,22 @@ export default function Career() {
       {loading ? (
         <SkeletonCard lines={2} />
       ) : (
-        <div className="ph-card p-4 mb-4">
-          <p className="text-lg font-bold text-cockpit-cream">{pilot?.full_name || "Pilot"}</p>
-          <div className="flex gap-2 mt-1.5">
-            {pilot?.authority && (
-              <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-cockpit-amber/10 text-cockpit-amber">
-                {pilot.authority}
-              </span>
-            )}
-            {pilot?.licence_type && (
-              <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-cockpit-valid/10 text-cockpit-valid">
-                {pilot.licence_type}
-              </span>
-            )}
+        <div className="ph-card p-4 mb-4 flex items-center gap-4">
+          <Avatar pilot={pilot} size={56} />
+          <div className="min-w-0">
+            <p className="text-lg font-bold text-cockpit-cream">{pilot?.full_name || "Pilot"}</p>
+            <div className="flex gap-2 mt-1.5">
+              {pilot?.authority && (
+                <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-cockpit-amber/10 text-cockpit-amber">
+                  {pilot.authority}
+                </span>
+              )}
+              {pilot?.licence_type && (
+                <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-cockpit-valid/10 text-cockpit-valid">
+                  {pilot.licence_type}
+                </span>
+              )}
+            </div>
           </div>
         </div>
       )}

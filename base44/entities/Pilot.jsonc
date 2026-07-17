@@ -36,6 +36,9 @@
     "home_aerodrome": {
       "type": "string"
     },
+    "avatar_url": {
+      "type": "string"
+    },
     "total_time": {
       "type": "number",
       "default": 0
