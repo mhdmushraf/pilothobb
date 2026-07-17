@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import {
-  BookOpen, Plane, Trash2, X, FileDown, BarChart3, Loader2, ChevronRight,
+  BookOpen, Plane, Trash2, X, FileDown, BarChart3, Loader2, ChevronRight, Pencil,
 } from "lucide-react";
 import EmptyState from "@/components/EmptyState";
 import SkeletonCard from "@/components/SkeletonCard";
@@ -49,7 +49,7 @@ function DetailRow({ label, value }) {
   );
 }
 
-function FlightDetail({ flight, aircraftReg, onClose, onDelete, deleting }) {
+function FlightDetail({ flight, aircraftReg, onClose, onDelete, onEdit, deleting }) {
   const date = flight.date ? new Date(flight.date).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) : "—";
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 p-0 sm:p-4" onClick={onClose}>
@@ -107,15 +107,24 @@ function FlightDetail({ flight, aircraftReg, onClose, onDelete, deleting }) {
           </div>
         )}
 
-        <Button
-          onClick={onDelete}
-          disabled={deleting}
-          variant="outline"
-          className="w-full border-cockpit-expired/30 text-cockpit-expired hover:bg-cockpit-expired/10"
-        >
-          {deleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
-          {deleting ? "Deleting…" : "Delete flight — reverses totals"}
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            onClick={onEdit}
+            variant="outline"
+            className="flex-1 border-cockpit-amber/30 text-cockpit-amber hover:bg-cockpit-amber/10"
+          >
+            <Pencil className="w-4 h-4" /> Edit
+          </Button>
+          <Button
+            onClick={onDelete}
+            disabled={deleting}
+            variant="outline"
+            className="flex-1 border-cockpit-expired/30 text-cockpit-expired hover:bg-cockpit-expired/10"
+          >
+            {deleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+            {deleting ? "Deleting…" : "Delete"}
+          </Button>
+        </div>
       </div>
     </div>
   );
@@ -441,6 +450,7 @@ export default function Logbook() {
           aircraftReg={aircraftRegFor(selected)}
           onClose={() => setSelected(null)}
           onDelete={handleDelete}
+          onEdit={() => navigate(`/edit-flight/${selected.id}`)}
           deleting={deleting}
         />
       )}

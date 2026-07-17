@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { useToast } from "@/components/ui/use-toast";
 import usePilot from "@/hooks/usePilot";
@@ -12,7 +12,7 @@ import {
   Select, SelectTrigger, SelectValue, SelectContent, SelectItem,
 } from "@/components/ui/select";
 import {
-  Plus, ChevronLeft, ChevronRight, Camera, Plane, Check, Minus, Loader2, Shield,
+  Plus, ChevronLeft, ChevronRight, Camera, Plane, Check, Minus, Loader2, Shield, Pencil,
 } from "lucide-react";
 import SkeletonCard from "@/components/SkeletonCard";
 
@@ -80,6 +80,8 @@ export default function AddFlight() {
   const { pilot, loading: pilotLoading } = usePilot();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { id } = useParams();
+  const isEdit = !!id;
 
   const [step, setStep] = useState(1);
   const [aircraftList, setAircraftList] = useState(null);
@@ -87,6 +89,7 @@ export default function AddFlight() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
   const [scanning, setScanning] = useState(false);
+  const [originalFlight, setOriginalFlight] = useState(null);
   const fileRef = useRef(null);
 
   const [form, setForm] = useState({
@@ -123,6 +126,48 @@ export default function AddFlight() {
       .then(setAircraftList)
       .catch(() => setAircraftList([]));
   }, []);
+
+  useEffect(() => {
+    if (!isEdit || !id || !aircraftList) return;
+    base44.entities.Flight.get(id).then((flight) => {
+      setOriginalFlight(flight);
+      const acId = typeof flight.aircraft === "string" ? flight.aircraft : flight.aircraft?.id;
+      const ac = aircraftList.find((a) => a.id === acId);
+      if (ac) setAircraft(ac);
+      setForm((f) => ({
+        ...f,
+        reading_before: flight.reading_before ?? 0,
+        reading_after: flight.reading_after ?? 0,
+        flight_time: flight.flight_time ?? 0,
+        mission_type: flight.mission_type || "",
+        operation_category: flight.operation_category || "",
+        battery_cycles: flight.battery_cycles ?? 0,
+        observer: flight.observer || "",
+        launch_site: flight.from_aerodrome || "",
+        recovery_site: flight.to_aerodrome || "",
+        from_aerodrome: flight.from_aerodrome || "",
+        to_aerodrome: flight.to_aerodrome || "",
+        stops: [{ name: "", tg: flight.touch_and_go || 0 }],
+        manualCounts: false,
+        takeoffs: flight.takeoffs ?? 1,
+        landings: flight.landings ?? 1,
+        pilot_role: flight.pilot_role || "PIC",
+        night_time: flight.night_time ?? 0,
+        night_landings: flight.night_landings ?? 0,
+        night_takeoffs: flight.night_takeoffs ?? 0,
+        xc_time: flight.xc_time ?? 0,
+        instrument_actual: flight.instrument_actual ?? 0,
+        instrument_sim: flight.instrument_sim ?? 0,
+        sim_time: flight.sim_time ?? 0,
+        autorotations: flight.autorotations ?? 0,
+        hoist_cycles: flight.hoist_cycles ?? 0,
+        remarks: flight.remarks || "",
+      }));
+    }).catch(() => {
+      toast({ title: "Flight not found", variant: "destructive" });
+      navigate("/logbook");
+    });
+  }, [id, aircraftList, isEdit]);
 
   const isRpas = aircraft?.category === "Drone (RPAS)";
   const isHeli = aircraft?.category === "Helicopter";
@@ -209,7 +254,7 @@ export default function AddFlight() {
     let created = null;
     try {
       const flightData = {
-        date: todayStr(),
+        date: isEdit ? originalFlight.date : todayStr(),
         aircraft: aircraft.id,
         is_rpas: isRpas,
         flight_time: flightTime,
@@ -249,14 +294,29 @@ export default function AddFlight() {
         flightData.hoist_cycles = Number(form.hoist_cycles) || 0;
       }
 
-      created = await base44.entities.Flight.create(flightData);
+      if (isEdit) {
+        const rev = computeTotals(originalFlight, pilot, aircraft, -1);
+        await base44.entities.Pilot.update(pilot.id, rev.pilotPatch);
+        if (aircraft) await base44.entities.Aircraft.update(aircraft.id, rev.aircraftPatch);
 
-      const { pilotPatch, aircraftPatch } = computeTotals(created, pilot, aircraft, 1);
-      await base44.entities.Pilot.update(pilot.id, pilotPatch);
-      await base44.entities.Aircraft.update(aircraft.id, aircraftPatch);
+        await base44.entities.Flight.update(id, flightData);
 
-      toast({ title: "Flight saved" });
-      navigate("/logbook");
+        const add = computeTotals({ ...flightData, id }, rev.pilotPatch, rev.aircraftPatch, 1);
+        await base44.entities.Pilot.update(pilot.id, add.pilotPatch);
+        if (aircraft) await base44.entities.Aircraft.update(aircraft.id, add.aircraftPatch);
+
+        toast({ title: "Flight updated" });
+        navigate("/logbook");
+      } else {
+        created = await base44.entities.Flight.create(flightData);
+
+        const { pilotPatch, aircraftPatch } = computeTotals(created, pilot, aircraft, 1);
+        await base44.entities.Pilot.update(pilot.id, pilotPatch);
+        await base44.entities.Aircraft.update(aircraft.id, aircraftPatch);
+
+        toast({ title: "Flight saved" });
+        navigate("/logbook");
+      }
     } catch (e) {
       if (created) {
         try { await base44.entities.Flight.delete(created.id); } catch { /* best-effort cleanup */ }
@@ -558,7 +618,7 @@ export default function AddFlight() {
       <div className="rounded-xl bg-cockpit-panel border border-cockpit-border p-4 space-y-2">
         <div className="flex justify-between"><span className="text-xs text-cockpit-muted">Aircraft</span><span className="text-sm text-cockpit-cream font-mono">{aircraft?.registration}</span></div>
         <div className="flex justify-between"><span className="text-xs text-cockpit-muted">Mode</span><span className="text-sm text-cockpit-cream">{isRpas ? "RPAS" : "Manned"}</span></div>
-        <div className="flex justify-between"><span className="text-xs text-cockpit-muted">Date</span><span className="text-sm text-cockpit-cream font-mono">{todayStr()}</span></div>
+        <div className="flex justify-between"><span className="text-xs text-cockpit-muted">Date</span><span className="text-sm text-cockpit-cream font-mono">{isEdit ? (originalFlight?.date || todayStr()) : todayStr()}</span></div>
         <div className="flex justify-between"><span className="text-xs text-cockpit-muted">Flight time</span><span className="text-sm text-cockpit-amber font-mono font-bold">{flightTime.toFixed(1)} hrs</span></div>
         {!isRpas && (
           <>
@@ -587,13 +647,13 @@ export default function AddFlight() {
   return (
     <div className="px-4 pt-6 pb-4 max-w-lg mx-auto">
       <div className="flex items-center gap-2 mb-5">
-        <Plus className="w-5 h-5 text-cockpit-amber" />
-        <h1 className="text-xl font-bold text-cockpit-cream">Add Flight</h1>
+        {isEdit ? <Pencil className="w-5 h-5 text-cockpit-amber" /> : <Plus className="w-5 h-5 text-cockpit-amber" />}
+        <h1 className="text-xl font-bold text-cockpit-cream">{isEdit ? "Edit Flight" : "Add Flight"}</h1>
       </div>
 
       <StepDots step={step} isRpas={isRpas} />
 
-      {stepContent}
+      {isEdit && !originalFlight ? <SkeletonCard lines={4} /> : stepContent}
 
       {error && (
         <div className="mt-4 rounded-xl bg-cockpit-expired/10 border border-cockpit-expired/30 p-3">
@@ -618,7 +678,7 @@ export default function AddFlight() {
           <Button onClick={handleSave} disabled={saving || pilotLoading}
             className="bg-cockpit-valid text-cockpit-bg hover:bg-cockpit-valid/90">
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
-            {saving ? "Saving…" : "Save flight"}
+            {saving ? "Saving…" : isEdit ? "Save changes" : "Save flight"}
           </Button>
         )}
       </div>
