@@ -15,6 +15,7 @@ import {
   Plus, ChevronLeft, ChevronRight, Camera, Plane, Check, Minus, Loader2, Shield, Pencil,
 } from "lucide-react";
 import SkeletonCard from "@/components/SkeletonCard";
+import MeterScanner from "@/components/MeterScanner";
 import { tap } from "@/lib/haptic";
 
 const r1 = (n) => Math.round((Number(n) || 0) * 10) / 10;
@@ -83,8 +84,10 @@ export default function AddFlight() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
   const [scanning, setScanning] = useState(false);
+  const [showScanner, setShowScanner] = useState(false);
   const [originalFlight, setOriginalFlight] = useState(null);
   const fileRef = useRef(null);
+  const readingAfterRef = useRef(null);
 
   const [form, setForm] = useState({
     reading_before: 0,
@@ -178,9 +181,7 @@ export default function AddFlight() {
     }));
   };
 
-  const handleScan = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const handleScanCapture = async (file) => {
     setScanning(true);
     try {
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
@@ -199,11 +200,12 @@ export default function AddFlight() {
       const reading = r1(result.reading);
       set("reading_after", reading);
       toast({ title: `Meter read: ${reading} (${result.confidence || "—"})` });
+      setShowScanner(false);
     } catch {
       toast({ title: "Couldn't read the meter — enter it manually." });
+      setShowScanner(false);
     } finally {
       setScanning(false);
-      e.target.value = "";
     }
   };
 
@@ -421,14 +423,14 @@ export default function AddFlight() {
           className="bg-cockpit-panel-light border-cockpit-border text-cockpit-cream font-mono" />
       </Field>
       <Field label="Reading after">
-        <Input type="number" step="0.1" value={form.reading_after}
+        <Input ref={readingAfterRef} type="number" step="0.1" value={form.reading_after}
           onChange={(e) => set("reading_after", e.target.value)}
           className="bg-cockpit-panel-light border-cockpit-border text-cockpit-cream font-mono" />
       </Field>
       <input ref={fileRef} type="file" accept="image/*" capture="environment"
-        className="hidden" onChange={handleScan} />
-      <button type="button" disabled={scanning} onClick={() => fileRef.current?.click()}
-        className="w-full rounded-xl border border-dashed border-cockpit-border bg-cockpit-panel py-3 flex items-center justify-center gap-2 text-cockpit-muted text-sm disabled:opacity-50">
+        className="hidden" onChange={handleScanCapture} />
+      <button type="button" disabled={scanning} onClick={() => setShowScanner(true)}
+        className="w-full rounded-xl border border-dashed border-cockpit-border bg-cockpit-panel py-3 flex items-center justify-center gap-2 text-cockpit-muted text-sm disabled:opacity-50 active:scale-[0.98] transition-transform">
         {scanning ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4" />}
         {scanning ? "Reading meter…" : "Scan Hobbs with camera"}
       </button>
@@ -720,6 +722,17 @@ export default function AddFlight() {
           to { opacity: 1; transform: translateY(0); }
         }
       `}</style>
+
+      {showScanner && (
+        <MeterScanner
+          onClose={() => setShowScanner(false)}
+          onManualEnter={() => {
+            setShowScanner(false);
+            setTimeout(() => readingAfterRef.current?.focus(), 100);
+          }}
+          onCapture={handleScanCapture}
+        />
+      )}
     </div>
   );
 }
