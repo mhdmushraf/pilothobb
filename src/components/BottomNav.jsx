@@ -15,7 +15,7 @@ export default function BottomNav() {
   const { pathname } = useLocation();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-cockpit-panel/95 backdrop-blur-lg border-t border-cockpit-border">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-cockpit-panel/95 backdrop-blur-lg border-t-2 border-cockpit-border shadow-[0_-8px_24px_rgba(0,0,0,0.35)]">
       <div className="flex items-end justify-around px-2 pb-[env(safe-area-inset-bottom)] max-w-lg mx-auto">
         {tabs.map((tab) => {
           const active = tab.path === "/" ? pathname === "/" : pathname.startsWith(tab.path);
@@ -37,8 +37,11 @@ export default function BottomNav() {
             <Link
               key={tab.path}
               to={tab.path}
-              className="flex flex-col items-center pt-2 pb-1 px-3 min-w-[56px]"
+              className="relative flex flex-col items-center pt-2 pb-1 px-3 min-w-[56px] active:scale-95 transition-transform"
             >
+              {active && (
+                <span className="absolute top-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-cockpit-amber shadow-[0_0_8px_2px_rgba(255,157,46,0.5)]" />
+              )}
               <Icon
                 className={`w-5 h-5 mb-0.5 transition-colors ${active ? "text-cockpit-amber" : "text-cockpit-muted"}`}
               />
