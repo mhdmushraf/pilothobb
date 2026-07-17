@@ -23,8 +23,8 @@ export default function AuthLayout({ icon: Icon, title, subtitle, footer, childr
               <Icon className="w-5 h-5 text-cockpit-amber" aria-hidden="true" />
             </div>
           )}
-          <h1 className="text-3xl font-heading font-bold tracking-tight text-cockpit-cream">{title}</h1>
-          {subtitle && <p className="text-cockpit-muted mt-2">{subtitle}</p>}
+          <h1 className="text-2xl font-heading font-semibold tracking-tight text-cockpit-cream">{title}</h1>
+          {subtitle && <p className="text-sm text-cockpit-muted mt-1.5 tracking-tight">{subtitle}</p>}
         </div>
 
         <div
