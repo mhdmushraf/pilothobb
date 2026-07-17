@@ -20,11 +20,13 @@ export default function BottomNav() {
     tap();
     const active = tab.path === "/" ? pathname === "/" : pathname.startsWith(tab.path);
     if (active) {
-      // Already on this tab: clear any open detail overlay (URL search params)
-      // and scroll back to the top — native tab-tap behaviour.
+      // Already on this tab: clear any open detail overlay / search params,
+      // reset child routing to the tab root, and scroll back to the top —
+      // native tab-tap behaviour. rAF ensures the scroll runs after the
+      // location update and any overlay unmount.
       e.preventDefault();
       navigate(tab.path, { replace: true });
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
     }
   };
 

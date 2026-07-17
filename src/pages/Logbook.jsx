@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { useToast } from "@/components/ui/use-toast";
@@ -138,6 +138,9 @@ export default function Logbook() {
   const [flights, setFlights] = useState(
     location.state?.optimisticFlight ? [location.state.optimisticFlight] : null
   );
+  // Tracks a just-created flight shown optimistically before the server list
+  // reloads; used to roll back the local entry if creation failed server-side.
+  const optimisticRef = useRef(location.state?.optimisticFlight?.id || null);
 
   useEffect(() => {
     if (location.state?.optimisticFlight) {
@@ -197,6 +200,12 @@ export default function Logbook() {
       setHasMore(result.length > PAGE_SIZE);
       const slice = result.slice(0, PAGE_SIZE);
       setFlights((prev) => (append ? dedupe([...(prev || []), ...slice]) : slice));
+      // Creation rollback: if the optimistic entry isn't on the server's first
+      // page, the creation failed/was rolled back — drop the stale local copy.
+      if (!append && optimisticRef.current && !slice.some((f) => f.id === optimisticRef.current)) {
+        dropOptimisticFlight(optimisticRef.current);
+      }
+      if (!append) optimisticRef.current = null;
     } catch {
       setFlights((prev) => prev ?? []);
     } finally {
@@ -326,26 +335,64 @@ export default function Logbook() {
     }
   };
 
+  // Rollback: restore a flight that was optimistically removed from the list.
+  const restoreFlightToList = (flight) => {
+    setFlights((prev) => {
+      if ((prev || []).some((f) => f.id === flight.id)) return prev;
+      return [...(prev || []), flight];
+    });
+  };
+
+  // Rollback: drop a stale optimistic flight entry when creation failed
+  // server-side (a just-created flight is newest, so it would appear on page 0).
+  const dropOptimisticFlight = (flightId) => {
+    if (!flightId) return;
+    setFlights((prev) => (prev || []).filter((f) => f.id !== flightId));
+  };
+
   const handleDelete = async () => {
     if (!selected || !pilot) return;
     setDeleting(true);
-    try {
-      const flight = selected;
-      const aircraftId = typeof flight.aircraft === "string" ? flight.aircraft : flight.aircraft?.id;
-      let ac = aircraftList.find((a) => a.id === aircraftId);
-      if (!ac && aircraftId) {
-        ac = await base44.entities.Aircraft.get(aircraftId);
-      }
-      const { pilotPatch, aircraftPatch } = computeTotals(flight, pilot, ac, -1);
-      await base44.entities.Pilot.update(pilot.id, pilotPatch);
-      if (ac) await base44.entities.Aircraft.update(ac.id, aircraftPatch);
-      await base44.entities.Flight.delete(flight.id);
+    const flight = selected;
+    const aircraftId = typeof flight.aircraft === "string" ? flight.aircraft : flight.aircraft?.id;
+    let ac = aircraftList.find((a) => a.id === aircraftId);
+    if (!ac && aircraftId) {
+      try { ac = await base44.entities.Aircraft.get(aircraftId); } catch { ac = null; }
+    }
 
-      setFlights((prev) => (prev || []).filter((f) => f.id !== flight.id));
+    // Optimistically remove the flight from the visible list.
+    setFlights((prev) => (prev || []).filter((f) => f.id !== flight.id));
+
+    let pilotPatch = {};
+    let aircraftPatch = {};
+    let appliedPilot = false;
+    let appliedAc = false;
+    try {
+      const rev = computeTotals(flight, pilot, ac, -1);
+      pilotPatch = rev.pilotPatch;
+      aircraftPatch = rev.aircraftPatch;
+      await base44.entities.Pilot.update(pilot.id, pilotPatch);
+      appliedPilot = true;
+      if (ac) {
+        await base44.entities.Aircraft.update(ac.id, aircraftPatch);
+        appliedAc = true;
+      }
+      await base44.entities.Flight.delete(flight.id);
       closeFlight();
       toast({ title: "Flight deleted", description: "Totals reversed." });
     } catch (e) {
-      toast({ title: "Delete failed", description: e.message, variant: "destructive" });
+      // Roll back the optimistic removal and reverse any totals already applied.
+      restoreFlightToList(flight);
+      if (appliedPilot || appliedAc) {
+        try {
+          const updatedPilot = { ...pilot, ...pilotPatch };
+          const updatedAc = ac ? { ...ac, ...aircraftPatch } : null;
+          const redo = computeTotals(flight, updatedPilot, updatedAc, 1);
+          if (appliedPilot) await base44.entities.Pilot.update(pilot.id, redo.pilotPatch);
+          if (appliedAc && ac) await base44.entities.Aircraft.update(ac.id, redo.aircraftPatch);
+        } catch { /* best-effort rollback */ }
+      }
+      toast({ title: "Delete failed", description: "Changes were rolled back.", variant: "destructive" });
     } finally {
       setDeleting(false);
     }

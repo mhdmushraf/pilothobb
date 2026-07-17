@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import SkeletonCard from "@/components/SkeletonCard";
 import MeterScanner from "@/components/MeterScanner";
+import AppHeader from "@/components/AppHeader";
 import { tap } from "@/lib/haptic";
 
 const r1 = (n) => Math.round((Number(n) || 0) * 10) / 10;
@@ -642,10 +643,10 @@ export default function AddFlight() {
 
   return (
     <div className="px-4 pt-6 pb-28 max-w-lg mx-auto">
-      <div className="flex items-center gap-2 mb-5">
-        {isEdit ? <Pencil className="w-5 h-5 text-cockpit-amber" /> : <Plus className="w-5 h-5 text-cockpit-amber" />}
-        <h1 className="text-xl font-bold text-cockpit-cream">{isEdit ? "Edit Flight" : "Add Flight"}</h1>
-      </div>
+      <AppHeader
+        icon={isEdit ? Pencil : Plus}
+        title={isEdit ? "Edit Flight" : "Add Flight"}
+      />
 
       <StepDots step={step} isRpas={isRpas} />
 
