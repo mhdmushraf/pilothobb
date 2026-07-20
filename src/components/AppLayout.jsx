@@ -2,6 +2,7 @@ import React, { useEffect, useLayoutEffect } from "react";
 import { Outlet, Navigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import BottomNav from "@/components/BottomNav";
+import Seo from "@/components/Seo";
 import usePilot from "@/hooks/usePilot";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import Dashboard from "@/pages/Dashboard";
@@ -55,6 +56,7 @@ export default function AppLayout() {
 
   return (
     <div className="min-h-screen bg-cockpit-bg safe-top">
+      <Seo noindex title="PilotHobb" description="PilotHobb digital pilot logbook." />
       <main className="app-scroll pb-24 max-w-lg mx-auto">
         {ActiveTab ? (
           Object.entries(TAB_PAGES).map(([path, Comp]) => (

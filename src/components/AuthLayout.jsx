@@ -1,6 +1,7 @@
 import React from "react";
 import Logo from "@/components/Logo";
 import AnimatedBackground from "@/components/AnimatedBackground";
+import Seo from "@/components/Seo";
 
 export default function AuthLayout({ icon: Icon, title, subtitle, footer, children }) {
   return (
@@ -8,6 +9,7 @@ export default function AuthLayout({ icon: Icon, title, subtitle, footer, childr
       className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden"
       style={{ background: "radial-gradient(120% 60% at 50% -10%, rgba(255,157,46,.10), transparent 55%), #0A0E17" }}
     >
+      <Seo noindex title="PilotHobb" description="PilotHobb digital pilot logbook." />
       {/* live airspace canvas, dimmed, behind everything */}
       <div className="pointer-events-none absolute inset-0 opacity-40">
         <AnimatedBackground />

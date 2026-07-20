@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { base44 } from "@/api/base44Client";
+import Seo from "@/components/Seo";
 
 export default function Contact() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
@@ -37,6 +38,11 @@ export default function Contact() {
 
   return (
     <>
+      <Seo
+        path="/contact"
+        title="Contact PilotHobb"
+        description="Get in touch with the PilotHobb team about the digital pilot logbook app, SACAA logbook exports, or drone (RPAS) hour tracking."
+      />
       <PageHeader
         eyebrow="Contact"
         title="Let's talk."

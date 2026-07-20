@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Check } from "lucide-react";
+import Seo from "@/components/Seo";
 
 const TOTAL_STEPS = 5;
 
@@ -106,6 +107,7 @@ export default function Onboarding() {
           "radial-gradient(120% 60% at 50% -10%, rgba(255,157,46,.10), transparent 55%), #0A0E17",
       }}
     >
+      <Seo noindex title="PilotHobb" description="PilotHobb digital pilot logbook." />
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="flex justify-center mb-6">

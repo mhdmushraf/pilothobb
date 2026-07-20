@@ -3,6 +3,7 @@ import { Gauge, ShieldAlert, Camera, BookOpen, Image, Briefcase } from "lucide-r
 import PageHeader from "@/components/PageHeader";
 import FeatureDetail from "@/components/landing/FeatureDetail";
 import FeaturesCTA from "@/components/landing/FeaturesCTA";
+import Seo from "@/components/Seo";
 import {
   RouteVisual,
   CurrencyVisual,
@@ -15,6 +16,11 @@ import {
 export default function Features() {
   return (
     <>
+      <Seo
+        path="/features"
+        title="Features — Hobbs/Tach Logging, Currency Alerts & RPAS Hours | PilotHobb"
+        description="Log flights straight from Hobbs or Tach readings with camera scanning, auto-calculate touch-and-go landings, track licence, medical and rating expiry, monitor MPI and oil hours, and keep drone (RPAS) hours separate from manned time."
+      />
       <PageHeader
         title="Everything a pilot has to track — in one place."
         subtitle="From the first training flight to ATPL, PilotHobb keeps your hours, currency and paperwork current, automatically."

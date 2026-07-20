@@ -2,6 +2,7 @@ import React from "react";
 import { Target, Lock, Globe2 } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import ScrollReveal from "@/components/ScrollReveal";
+import Seo from "@/components/Seo";
 
 const values = [
   {
@@ -31,6 +32,11 @@ const stats = [
 export default function About() {
   return (
     <>
+      <Seo
+        path="/about"
+        title="About PilotHobb — A Modern Replacement for the Paper Logbook"
+        description="PilotHobb is a worldwide digital pilot logbook replacing paper: Hobbs and Tach hour tracking, licence currency reminders, aircraft maintenance monitoring, and RPAS drone hours in one place."
+      />
       <PageHeader eyebrow="About" title="Made by a pilot, for pilots." />
 
       {/* Story */}

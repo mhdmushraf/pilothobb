@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Check } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import ScrollReveal from "@/components/ScrollReveal";
+import Seo from "@/components/Seo";
 
 const tiers = [
   {
@@ -87,6 +88,11 @@ const tabletClasses = [
 export default function Pricing() {
   return (
     <>
+      <Seo
+        path="/pricing"
+        title="Pricing — PilotHobb Digital Pilot Logbook"
+        description="Simple pricing for PilotHobb, the digital logbook for student, private and commercial pilots. Track flight hours, currency, aircraft maintenance and drone (RPAS) time in one app."
+      />
       <PageHeader
         eyebrow="Pricing"
         title="One subscription. Your whole flying career."
