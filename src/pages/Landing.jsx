@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import Seo from "@/components/Seo";
 
-const LOGO = "https://media.base44.com/images/public/6a455fc5475b58bb52305622/18e6981fd_pilothobb-icon.svg";
+const LOGO = "https://media.base44.com/images/public/6a455fc5475b58bb52305622/a0460c0c0_pilothobb-mark.svg";
 const HERO_IMG = "https://lh3.googleusercontent.com/aida-public/AB6AXuD4RrnZZ1PmAAiOK4UNRinKFc71Gu7Pctx8ud2O1q4QfUNWKaTA5cRr33ZpvunRY4MaIeeqHTsKSve8Y5m7HfFvgob8v3-WbvTEbzDCqtlsBtzIWSuLks_4wHdRRgXTKoMD0mwRNunf1wiC9Lc4RBt-fgivMK3HYbjwj4_GPZoHQJ4gvPE_VjWJv14nDDz7Bo-lEEa6BU8r_N452ueGWWk-agONrq-D6MqhuVEa6FG2lX08l_oSaVLb1LpPFK8o_9vFgqLJnBWEoOj8";
 const DRONE_IMG = "https://lh3.googleusercontent.com/aida-public/AB6AXuD-Us9psyIq1rPxWQ0zbJRJ1q_aZvcFgtTGQ3KDInhnEYROhIx6edmF-qyrgJPyuoCUPK6QGf21YHla9BXKpHj8jcEWQZphxwq4fAj2ZsNN-SVpOFOJnOKVUJVFu_kVsN0Q10F-aTNEeNWRzlPaepuTt4cJbDL8oT6tkmk-sGO7hq4f7HlkcmPGR0fNgc_IeKBvG7WaYmQrL_4F_qYP9dCLV06aXq-0yFKsd2MAuO-HL0_ybY1bMDCA8nCpUEfs_vCb40djZsCSldy3";
 
@@ -84,7 +84,7 @@ function NavBar() {
     <header className={`fixed top-0 w-full z-50 backdrop-blur-md transition-all ${scrolled ? "bg-[#f7f9fb]/90 shadow-sm" : "bg-[#f7f9fb]/70"}`}>
       <div className="flex justify-between items-center h-16 px-4 md:px-8 max-w-[1280px] mx-auto w-full">
         <a href="#top" className="flex items-center gap-2.5">
-          <img src={LOGO} alt="PilotHobb" className="w-8 h-8" />
+          <img src={LOGO} alt="PilotHobb" className="h-9 w-9" />
           <span className="text-[22px] font-heading font-bold tracking-tight"><span className="text-[#4f46e5]">Pilot</span><span className="text-[#0f172a]">Hobb</span></span>
         </a>
         <nav className="hidden md:flex items-center gap-8">
@@ -317,7 +317,7 @@ export default function Landing() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mb-16">
             <div className="col-span-2 md:col-span-1">
               <div className="flex items-center gap-2.5 mb-6">
-                <img src={LOGO} alt="PilotHobb" className="w-8 h-8" />
+                <img src={LOGO} alt="PilotHobb" className="h-9 w-9" />
                 <span className="text-[22px] font-heading font-bold tracking-tight"><span className="text-[#4f46e5]">Pilot</span><span className="text-[#0f172a]">Hobb</span></span>
               </div>
               <p className="text-[14px] text-[#464555]">Your logbook, down to the tenth of an hour. Professional tools for the modern cockpit and remote control station.</p>
