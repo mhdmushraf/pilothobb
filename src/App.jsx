@@ -65,9 +65,11 @@ const AuthenticatedApp = () => {
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
 
+      {/* Landing (standalone light marketing page) */}
+      <Route path="/" element={<RootEntry />} />
+
       {/* Marketing (public) */}
       <Route element={<MarketingLayout />}>
-        <Route path="/" element={<RootEntry />} />
         <Route path="/features" element={<Features />} />
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/about" element={<About />} />
