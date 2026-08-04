@@ -2,7 +2,11 @@ import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
 
-const BACK_ROUTES = ["/settings", "/documents", "/career", "/tracking", "/add-flight", "/edit-flight"];
+const BACK_ROUTES = [
+  "/settings", "/documents", "/career", "/tracking", "/add-flight", "/edit-flight",
+  "/analytics", "/currency", "/schedule", "/checklists", "/export", "/flight-map",
+  "/maintenance-log", "/pilot-notes", "/aerodromes", "/goals",
+];
 
 export default function AppHeader({ icon: Icon, title, subtitle, action }) {
   const location = useLocation();
