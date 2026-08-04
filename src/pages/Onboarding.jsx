@@ -104,7 +104,7 @@ export default function Onboarding() {
       className="min-h-screen w-full overflow-y-auto relative flex flex-col items-center px-4 py-8 pb-28"
       style={{
         background:
-          "radial-gradient(120% 60% at 50% -10%, rgba(255,157,46,.10), transparent 55%), #0A0E17",
+          "radial-gradient(120% 60% at 50% -10%, rgba(79,70,229,.10), transparent 55%), #F7F9FB",
       }}
     >
       <Seo noindex title="PilotHobb" description="PilotHobb digital pilot logbook." />
@@ -343,10 +343,10 @@ export default function Onboarding() {
           to { opacity: 1; transform: translateX(0); }
         }
         .ph-btn-primary {
-          background: linear-gradient(180deg, #FFC062, #FF9D2E);
-          color: #0A0E17;
+          background: linear-gradient(180deg, #6366F1, #4F46E5);
+          color: #F7F9FB;
           border: none;
-          box-shadow: 0 4px 16px rgba(255,157,46,0.3);
+          box-shadow: 0 4px 16px rgba(79,70,229,0.3);
           font-weight: 600;
           border-radius: 0.75rem;
           height: 2.75rem;
@@ -354,16 +354,16 @@ export default function Onboarding() {
         .ph-btn-primary:hover { filter: brightness(1.05); }
         .ph-btn-primary:disabled { opacity: 0.5; }
         .ph-btn-ghost {
-          background: #1A2336;
-          border: 1px solid #243049;
-          color: #8893A8;
+          background: #F2F4F6;
+          border: 1px solid #E2E8F0;
+          color: #6B7280;
           border-radius: 0.75rem;
           height: 2.75rem;
         }
-        .ph-btn-ghost:hover { color: #F3ECDD; }
+        .ph-btn-ghost:hover { color: #191C1E; }
         .ph-chip-active {
-          background: linear-gradient(180deg, #FFC062, #FF9D2E);
-          color: #0A0E17;
+          background: linear-gradient(180deg, #6366F1, #4F46E5);
+          color: #F7F9FB;
           border-color: transparent;
         }
       `}</style>

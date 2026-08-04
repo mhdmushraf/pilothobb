@@ -664,7 +664,7 @@ export default function AddFlight() {
 
       <div
         className="flex items-center gap-3 mt-6 pt-3 -mx-4 px-4 border-t border-cockpit-border"
-        style={{ position: "sticky", bottom: "calc(84px + env(safe-area-inset-bottom))", background: "linear-gradient(180deg, transparent, #0A0E17 30%)" }}
+        style={{ position: "sticky", bottom: "calc(84px + env(safe-area-inset-bottom))", background: "linear-gradient(180deg, transparent, #F7F9FB 30%)" }}
       >
         {step > 1 && (
           <Button variant="ghost" onClick={prevStep} disabled={saving}
@@ -688,10 +688,10 @@ export default function AddFlight() {
 
       <style>{`
         .ph-btn-primary {
-          background: linear-gradient(180deg, #FFC062, #FF9D2E);
-          color: #0A0E17;
+          background: linear-gradient(180deg, #6366F1, #4F46E5);
+          color: #F7F9FB;
           border: none;
-          box-shadow: 0 4px 16px rgba(255,157,46,0.3);
+          box-shadow: 0 4px 16px rgba(79,70,229,0.3);
           font-weight: 600;
           border-radius: 0.75rem;
           height: 2.75rem;
@@ -699,22 +699,22 @@ export default function AddFlight() {
         .ph-btn-primary:hover { filter: brightness(1.05); }
         .ph-btn-primary:disabled { opacity: 0.5; }
         .ph-btn-ghost {
-          background: #1A2336;
-          border: 1px solid #243049;
-          color: #8893A8;
+          background: #F2F4F6;
+          border: 1px solid #E2E8F0;
+          color: #6B7280;
           border-radius: 0.75rem;
           height: 2.75rem;
         }
-        .ph-btn-ghost:hover { color: #F3ECDD; }
+        .ph-btn-ghost:hover { color: #191C1E; }
         .ph-chip-active {
-          background: linear-gradient(180deg, #FFC062, #FF9D2E);
-          color: #0A0E17;
+          background: linear-gradient(180deg, #6366F1, #4F46E5);
+          color: #F7F9FB;
           border-color: transparent;
         }
         .ph-chip-active .text-cockpit-cream,
         .ph-chip-active .text-cockpit-muted,
         .ph-chip-active .text-cockpit-amber {
-          color: #0A0E17;
+          color: #F7F9FB;
         }
         .step-fade-in { animation: stepFade .3s ease-out; }
         @keyframes stepFade {

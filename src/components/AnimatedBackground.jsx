@@ -160,7 +160,7 @@ export default function AnimatedBackground() {
         ctx.beginPath();
         ctx.moveTo(a.from.x, a.from.y);
         ctx.lineTo(a.to.x, a.to.y);
-        ctx.strokeStyle = "rgba(74,144,217,0.07)";
+        ctx.strokeStyle = "rgba(20,184,166,0.07)";
         ctx.lineDashOffset = a.offset;
         ctx.stroke();
       }
@@ -174,7 +174,7 @@ export default function AnimatedBackground() {
       const maxR = Math.min(W, H) * 0.32;
 
       // Range rings
-      ctx.strokeStyle = "rgba(255,157,46,0.06)";
+      ctx.strokeStyle = "rgba(79,70,229,0.06)";
       ctx.lineWidth = 1;
       for (let i = 1; i <= 4; i++) {
         ctx.beginPath();
@@ -198,7 +198,7 @@ export default function AnimatedBackground() {
         }
         ctx.beginPath();
         ctx.arc(cx, cy, p.r, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(255,157,46,${p.a})`;
+        ctx.strokeStyle = `rgba(79,70,229,${p.a})`;
         ctx.lineWidth = 1;
         ctx.stroke();
       }
@@ -207,8 +207,8 @@ export default function AnimatedBackground() {
       radarAngle += dt * 0.0008;
       const sw = 0.5;
       const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR);
-      grad.addColorStop(0, "rgba(255,157,46,0.12)");
-      grad.addColorStop(1, "rgba(255,157,46,0)");
+      grad.addColorStop(0, "rgba(79,70,229,0.12)");
+      grad.addColorStop(1, "rgba(79,70,229,0)");
       ctx.beginPath();
       ctx.moveTo(cx, cy);
       ctx.arc(cx, cy, maxR, radarAngle - sw, radarAngle);
@@ -220,7 +220,7 @@ export default function AnimatedBackground() {
       ctx.beginPath();
       ctx.moveTo(cx, cy);
       ctx.lineTo(cx + Math.cos(radarAngle) * maxR, cy + Math.sin(radarAngle) * maxR);
-      ctx.strokeStyle = "rgba(255,157,46,0.25)";
+      ctx.strokeStyle = "rgba(79,70,229,0.25)";
       ctx.lineWidth = 1;
       ctx.stroke();
     }
@@ -232,7 +232,7 @@ export default function AnimatedBackground() {
         b.ringR += b.ringSpeed * dt * 0.06;
         if (b.ringR > 35) b.ringR = 0;
 
-        const col = b.blue ? "74,144,217" : "255,157,46";
+        const col = b.blue ? "20,184,166" : "79,70,229";
 
         // Expanding ring
         const ringA = (1 - b.ringR / 35) * 0.35;
@@ -251,7 +251,7 @@ export default function AnimatedBackground() {
         ctx.fill();
         ctx.beginPath();
         ctx.arc(b.x, b.y, r, 0, Math.PI * 2);
-        ctx.fillStyle = b.blue ? "#4A90D9" : "#FF9D2E";
+        ctx.fillStyle = b.blue ? "#14B8A6" : "#4F46E5";
         ctx.fill();
       }
     }
@@ -285,7 +285,7 @@ export default function AnimatedBackground() {
         }
 
         // Glow
-        const col = p.blue ? "74,144,217" : "255,157,46";
+        const col = p.blue ? "20,184,166" : "79,70,229";
         ctx.beginPath();
         ctx.arc(pos.x, pos.y, p.size * 2.5, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${col},0.12)`;
@@ -295,7 +295,7 @@ export default function AnimatedBackground() {
         ctx.save();
         ctx.translate(pos.x, pos.y);
         ctx.rotate(ang);
-        ctx.fillStyle = p.blue ? "#4A90D9" : "#FF9D2E";
+        ctx.fillStyle = p.blue ? "#14B8A6" : "#4F46E5";
         ctx.beginPath();
         ctx.moveTo(p.size, 0);
         ctx.lineTo(-p.size * 0.7, p.size * 0.5);
@@ -420,10 +420,10 @@ export default function AnimatedBackground() {
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(1100px 700px at 82% -8%, rgba(255,157,46,.10), transparent 60%)," +
-            "radial-gradient(1300px 340px at 50% 112%, rgba(74,144,217,.12), transparent 70%)," +
-            "radial-gradient(900px 700px at 10% 110%, rgba(74,144,217,.06), transparent 60%)," +
-            "#0A0E17",
+            "radial-gradient(1100px 700px at 82% -8%, rgba(79,70,229,.10), transparent 60%)," +
+            "radial-gradient(1300px 340px at 50% 112%, rgba(20,184,166,.12), transparent 70%)," +
+            "radial-gradient(900px 700px at 10% 110%, rgba(20,184,166,.06), transparent 60%)," +
+            "#F7F9FB",
         }}
       />
 
@@ -435,7 +435,7 @@ export default function AnimatedBackground() {
           height: 600,
           top: "-10%",
           left: "-5%",
-          background: "radial-gradient(circle, #FF9D2E 0%, transparent 70%)",
+          background: "radial-gradient(circle, #4F46E5 0%, transparent 70%)",
           opacity: 0.2,
           filter: "blur(70px)",
           mixBlendMode: "screen",
@@ -450,7 +450,7 @@ export default function AnimatedBackground() {
           height: 500,
           bottom: "-10%",
           right: "-5%",
-          background: "radial-gradient(circle, #4A90D9 0%, transparent 70%)",
+          background: "radial-gradient(circle, #14B8A6 0%, transparent 70%)",
           opacity: 0.15,
           filter: "blur(70px)",
           mixBlendMode: "screen",
@@ -465,7 +465,7 @@ export default function AnimatedBackground() {
           height: 400,
           top: "40%",
           left: "30%",
-          background: "radial-gradient(circle, #FF9D2E 0%, transparent 70%)",
+          background: "radial-gradient(circle, #4F46E5 0%, transparent 70%)",
           opacity: 0.1,
           filter: "blur(70px)",
           mixBlendMode: "screen",
@@ -478,7 +478,7 @@ export default function AnimatedBackground() {
         className="absolute inset-0 opacity-[0.025]"
         style={{
           backgroundImage:
-            "linear-gradient(#FF9D2E 1px, transparent 1px), linear-gradient(90deg, #FF9D2E 1px, transparent 1px)",
+            "linear-gradient(#4F46E5 1px, transparent 1px), linear-gradient(90deg, #4F46E5 1px, transparent 1px)",
           backgroundSize: "64px 64px",
           animation: "hudPan 60s linear infinite",
         }}

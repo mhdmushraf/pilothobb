@@ -186,9 +186,9 @@ export default function Pricing() {
                 </a>
                 <a href="#" className="inline-flex items-center gap-2.5 px-5 py-3 rounded-xl bg-cockpit-panel-light border border-cockpit-border hover:border-cockpit-amber/30 transition-colors">
                   <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none">
-                    <path d="M3 3.5v17l9-8.5-9-8.5z" fill="#FF9D2E"/>
-                    <path d="M3 3.5l9 8.5 3.5-3.3L4.5 3.5H3z" fill="#F3ECDD" opacity="0.6"/>
-                    <path d="M3 20.5l9-8.5 3.5 3.3L4.5 20.5H3z" fill="#8893A8"/>
+                    <path d="M3 3.5v17l9-8.5-9-8.5z" fill="#4F46E5"/>
+                    <path d="M3 3.5l9 8.5 3.5-3.3L4.5 3.5H3z" fill="#191C1E" opacity="0.6"/>
+                    <path d="M3 20.5l9-8.5 3.5 3.3L4.5 20.5H3z" fill="#6B7280"/>
                   </svg>
                   <span className="text-sm font-semibold text-cockpit-cream font-heading">Download for Android</span>
                 </a>

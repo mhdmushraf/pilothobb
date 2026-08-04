@@ -107,24 +107,24 @@ export function LogbookVisual() {
   return (
     <Panel>
       <p className="text-xs text-cockpit-muted uppercase tracking-wider mb-3">Logbook · Page 12</p>
-      <div className="rounded-xl bg-[#F3ECDD] border border-[#243049]/20 overflow-hidden">
-        <div className="grid grid-cols-[auto_1fr_auto] gap-2 px-3 py-2 border-b border-[#243049]/20 text-[9px] font-semibold text-[#8893A8] uppercase tracking-wider">
+      <div className="rounded-xl bg-[#191C1E] border border-[#E2E8F0]/20 overflow-hidden">
+        <div className="grid grid-cols-[auto_1fr_auto] gap-2 px-3 py-2 border-b border-[#E2E8F0]/20 text-[9px] font-semibold text-[#6B7280] uppercase tracking-wider">
           <span>Date</span>
           <span>Aircraft · Route</span>
           <span>Time</span>
         </div>
         {rows.map((r, i) => (
-          <div key={i} className="grid grid-cols-[auto_1fr_auto] gap-2 px-3 py-2 border-b border-[#243049]/10 last:border-0">
-            <span className="font-mono text-[10px] text-[#0A0E17]">{r.date}</span>
-            <span className="font-mono text-[10px] text-[#0A0E17]">
+          <div key={i} className="grid grid-cols-[auto_1fr_auto] gap-2 px-3 py-2 border-b border-[#E2E8F0]/10 last:border-0">
+            <span className="font-mono text-[10px] text-[#F7F9FB]">{r.date}</span>
+            <span className="font-mono text-[10px] text-[#F7F9FB]">
               <span className="font-bold">{r.reg}</span> · {r.route}
             </span>
-            <span className="font-mono text-[10px] font-bold text-[#0A0E17]">{r.time}</span>
+            <span className="font-mono text-[10px] font-bold text-[#F7F9FB]">{r.time}</span>
           </div>
         ))}
-        <div className="flex items-center justify-between px-3 py-2 bg-[#8893A8]/10">
-          <span className="text-[9px] font-semibold text-[#0A0E17] uppercase tracking-wider">Page Total</span>
-          <span className="font-mono text-sm font-bold text-[#0A0E17]">3.3</span>
+        <div className="flex items-center justify-between px-3 py-2 bg-[#6B7280]/10">
+          <span className="text-[9px] font-semibold text-[#F7F9FB] uppercase tracking-wider">Page Total</span>
+          <span className="font-mono text-sm font-bold text-[#F7F9FB]">3.3</span>
         </div>
       </div>
       <div className="mt-3 flex items-center justify-between">

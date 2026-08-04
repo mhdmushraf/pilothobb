@@ -7,7 +7,7 @@ export default function AuthLayout({ icon: Icon, title, subtitle, footer, childr
   return (
     <div
       className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden"
-      style={{ background: "radial-gradient(120% 60% at 50% -10%, rgba(255,157,46,.10), transparent 55%), #0A0E17" }}
+      style={{ background: "radial-gradient(120% 60% at 50% -10%, rgba(79,70,229,.10), transparent 55%), #F7F9FB" }}
     >
       <Seo noindex title="PilotHobb" description="PilotHobb digital pilot logbook." />
       {/* live airspace canvas, dimmed, behind everything */}

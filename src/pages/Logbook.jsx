@@ -276,7 +276,7 @@ export default function Logbook() {
 
       doc.setFont("helvetica", "bold");
       doc.setFontSize(16);
-      doc.setTextColor(255, 157, 46);
+      doc.setTextColor(79,70,229);
       doc.text("PilotHobb — Flight Log", 14, 15);
 
       doc.setFont("helvetica", "normal");
@@ -313,7 +313,7 @@ export default function Logbook() {
           ];
         }),
         headStyles: {
-          fillColor: [255, 157, 46],
+          fillColor: [79,70,229],
           textColor: [10, 14, 23],
           fontStyle: "bold",
         },

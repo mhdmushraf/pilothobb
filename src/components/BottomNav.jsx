@@ -58,7 +58,7 @@ export default function BottomNav() {
               className="relative flex flex-col items-center pt-2 pb-1 px-3 min-w-[56px] active:scale-95 transition-transform"
             >
               {active && (
-                <span className="absolute top-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-cockpit-amber shadow-[0_0_8px_2px_rgba(255,157,46,0.5)]" />
+                <span className="absolute top-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-cockpit-amber shadow-[0_0_8px_2px_rgba(79,70,229,0.5)]" />
               )}
               <Icon
                 className={`w-5 h-5 mb-0.5 transition-colors ${active ? "text-cockpit-amber" : "text-cockpit-muted"}`}

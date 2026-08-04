@@ -14,10 +14,10 @@ export function dayDiff(dateStr) {
 }
 
 export function ringColor(days) {
-  if (days === null) return "#8893A8";
-  if (days <= 0) return "#FF6B6B";
-  if (days <= 90) return "#F5B73C";
-  return "#6FE0A6";
+  if (days === null) return "#6B7280";
+  if (days <= 0) return "#EF4444";
+  if (days <= 90) return "#F59E0B";
+  return "#10B981";
 }
 
 export function ExpiryRing({ days, size = 44, stroke = 4 }) {
@@ -31,7 +31,7 @@ export function ExpiryRing({ days, size = 44, stroke = 4 }) {
   return (
     <div className="relative shrink-0" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="-rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={R} fill="none" stroke="#243049" strokeWidth={stroke} />
+        <circle cx={size / 2} cy={size / 2} r={R} fill="none" stroke="#E2E8F0" strokeWidth={stroke} />
         <circle
           cx={size / 2} cy={size / 2} r={R} fill="none" stroke={color}
           strokeWidth={stroke} strokeLinecap="round"

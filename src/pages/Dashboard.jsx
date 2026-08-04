@@ -38,9 +38,9 @@ function dayDiff(expiryDate) {
 }
 
 function ringColor(daysLeft) {
-  if (daysLeft <= 0) return "#FF6B6B"; // cockpit-expired
-  if (daysLeft <= 90) return "#F5B73C"; // cockpit-warning
-  return "#6FE0A6"; // cockpit-valid
+  if (daysLeft <= 0) return "#EF4444"; // cockpit-expired
+  if (daysLeft <= 90) return "#F59E0B"; // cockpit-warning
+  return "#10B981"; // cockpit-valid
 }
 
 function CurrencyRing({ licence }) {
@@ -56,7 +56,7 @@ function CurrencyRing({ licence }) {
     <div className="flex items-center gap-3 py-3 border-b border-cockpit-border last:border-0">
       <div className="relative shrink-0" style={{ width: 64, height: 64 }}>
         <svg width="64" height="64" className="-rotate-90">
-          <circle cx="32" cy="32" r={R} fill="none" stroke="#243049" strokeWidth="5" />
+          <circle cx="32" cy="32" r={R} fill="none" stroke="#E2E8F0" strokeWidth="5" />
           <circle
             cx="32"
             cy="32"
@@ -93,7 +93,7 @@ function CurrencyRing({ licence }) {
 function StatCard({ label, value, accent, bar }) {
   return (
     <div className="relative flex-1 overflow-hidden rounded-2xl border border-cockpit-border p-4 shadow-lg shadow-black/20"
-         style={{ background: "linear-gradient(180deg,#141B2B,#111725)" }}>
+         style={{ background: "linear-gradient(180deg,#FFFFFF,#F2F4F6)" }}>
       <div className="absolute top-0 left-0 right-0 h-0.5" style={{ background: bar }} />
       <p className="text-[11px] text-cockpit-muted uppercase tracking-widest mb-1">{label}</p>
       <p className={`font-mono text-4xl font-bold leading-none ${accent}`}>{(value ?? 0).toFixed(1)}</p>
@@ -190,7 +190,7 @@ export default function Dashboard() {
       <div className="flex items-center justify-between mb-4">
         <Logo size={30} />
         <Link to="/career" className="shrink-0 rounded-full p-[1.5px]"
-              style={{ background: "linear-gradient(135deg,#FF9D2E,#4A90D9)" }}>
+              style={{ background: "linear-gradient(135deg,#4F46E5,#14B8A6)" }}>
           <Avatar pilot={pilot} size={44} />
         </Link>
       </div>
@@ -212,26 +212,26 @@ export default function Dashboard() {
       ) : (
         <div
           className="relative overflow-hidden rounded-3xl border border-cockpit-border p-6 mb-4"
-          style={{ background: "linear-gradient(180deg,#141B2B,#0d1220)" }}
+          style={{ background: "linear-gradient(180deg,#FFFFFF,#EEF1F5)" }}
         >
           <div
             className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 w-64 h-40"
-            style={{ background: "radial-gradient(circle, rgba(255,157,46,.22), transparent 70%)" }}
+            style={{ background: "radial-gradient(circle, rgba(79,70,229,.22), transparent 70%)" }}
           />
           <svg
             className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-50"
             width="220" height="220" viewBox="0 0 220 220"
           >
-            <circle cx="110" cy="110" r="100" fill="none" stroke="#2b3855" strokeWidth="1" />
-            <circle cx="110" cy="110" r="82" fill="none" stroke="#FF9D2E" strokeWidth="1" strokeDasharray="3 7" opacity="0.5" />
-            <path d="M110 6 l5 9 h-10 z" fill="#FF9D2E" />
+            <circle cx="110" cy="110" r="100" fill="none" stroke="#C7D2E0" strokeWidth="1" />
+            <circle cx="110" cy="110" r="82" fill="none" stroke="#4F46E5" strokeWidth="1" strokeDasharray="3 7" opacity="0.5" />
+            <path d="M110 6 l5 9 h-10 z" fill="#4F46E5" />
             {Array.from({ length: 12 }).map((_, i) => {
               const a = (i * 30 - 90) * Math.PI / 180;
               return (
                 <line key={i}
                   x1={110 + 88 * Math.cos(a)} y1={110 + 88 * Math.sin(a)}
                   x2={110 + 100 * Math.cos(a)} y2={110 + 100 * Math.sin(a)}
-                  stroke="#2b3855" strokeWidth={i % 3 === 0 ? 2.5 : 1.5}
+                  stroke="#C7D2E0" strokeWidth={i % 3 === 0 ? 2.5 : 1.5}
                 />
               );
             })}
@@ -252,7 +252,7 @@ export default function Dashboard() {
       <Link
         to="/fleet"
         className="block rounded-2xl border border-cockpit-border p-4 mb-4 shadow-lg shadow-black/20 hover:border-cockpit-glow-blue/40 transition-all active:scale-[0.98]"
-        style={{ background: "linear-gradient(180deg,#141B2B,#111725)" }}
+        style={{ background: "linear-gradient(180deg,#FFFFFF,#F2F4F6)" }}
       >
         <div className="flex items-center justify-between">
           <div>
@@ -265,7 +265,7 @@ export default function Dashboard() {
             </p>
           </div>
           <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
-               style={{ background: "rgba(74,144,217,.12)", border: "1px solid rgba(74,144,217,.25)" }}>
+               style={{ background: "rgba(20,184,166,.12)", border: "1px solid rgba(20,184,166,.25)" }}>
             <DroneIcon className="w-5 h-5 text-cockpit-glow-blue" />
           </div>
         </div>
@@ -273,8 +273,8 @@ export default function Dashboard() {
 
       {/* 4. Stat cards */}
       <div className="flex gap-3 mb-5">
-        <StatCard label="PIC" value={pilot?.total_pic} accent="text-cockpit-amber" bar="#FF9D2E" />
-        <StatCard label="Dual" value={pilot?.total_dual} accent="text-cockpit-cream" bar="#243049" />
+        <StatCard label="PIC" value={pilot?.total_pic} accent="text-cockpit-amber" bar="#4F46E5" />
+        <StatCard label="Dual" value={pilot?.total_dual} accent="text-cockpit-cream" bar="#E2E8F0" />
       </div>
 
       {/* 5. Reminder banner */}
@@ -282,7 +282,7 @@ export default function Dashboard() {
         <button
           onClick={() => navigate("/documents")}
           className="w-full text-left rounded-2xl border border-cockpit-warning/30 p-4 mb-5 flex items-center gap-3 shadow-lg shadow-black/20 hover:border-cockpit-warning/50 transition-all active:scale-[0.98]"
-          style={{ background: "linear-gradient(180deg,#141B2B,#111725)" }}
+          style={{ background: "linear-gradient(180deg,#FFFFFF,#F2F4F6)" }}
         >
           <Shield className="w-5 h-5 text-cockpit-warning shrink-0" />
           <div className="flex-1 min-w-0">
@@ -311,7 +311,7 @@ export default function Dashboard() {
             </div>
           </div>
         ) : licences.length === 0 ? (
-          <div className="rounded-2xl border border-cockpit-border p-6 text-center shadow-lg shadow-black/20" style={{ background: "linear-gradient(180deg,#141B2B,#111725)" }}>
+          <div className="rounded-2xl border border-cockpit-border p-6 text-center shadow-lg shadow-black/20" style={{ background: "linear-gradient(180deg,#FFFFFF,#F2F4F6)" }}>
             <Shield className="w-6 h-6 text-cockpit-muted mx-auto mb-2" />
             <p className="text-xs text-cockpit-muted mb-2">No licences or ratings tracked yet</p>
             <Link to="/documents" className="text-xs font-medium text-cockpit-amber">

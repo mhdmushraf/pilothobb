@@ -53,7 +53,7 @@ function RadarMap() {
       className="relative w-full aspect-square rounded-2xl overflow-hidden border border-cockpit-border"
       style={{
         background:
-          "radial-gradient(circle at 50% 50%, #0F1626 0%, #0A0E17 70%), #0A0E17",
+          "radial-gradient(circle at 50% 50%, #0F1626 0%, #F7F9FB 70%), #F7F9FB",
       }}
     >
       {/* Grid */}
@@ -61,7 +61,7 @@ function RadarMap() {
         className="absolute inset-0 opacity-20"
         style={{
           backgroundImage:
-            "linear-gradient(#243049 1px, transparent 1px), linear-gradient(90deg, #243049 1px, transparent 1px)",
+            "linear-gradient(#E2E8F0 1px, transparent 1px), linear-gradient(90deg, #E2E8F0 1px, transparent 1px)",
           backgroundSize: "32px 32px",
         }}
       />
@@ -76,7 +76,7 @@ function RadarMap() {
         className="absolute inset-0 animate-spin origin-center"
         style={{
           background:
-            "conic-gradient(from 0deg, rgba(255,157,46,0.25), rgba(255,157,46,0.05) 40deg, transparent 60deg, transparent 360deg)",
+            "conic-gradient(from 0deg, rgba(79,70,229,0.25), rgba(79,70,229,0.05) 40deg, transparent 60deg, transparent 360deg)",
           animationDuration: "4s",
         }}
       />

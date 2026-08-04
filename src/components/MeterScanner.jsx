@@ -180,7 +180,7 @@ export default function MeterScanner({ onClose, onManualEnter, onCapture }) {
             {/* Scan line animation */}
             {!prefersReducedMotion && !reading && (
               <div
-                className="absolute left-2 right-2 h-0.5 bg-cockpit-amber shadow-[0_0_8px_rgba(255,157,46,0.8)]"
+                className="absolute left-2 right-2 h-0.5 bg-cockpit-amber shadow-[0_0_8px_rgba(79,70,229,0.8)]"
                 style={{ animation: "scanSweep 2.2s ease-in-out infinite" }}
               />
             )}
