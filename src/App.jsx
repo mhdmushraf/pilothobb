@@ -36,6 +36,16 @@ import Settings from '@/pages/Settings';
 import More from '@/pages/More';
 import Tracking from '@/pages/Tracking';
 import Onboarding from '@/pages/Onboarding';
+import Analytics from '@/pages/Analytics';
+import Currency from '@/pages/Currency';
+import Schedule from '@/pages/Schedule';
+import Checklists from '@/pages/Checklists';
+import ExportData from '@/pages/ExportData';
+import FlightMap from '@/pages/FlightMap';
+import MaintenanceLog from '@/pages/MaintenanceLog';
+import PilotNotes from '@/pages/PilotNotes';
+import Aerodromes from '@/pages/Aerodromes';
+import Goals from '@/pages/Goals';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -90,6 +100,16 @@ const AuthenticatedApp = () => {
           <Route path="/settings" element={<Settings />} />
           <Route path="/more" element={<More />} />
           <Route path="/tracking" element={<Tracking />} />
+          <Route path="/analytics" element={<Analytics />} />
+          <Route path="/currency" element={<Currency />} />
+          <Route path="/schedule" element={<Schedule />} />
+          <Route path="/checklists" element={<Checklists />} />
+          <Route path="/export" element={<ExportData />} />
+          <Route path="/flight-map" element={<FlightMap />} />
+          <Route path="/maintenance-log" element={<MaintenanceLog />} />
+          <Route path="/pilot-notes" element={<PilotNotes />} />
+          <Route path="/aerodromes" element={<Aerodromes />} />
+          <Route path="/goals" element={<Goals />} />
         </Route>
       </Route>
 
