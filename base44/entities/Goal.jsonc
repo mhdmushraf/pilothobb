@@ -1,0 +1,84 @@
+{
+  "name": "Goal",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "metric": {
+      "type": "string",
+      "enum": [
+        "Total hours",
+        "PIC hours",
+        "Dual hours",
+        "Night hours",
+        "Instrument hours",
+        "Cross-country hours",
+        "RPAS hours",
+        "Landings",
+        "Custom"
+      ]
+    },
+    "target": {
+      "type": "number"
+    },
+    "current": {
+      "type": "number",
+      "default": 0
+    },
+    "target_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "achieved": {
+      "type": "boolean",
+      "default": false
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "target"
+  ],
+  "rls": {
+    "create": true,
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}
