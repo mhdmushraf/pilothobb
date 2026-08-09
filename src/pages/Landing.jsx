@@ -8,7 +8,7 @@ import Seo from "@/components/Seo";
 
 const LOGO = "https://media.base44.com/images/public/6a455fc5475b58bb52305622/a0460c0c0_pilothobb-mark.svg";
 const HERO_IMG = "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&q=80&auto=format&fit=crop";
-const DRONE_IMG = "https://lh3.googleusercontent.com/aida-public/AB6AXuD-Us9psyIq1rPxWQ0zbJRJ1q_aZvcFgtTGQ3KDInhnEYROhIx6edmF-qyrgJPyuoCUPK6QGf21YHla9BXKpHj8jcEWQZphxwq4fAj2ZsNN-SVpOFOJnOKVUJVFu_kVsN0Q10F-aTNEeNWRzlPaepuTt4cJbDL8oT6tkmk-sGO7hq4f7HlkcmPGR0fNgc_IeKBvG7WaYmQrL_4F_qYP9dCLV06aXq-0yFKsd2MAuO-HL0_ybY1bMDCA8nCpUEfs_vCb40djZsCSldy3";
+const DRONE_IMG = "https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=1200&q=75&auto=format&fit=crop";
 
 const AUTHORITIES = ["SACAA", "FAA", "EASA", "UK CAA", "CASA"];
 
