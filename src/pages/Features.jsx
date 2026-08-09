@@ -26,6 +26,27 @@ export default function Features() {
         subtitle="From the first training flight to ATPL, PilotHobb keeps your hours, currency and paperwork current, automatically."
       />
 
+      {/* Immersive hero image band */}
+      <section className="px-4 sm:px-6 -mt-6 mb-4 max-w-5xl mx-auto">
+        <div className="relative rounded-3xl overflow-hidden border border-cockpit-border shadow-xl shadow-cockpit-amber/10">
+          <img
+            src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1600&q=75&auto=format&fit=crop"
+            alt="Aircraft wing above a sea of clouds at sunset"
+            loading="lazy"
+            className="w-full h-56 sm:h-80 object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-cockpit-bg/85 via-cockpit-bg/20 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-7">
+            <span className="inline-block px-2.5 py-1 rounded-full bg-cockpit-amber/90 text-white text-[10px] font-semibold uppercase tracking-wider mb-2">
+              Built for how pilots actually fly
+            </span>
+            <p className="font-heading text-lg sm:text-2xl font-bold text-white max-w-md leading-snug drop-shadow">
+              Hours, currency, endorsements and drone time — one calm, accurate record.
+            </p>
+          </div>
+        </div>
+      </section>
+
       <section className="px-4 sm:px-6 py-10 max-w-5xl mx-auto space-y-20">
         <FeatureDetail
           icon={Gauge}
