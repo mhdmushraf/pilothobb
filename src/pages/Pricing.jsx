@@ -171,8 +171,15 @@ export default function Pricing() {
       {/* CTA Band */}
       <section className="px-4 sm:px-6 py-16">
         <ScrollReveal>
-          <div className="max-w-4xl mx-auto rounded-3xl bg-cockpit-panel border border-cockpit-border p-10 sm:p-12 text-center relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-cockpit-amber/5 to-transparent pointer-events-none" />
+          <div className="max-w-4xl mx-auto rounded-3xl border border-cockpit-border p-10 sm:p-12 text-center relative overflow-hidden">
+            <img
+              src="https://images.unsplash.com/photo-1540962351504-03099e0a754b?w=1600&q=75&auto=format&fit=crop"
+              alt="Business jet on the tarmac"
+              loading="lazy"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-cockpit-bg/85 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-br from-cockpit-amber/10 to-transparent pointer-events-none" />
             <div className="relative">
               <h2 className="font-heading text-3xl sm:text-4xl font-bold text-cockpit-cream mb-3">
                 Start your logbook tonight.
