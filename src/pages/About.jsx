@@ -39,8 +39,21 @@ export default function About() {
       />
       <PageHeader eyebrow="About" title="Made by a pilot, for pilots." />
 
+      {/* Hero image band */}
+      <section className="px-4 sm:px-6 -mt-6 mb-2 max-w-4xl mx-auto">
+        <div className="relative rounded-3xl overflow-hidden border border-cockpit-border shadow-xl shadow-cockpit-amber/10">
+          <img
+            src="https://images.unsplash.com/photo-1474302770737-173ee21bab63?w=1600&q=75&auto=format&fit=crop"
+            alt="Private aircraft on the ramp at golden hour"
+            loading="lazy"
+            className="w-full h-52 sm:h-72 object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-cockpit-bg/80 to-transparent" />
+        </div>
+      </section>
+
       {/* Story */}
-      <section className="px-4 sm:px-6 py-6 max-w-2xl mx-auto">
+      <section className="px-4 sm:px-6 py-8 max-w-2xl mx-auto">
         <ScrollReveal>
           <p className="text-cockpit-muted text-lg leading-relaxed text-center">
             PilotHobb started with a simple frustration: keeping a logbook and staying current
