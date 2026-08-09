@@ -7,7 +7,7 @@ import {
 import Seo from "@/components/Seo";
 
 const LOGO = "https://media.base44.com/images/public/6a455fc5475b58bb52305622/a0460c0c0_pilothobb-mark.svg";
-const HERO_IMG = "https://lh3.googleusercontent.com/aida-public/AB6AXuD4RrnZZ1PmAAiOK4UNRinKFc71Gu7Pctx8ud2O1q4QfUNWKaTA5cRr33ZpvunRY4MaIeeqHTsKSve8Y5m7HfFvgob8v3-WbvTEbzDCqtlsBtzIWSuLks_4wHdRRgXTKoMD0mwRNunf1wiC9Lc4RBt-fgivMK3HYbjwj4_GPZoHQJ4gvPE_VjWJv14nDDz7Bo-lEEa6BU8r_N452ueGWWk-agONrq-D6MqhuVEa6FG2lX08l_oSaVLb1LpPFK8o_9vFgqLJnBWEoOj8";
+const HERO_IMG = "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&q=80&auto=format&fit=crop";
 const DRONE_IMG = "https://lh3.googleusercontent.com/aida-public/AB6AXuD-Us9psyIq1rPxWQ0zbJRJ1q_aZvcFgtTGQ3KDInhnEYROhIx6edmF-qyrgJPyuoCUPK6QGf21YHla9BXKpHj8jcEWQZphxwq4fAj2ZsNN-SVpOFOJnOKVUJVFu_kVsN0Q10F-aTNEeNWRzlPaepuTt4cJbDL8oT6tkmk-sGO7hq4f7HlkcmPGR0fNgc_IeKBvG7WaYmQrL_4F_qYP9dCLV06aXq-0yFKsd2MAuO-HL0_ybY1bMDCA8nCpUEfs_vCb40djZsCSldy3";
 
 const AUTHORITIES = ["SACAA", "FAA", "EASA", "UK CAA", "CASA"];
