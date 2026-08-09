@@ -49,6 +49,24 @@ export default function Contact() {
         subtitle="Questions, feedback, or partnership ideas — we'd love to hear from you."
       />
 
+      {/* Hero image band */}
+      <section className="px-4 sm:px-6 -mt-6 mb-8 max-w-5xl mx-auto">
+        <div className="relative rounded-3xl overflow-hidden border border-cockpit-border shadow-xl shadow-cockpit-amber/10">
+          <img
+            src="https://images.unsplash.com/photo-1559060017-445fb9722f2a?w=1600&q=75&auto=format&fit=crop"
+            alt="Dramatic clouds at altitude"
+            loading="lazy"
+            className="w-full h-40 sm:h-56 object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-cockpit-bg/85 via-cockpit-bg/30 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-7">
+            <p className="font-heading text-lg sm:text-xl font-bold text-white drop-shadow">
+              We usually reply within one business day.
+            </p>
+          </div>
+        </div>
+      </section>
+
       <section className="px-4 sm:px-6 pb-20 max-w-5xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
           {/* Contact methods */}
