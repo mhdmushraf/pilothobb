@@ -90,9 +90,8 @@ export default function Register() {
       <Seo noindex title="Create account — PilotHobb" description="Create your PilotHobb pilot account." />
       {/* Top bar */}
       <div className="flex items-center justify-between px-5 h-16 max-w-lg mx-auto">
-        <Link to="/" className="flex items-center gap-2.5">
-          <img src={BRAND_ASSETS.mark} alt="PilotHobb" className="w-8 h-8" onError={(e) => { e.currentTarget.src = BRAND_ASSETS.iconPng; }} />
-          <span className="text-lg font-heading font-bold"><span className="text-[#4f46e5]">Pilot</span><span className="text-[#0f172a]">Hobb</span></span>
+        <Link to="/" className="flex items-center">
+          <img src={BRAND_ASSETS.logo} alt="PilotHobb" className="h-8 w-auto" />
         </Link>
         <span className="inline-flex items-center gap-1.5 bg-[#eceef0] text-[#464555] text-[11px] font-bold tracking-widest uppercase px-3 py-1.5 rounded-full">
           <Plane className="w-3.5 h-3.5 text-[#4f46e5]" /> {showOtp ? "Takeoff" : "Pre-Flight"} Mode
