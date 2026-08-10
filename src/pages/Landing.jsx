@@ -85,7 +85,7 @@ function NavBar() {
     <header className={`fixed top-0 w-full z-50 backdrop-blur-md transition-all ${scrolled ? "bg-[#f7f9fb]/90 shadow-sm" : "bg-[#f7f9fb]/70"}`}>
       <div className="flex justify-between items-center h-16 px-4 md:px-8 max-w-[1280px] mx-auto w-full">
         <a href="#top" className="flex items-center">
-          <img src="https://media.base44.com/images/public/6a455fc5475b58bb52305622/802a22ab0_Screenshot2026-08-10at113612PM.png" alt="PilotHobb" className="h-8 w-auto" />
+          <img src="https://media.base44.com/images/public/6a455fc5475b58bb52305622/ee9a14bca_802a22ab0_Screenshot2026-08-10at113612PM-removebg-preview.png" alt="PilotHobb" className="h-8 w-auto rounded-lg" />
         </a>
         <nav className="hidden md:flex items-center gap-8">
           <a className="text-[15px] text-[#464555] font-medium hover:text-[#3525cd] transition-colors" href="#features">Features</a>
