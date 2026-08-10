@@ -6,7 +6,7 @@ import ScrollReveal from "@/components/ScrollReveal";
 import Seo from "@/components/Seo";
 
 const points = [
-  { icon: Lock, title: "Encrypted end to end of transit", text: "Your data is encrypted in transit and at rest. Passwords are hashed — never stored in plain text." },
+  { icon: Lock, title: "Encrypted in transit & at rest", text: "Your data is encrypted in transit and at rest. Passwords are hashed — never stored in plain text." },
   { icon: Download, title: "Your data is yours", text: "Export your full logbook to PDF or CSV whenever you like. Nothing is locked in, even if you cancel." },
   { icon: KeyRound, title: "You control access", text: "Only you can see your logbook. We never sell your personal information or share it for advertising." },
   { icon: ServerCog, title: "Reliable infrastructure", text: "Built on established cloud infrastructure with backups, so your records are safe as you change devices." },
