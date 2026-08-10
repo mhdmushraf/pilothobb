@@ -40,13 +40,8 @@ export default function Login() {
         <div className="bg-white/80 backdrop-blur rounded-3xl border border-[#e2e8f0] shadow-2xl shadow-[#4f46e5]/10 p-8">
           {/* Brand */}
           <div className="text-center mb-6">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white shadow-md border border-[#e2e8f0] mb-4">
-              <img src={BRAND_ASSETS.mark} alt="PilotHobb" className="w-9 h-9" onError={(e) => { e.currentTarget.src = BRAND_ASSETS.iconPng; }} />
-            </div>
-            <h1 className="font-heading text-2xl font-bold tracking-tight">
-              <span className="text-[#4f46e5]">Pilot</span><span className="text-[#0f172a]">Hobb</span>
-            </h1>
-            <p className="text-[12px] tracking-[0.25em] text-[#464555] font-semibold uppercase mt-1">Aviation Intelligence</p>
+            <img src={BRAND_ASSETS.logo} alt="PilotHobb" className="h-10 w-auto mx-auto mb-3" />
+            <p className="text-[12px] tracking-[0.25em] text-[#464555] font-semibold uppercase">Aviation Intelligence</p>
           </div>
 
           {verified ? (
