@@ -8,6 +8,8 @@ import Seo from "@/components/Seo";
 
 const LOGO = "/pilothobb-wing.png";
 const LOCKUP = "https://media.base44.com/images/public/6a455fc5475b58bb52305622/ee9a14bca_802a22ab0_Screenshot2026-08-10at113612PM-removebg-preview.png";
+// ↓ After uploading pilothobb_demo.mp4 to Base44 media, paste its URL here to enable the player.
+const DEMO_VIDEO = "";
 const HERO_IMG = "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&q=80&auto=format&fit=crop";
 const DRONE_IMG = "https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=1200&q=75&auto=format&fit=crop";
 
@@ -116,6 +118,7 @@ function CardIcon({ children, tone = "indigo" }) {
 }
 
 export default function Landing() {
+  const [showVideo, setShowVideo] = useState(false);
   return (
     <div id="top" className="bg-[#f7f9fb] text-[#191c1e] font-body min-h-screen">
       <Seo
@@ -125,6 +128,19 @@ export default function Landing() {
         jsonLd={landingJsonLd} />
       
       <NavBar />
+
+      {showVideo && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0f172a]/80 backdrop-blur-sm p-4" onClick={() => setShowVideo(false)}>
+          <div className="relative w-full max-w-4xl" onClick={(e) => e.stopPropagation()}>
+            <button onClick={() => setShowVideo(false)} aria-label="Close" className="absolute -top-11 right-0 text-white/80 hover:text-white flex items-center gap-1 text-sm font-semibold">
+              <X className="w-5 h-5" /> Close
+            </button>
+            <div className="rounded-2xl overflow-hidden shadow-2xl bg-black aspect-video">
+              <video src={DEMO_VIDEO} controls autoPlay playsInline className="w-full h-full" />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* HERO */}
       <section className="relative min-h-[88vh] flex items-center pt-24 pb-16 overflow-hidden">
@@ -147,9 +163,13 @@ export default function Landing() {
               <Link to="/register" className="bg-[#4f46e5] text-white px-8 py-4 rounded-xl font-bold shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2">
                 Start free <ArrowRight className="w-5 h-5" />
               </Link>
-              <a href="#features" className="bg-white border border-[#e2e8f0] text-[#4f46e5] px-8 py-4 rounded-xl font-bold hover:bg-[#f2f4f6] transition-all flex items-center justify-center gap-2">
+              <button
+                type="button"
+                onClick={() => { if (DEMO_VIDEO) { setShowVideo(true); } else { document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' }); } }}
+                className="bg-white border border-[#e2e8f0] text-[#4f46e5] px-8 py-4 rounded-xl font-bold hover:bg-[#f2f4f6] transition-all flex items-center justify-center gap-2"
+              >
                 <PlayCircle className="w-5 h-5" /> See how it works
-              </a>
+              </button>
             </div>
             <div className="mt-10">
               <p className="text-[12px] uppercase tracking-widest text-[#464555]/70 font-semibold mb-3">Built for pilots under</p>
