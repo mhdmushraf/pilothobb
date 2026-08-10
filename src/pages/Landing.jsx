@@ -7,6 +7,7 @@ import {
 import Seo from "@/components/Seo";
 
 const LOGO = "/pilothobb-wing.png";
+const LOCKUP = "/pilothobb-lockup.png";
 const HERO_IMG = "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&q=80&auto=format&fit=crop";
 const DRONE_IMG = "https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=1200&q=75&auto=format&fit=crop";
 
@@ -83,9 +84,8 @@ function NavBar() {
   return (
     <header className={`fixed top-0 w-full z-50 backdrop-blur-md transition-all ${scrolled ? "bg-[#f7f9fb]/90 shadow-sm" : "bg-[#f7f9fb]/70"}`}>
       <div className="flex justify-between items-center h-16 px-4 md:px-8 max-w-[1280px] mx-auto w-full">
-        <a href="#top" className="flex items-center gap-2.5">
-          <img src={LOGO} alt="PilotHobb" className="h-9 w-9" />
-          <span className="text-[22px] font-heading font-bold tracking-tight"><span className="text-[#4f46e5]">Pilot</span><span className="text-[#0f172a]">Hobb</span></span>
+        <a href="#top" className="flex items-center">
+          <img src={LOCKUP} alt="PilotHobb" className="h-8 w-auto" />
         </a>
         <nav className="hidden md:flex items-center gap-8">
           <a className="text-[15px] text-[#464555] font-medium hover:text-[#3525cd] transition-colors" href="#features">Features</a>
@@ -316,9 +316,8 @@ export default function Landing() {
         <div className="max-w-[1280px] mx-auto px-4 md:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mb-16">
             <div className="col-span-2 md:col-span-1">
-              <div className="flex items-center gap-2.5 mb-6">
-                <img src={LOGO} alt="PilotHobb" className="h-9 w-9" />
-                <span className="text-[22px] font-heading font-bold tracking-tight"><span className="text-[#4f46e5]">Pilot</span><span className="text-[#0f172a]">Hobb</span></span>
+              <div className="flex items-center mb-6">
+                <img src={LOCKUP} alt="PilotHobb" className="h-9 w-auto" />
               </div>
               <p className="text-[14px] text-[#464555]">Your logbook, down to the tenth of an hour. Professional tools for the modern cockpit and remote control station.</p>
             </div>
