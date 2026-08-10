@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Menu, X, ArrowRight, PlayCircle, ShieldCheck, Gauge, FileDown,
-  Wrench, PlaneTakeoff, CheckCircle2, Sparkles, ArrowLeftRight, Camera,
-} from "lucide-react";
+  Wrench, PlaneTakeoff, CheckCircle2, Sparkles, ArrowLeftRight, Camera } from
+"lucide-react";
 import Seo from "@/components/Seo";
 
 const LOGO = "/pilothobb-wing.png";
@@ -14,63 +14,63 @@ const DRONE_IMG = "https://images.unsplash.com/photo-1508614589041-895b88991e3e?
 const AUTHORITIES = ["SACAA", "FAA", "EASA", "UK CAA", "CASA"];
 
 const TIERS = [
-  {
-    name: "Student", price: "Free trial", period: "14 days · no card",
-    features: ["Unlimited flight logging", "Hobbs / Tach auto-totals", "Currency & exam clocks"],
-    cta: "Start free", to: "/register", highlighted: false,
-  },
-  {
-    name: "Pilot Pro", price: "$6.99", period: "/month · or $69/year — save 18%",
-    features: ["Everything in Student", "Licence & medical renewals", "Page-replica PDF export", "Endorsements with photos", "Camera meter scan (soon)"],
-    cta: "Get Pilot Pro", to: "/register", highlighted: true,
-  },
-  {
-    name: "Academy", price: "Talk to us", period: "per-seat · billed yearly",
-    features: ["Everything in Pilot Pro", "Student roster & oversight", "Bulk seats & school branding"],
-    cta: "Contact sales", to: "/contact", highlighted: false,
-  },
-];
+{
+  name: "Student", price: "Free trial", period: "14 days · no card",
+  features: ["Unlimited flight logging", "Hobbs / Tach auto-totals", "Currency & exam clocks"],
+  cta: "Start free", to: "/register", highlighted: false
+},
+{
+  name: "Pilot Pro", price: "$6.99", period: "/month · or $69/year — save 18%",
+  features: ["Everything in Student", "Licence & medical renewals", "Page-replica PDF export", "Endorsements with photos", "Camera meter scan (soon)"],
+  cta: "Get Pilot Pro", to: "/register", highlighted: true
+},
+{
+  name: "Academy", price: "Talk to us", period: "per-seat · billed yearly",
+  features: ["Everything in Pilot Pro", "Student roster & oversight", "Bulk seats & school branding"],
+  cta: "Contact sales", to: "/contact", highlighted: false
+}];
+
 
 const landingJsonLd = {
   "@context": "https://schema.org",
   "@graph": [
-    {
-      "@type": "Organization",
-      "@id": "https://pilothobb.com/#org",
-      "name": "PilotHobb",
-      "url": "https://pilothobb.com",
-      "email": "hello@pilothobb.com",
-      "logo": "https://media.base44.com/images/public/6a455fc5475b58bb52305622/1a9086f0b_pilothobb-icon-appstore-1024.png"
-    },
-    {
-      "@type": "SoftwareApplication",
-      "name": "PilotHobb",
-      "applicationCategory": "BusinessApplication",
-      "operatingSystem": "Web, iOS, Android",
-      "url": "https://pilothobb.com",
-      "publisher": { "@id": "https://pilothobb.com/#org" },
-      "description": "Digital pilot logbook for tracking flight hours from Hobbs or Tach readings, licence and medical currency, aircraft maintenance, and RPAS drone hours.",
-      "featureList": [
-        "Log flights from Hobbs or Tach meter readings",
-        "Scan the Hobbs meter with your camera",
-        "Automatic touch-and-go landing and take-off totals",
-        "Licence, medical and rating expiry tracking",
-        "Aircraft maintenance monitoring (MPI and oil hours)",
-        "RPAS drone hours tracked separately from manned hours",
-        "Career summary and logbook PDF export"
-      ]
-    },
-    {
-      "@type": "FAQPage",
-      "mainEntity": [
-        { "@type": "Question", "name": "Does PilotHobb track drone (RPAS) hours?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. PilotHobb tracks RPAS drone hours in a separate total from manned aeroplane and helicopter hours, because aviation authorities require remote pilot time to be logged separately. Drone flights record mission type, VLOS/BVLOS operation category, battery cycles and observer, and roll into their own RPAS totals." } },
-        { "@type": "Question", "name": "Can I log flights using Hobbs or Tach time?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Each aircraft is set to either Hobbs or Tach as its time source. When logging a flight, PilotHobb pre-fills the reading before from the aircraft's last known meter value, you enter the reading after, and flight time is calculated automatically. You can also scan the meter with your phone camera instead of typing it." } },
-        { "@type": "Question", "name": "Does PilotHobb track licence and medical expiry?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. PilotHobb tracks licences, ratings, medicals, theory exam validity and English proficiency, showing days remaining with colour-coded status and surfacing the nearest expiry so nothing lapses." } },
-        { "@type": "Question", "name": "Which aviation authorities does PilotHobb support?", "acceptedAnswer": { "@type": "Answer", "text": "PilotHobb supports pilots under SACAA, FAA, EASA, UK CAA and CASA, for both manned licences (Student, PPL, CPL, ATPL) and remote pilot licences such as SACAA RPL and FAA Part 107." } },
-        { "@type": "Question", "name": "How is a touch-and-go counted in PilotHobb?", "acceptedAnswer": { "@type": "Answer", "text": "Each touch-and-go counts as one landing and one take-off. PilotHobb totals them automatically from the intermediate stops you add to a route, plus the initial take-off and the final full-stop landing." } }
-      ]
-    }
-  ]
+  {
+    "@type": "Organization",
+    "@id": "https://pilothobb.com/#org",
+    "name": "PilotHobb",
+    "url": "https://pilothobb.com",
+    "email": "hello@pilothobb.com",
+    "logo": "https://media.base44.com/images/public/6a455fc5475b58bb52305622/1a9086f0b_pilothobb-icon-appstore-1024.png"
+  },
+  {
+    "@type": "SoftwareApplication",
+    "name": "PilotHobb",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web, iOS, Android",
+    "url": "https://pilothobb.com",
+    "publisher": { "@id": "https://pilothobb.com/#org" },
+    "description": "Digital pilot logbook for tracking flight hours from Hobbs or Tach readings, licence and medical currency, aircraft maintenance, and RPAS drone hours.",
+    "featureList": [
+    "Log flights from Hobbs or Tach meter readings",
+    "Scan the Hobbs meter with your camera",
+    "Automatic touch-and-go landing and take-off totals",
+    "Licence, medical and rating expiry tracking",
+    "Aircraft maintenance monitoring (MPI and oil hours)",
+    "RPAS drone hours tracked separately from manned hours",
+    "Career summary and logbook PDF export"]
+
+  },
+  {
+    "@type": "FAQPage",
+    "mainEntity": [
+    { "@type": "Question", "name": "Does PilotHobb track drone (RPAS) hours?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. PilotHobb tracks RPAS drone hours in a separate total from manned aeroplane and helicopter hours, because aviation authorities require remote pilot time to be logged separately. Drone flights record mission type, VLOS/BVLOS operation category, battery cycles and observer, and roll into their own RPAS totals." } },
+    { "@type": "Question", "name": "Can I log flights using Hobbs or Tach time?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Each aircraft is set to either Hobbs or Tach as its time source. When logging a flight, PilotHobb pre-fills the reading before from the aircraft's last known meter value, you enter the reading after, and flight time is calculated automatically. You can also scan the meter with your phone camera instead of typing it." } },
+    { "@type": "Question", "name": "Does PilotHobb track licence and medical expiry?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. PilotHobb tracks licences, ratings, medicals, theory exam validity and English proficiency, showing days remaining with colour-coded status and surfacing the nearest expiry so nothing lapses." } },
+    { "@type": "Question", "name": "Which aviation authorities does PilotHobb support?", "acceptedAnswer": { "@type": "Answer", "text": "PilotHobb supports pilots under SACAA, FAA, EASA, UK CAA and CASA, for both manned licences (Student, PPL, CPL, ATPL) and remote pilot licences such as SACAA RPL and FAA Part 107." } },
+    { "@type": "Question", "name": "How is a touch-and-go counted in PilotHobb?", "acceptedAnswer": { "@type": "Answer", "text": "Each touch-and-go counts as one landing and one take-off. PilotHobb totals them automatically from the intermediate stops you add to a route, plus the initial take-off and the final full-stop landing." } }]
+
+  }]
+
 };
 
 function NavBar() {
@@ -85,7 +85,7 @@ function NavBar() {
     <header className={`fixed top-0 w-full z-50 backdrop-blur-md transition-all ${scrolled ? "bg-[#f7f9fb]/90 shadow-sm" : "bg-[#f7f9fb]/70"}`}>
       <div className="flex justify-between items-center h-16 px-4 md:px-8 max-w-[1280px] mx-auto w-full">
         <a href="#top" className="flex items-center">
-          <img src={LOCKUP} alt="PilotHobb" className="h-8 w-auto" />
+          <img src="https://media.base44.com/images/public/6a455fc5475b58bb52305622/802a22ab0_Screenshot2026-08-10at113612PM.png" alt="PilotHobb" className="h-8 w-auto" />
         </a>
         <nav className="hidden md:flex items-center gap-8">
           <a className="text-[15px] text-[#464555] font-medium hover:text-[#3525cd] transition-colors" href="#features">Features</a>
@@ -98,16 +98,16 @@ function NavBar() {
           <button onClick={() => setOpen(!open)} className="md:hidden w-10 h-10 flex items-center justify-center text-[#191c1e]">{open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}</button>
         </div>
       </div>
-      {open && (
-        <div className="md:hidden border-t border-[#e2e8f0] bg-[#f7f9fb]/95 backdrop-blur px-4 py-3">
+      {open &&
+      <div className="md:hidden border-t border-[#e2e8f0] bg-[#f7f9fb]/95 backdrop-blur px-4 py-3">
           <a onClick={() => setOpen(false)} className="block py-3 font-medium text-[#464555]" href="#features">Features</a>
           <a onClick={() => setOpen(false)} className="block py-3 font-medium text-[#464555]" href="#pricing">Pricing</a>
           <Link onClick={() => setOpen(false)} className="block py-3 font-medium text-[#464555]" to="/about">About</Link>
           <Link onClick={() => setOpen(false)} className="block py-3 font-semibold text-[#4f46e5]" to="/login">Login</Link>
         </div>
-      )}
-    </header>
-  );
+      }
+    </header>);
+
 }
 
 function CardIcon({ children, tone = "indigo" }) {
@@ -122,8 +122,8 @@ export default function Landing() {
         path="/"
         title="PilotHobb — Digital Pilot Logbook for Flight Hours, Currency & Drone Hours"
         description="PilotHobb is a digital pilot logbook that tracks flight hours from your Hobbs or Tach meter, licence and medical expiry, aircraft maintenance, and RPAS drone hours separately. For SACAA, FAA, EASA and UK CAA pilots."
-        jsonLd={landingJsonLd}
-      />
+        jsonLd={landingJsonLd} />
+      
       <NavBar />
 
       {/* HERO */}
@@ -154,9 +154,9 @@ export default function Landing() {
             <div className="mt-10">
               <p className="text-[12px] uppercase tracking-widest text-[#464555]/70 font-semibold mb-3">Built for pilots under</p>
               <div className="flex flex-wrap gap-2">
-                {AUTHORITIES.map((a) => (
-                  <span key={a} className="px-3 py-1.5 rounded-full bg-white border border-[#e2e8f0] text-[13px] font-semibold text-[#0f172a] font-mono">{a}</span>
-                ))}
+                {AUTHORITIES.map((a) =>
+                <span key={a} className="px-3 py-1.5 rounded-full bg-white border border-[#e2e8f0] text-[13px] font-semibold text-[#0f172a] font-mono">{a}</span>
+                )}
               </div>
             </div>
           </div>
@@ -272,27 +272,27 @@ export default function Landing() {
             <p className="text-[18px] text-[#464555]">Start free, keep your logbook for life. Cancel anytime — your data exports to PDF whenever you want it.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-            {TIERS.map((t) => (
-              <div key={t.name} className={`rounded-2xl p-8 lg:p-10 flex flex-col relative ${t.highlighted ? "bg-white border-2 border-[#4f46e5]/40 shadow-xl md:-mt-2" : "bg-white border border-[#e2e8f0] shadow-sm"}`}>
-                {t.highlighted && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#4f46e5] text-white px-5 py-1.5 rounded-full text-[11px] tracking-widest font-bold shadow-lg uppercase">Most Popular</div>
-                )}
+            {TIERS.map((t) =>
+            <div key={t.name} className={`rounded-2xl p-8 lg:p-10 flex flex-col relative ${t.highlighted ? "bg-white border-2 border-[#4f46e5]/40 shadow-xl md:-mt-2" : "bg-white border border-[#e2e8f0] shadow-sm"}`}>
+                {t.highlighted &&
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#4f46e5] text-white px-5 py-1.5 rounded-full text-[11px] tracking-widest font-bold shadow-lg uppercase">Most Popular</div>
+              }
                 <h3 className="font-heading text-[24px] font-semibold mb-2">{t.name}</h3>
                 <div className="flex items-baseline gap-1.5 mb-1">
                   <span className="font-mono text-4xl font-bold text-[#3525cd]">{t.price}</span>
                 </div>
                 <p className="text-[13px] text-[#464555] mb-8">{t.period}</p>
                 <ul className="space-y-4 mb-10 flex-1">
-                  {t.features.map((f, i) => (
-                    <li key={f} className={`flex items-center gap-3 text-[15px] ${i === 0 && t.highlighted ? "text-[#3525cd] font-bold" : "text-[#464555]"}`}>
+                  {t.features.map((f, i) =>
+                <li key={f} className={`flex items-center gap-3 text-[15px] ${i === 0 && t.highlighted ? "text-[#3525cd] font-bold" : "text-[#464555]"}`}>
                       {i === 0 && t.highlighted ? <Sparkles className="w-5 h-5 text-[#4f46e5] shrink-0" /> : <CheckCircle2 className="w-5 h-5 text-[#10b981] shrink-0" />}
                       {f}
                     </li>
-                  ))}
+                )}
                 </ul>
                 <Link to={t.to} className={`w-full text-center py-4 rounded-xl font-bold transition-all ${t.highlighted ? "bg-[#4f46e5] text-white shadow-lg hover:brightness-110" : "border-2 border-[#4f46e5]/20 text-[#4f46e5] hover:bg-[#4f46e5]/5"}`}>{t.cta}</Link>
               </div>
-            ))}
+            )}
           </div>
           <p className="text-center text-[13px] text-[#464555]/70 mt-8">Prices shown are placeholders — final pricing set at launch. Shown in USD.</p>
         </div>
@@ -317,7 +317,7 @@ export default function Landing() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mb-16">
             <div className="col-span-2 md:col-span-1">
               <div className="flex items-center mb-6">
-                <img src={LOCKUP} alt="PilotHobb" className="h-9 w-auto" />
+                <img src="https://media.base44.com/images/public/6a455fc5475b58bb52305622/802a22ab0_Screenshot2026-08-10at113612PM.png" alt="PilotHobb" className="h-9 w-auto" />
               </div>
               <p className="text-[14px] text-[#464555]">Your logbook, down to the tenth of an hour. Professional tools for the modern cockpit and remote control station.</p>
             </div>
@@ -350,6 +350,6 @@ export default function Landing() {
           </div>
         </div>
       </footer>
-    </div>
-  );
+    </div>);
+
 }
