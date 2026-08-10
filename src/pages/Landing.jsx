@@ -294,7 +294,7 @@ export default function Landing() {
               </div>
             )}
           </div>
-          <p className="text-center text-[13px] text-[#464555]/70 mt-8">Prices shown are placeholders — final pricing set at launch. Shown in USD.</p>
+          <p className="text-center text-[13px] text-[#464555]/70 mt-8">Prices in ZAR. CSV export is free on every plan — your data is always yours. <Link to="/pricing" className="text-[#4f46e5] font-semibold">Compare plans</Link></p>
         </div>
       </section>
 
