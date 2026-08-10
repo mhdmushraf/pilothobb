@@ -22,6 +22,13 @@ import Features from '@/pages/Features';
 import Pricing from '@/pages/Pricing';
 import About from '@/pages/About';
 import Contact from '@/pages/Contact';
+import Faq from '@/pages/Faq';
+import Rpas from '@/pages/Rpas';
+import Security from '@/pages/Security';
+import Download from '@/pages/Download';
+import Changelog from '@/pages/Changelog';
+import Privacy from '@/pages/Privacy';
+import Terms from '@/pages/Terms';
 import RootEntry from '@/components/RootEntry';
 
 // App pages
@@ -84,6 +91,13 @@ const AuthenticatedApp = () => {
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/faq" element={<Faq />} />
+        <Route path="/rpas" element={<Rpas />} />
+        <Route path="/security" element={<Security />} />
+        <Route path="/download" element={<Download />} />
+        <Route path="/changelog" element={<Changelog />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/terms" element={<Terms />} />
       </Route>
 
       {/* App (protected) */}
