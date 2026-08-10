@@ -317,7 +317,7 @@ export default function Landing() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mb-16">
             <div className="col-span-2 md:col-span-1">
               <div className="flex items-center mb-6">
-                <img src="https://media.base44.com/images/public/6a455fc5475b58bb52305622/802a22ab0_Screenshot2026-08-10at113612PM.png" alt="PilotHobb" className="h-9 w-auto" />
+                <img src="https://media.base44.com/images/public/6a455fc5475b58bb52305622/ee9a14bca_802a22ab0_Screenshot2026-08-10at113612PM-removebg-preview.png" alt="PilotHobb" className="h-9 w-auto" />
               </div>
               <p className="text-[14px] text-[#464555]">Your logbook, down to the tenth of an hour. Professional tools for the modern cockpit and remote control station.</p>
             </div>
