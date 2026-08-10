@@ -8,21 +8,25 @@ const columns = [
     links: [
       { label: "Features", path: "/features" },
       { label: "Pricing", path: "/pricing" },
-      { label: "Get the app", path: "/register" },
+      { label: "Drone / RPAS", path: "/rpas" },
+      { label: "Get the app", path: "/download" },
+      { label: "What's new", path: "/changelog" },
     ],
   },
   {
     title: "Company",
     links: [
       { label: "About", path: "/about" },
+      { label: "FAQ", path: "/faq" },
+      { label: "Security & data", path: "/security" },
       { label: "Contact", path: "/contact" },
     ],
   },
   {
     title: "Legal",
     links: [
-      { label: "Privacy", path: "/about" },
-      { label: "Terms", path: "/about" },
+      { label: "Privacy", path: "/privacy" },
+      { label: "Terms", path: "/terms" },
     ],
   },
 ];
