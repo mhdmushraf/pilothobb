@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import Seo from "@/components/Seo";
 
-const LOGO = "https://media.base44.com/images/public/6a455fc5475b58bb52305622/a0460c0c0_pilothobb-mark.svg";
+const LOGO = "/pilothobb-wing.png";
 const HERO_IMG = "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&q=80&auto=format&fit=crop";
 const DRONE_IMG = "https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=1200&q=75&auto=format&fit=crop";
 
