@@ -7,7 +7,7 @@ import {
 import Seo from "@/components/Seo";
 
 const LOGO = "/pilothobb-wing.png";
-const LOCKUP = "/pilothobb-lockup.png";
+const LOCKUP = "https://media.base44.com/images/public/6a455fc5475b58bb52305622/ee9a14bca_802a22ab0_Screenshot2026-08-10at113612PM-removebg-preview.png";
 const HERO_IMG = "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&q=80&auto=format&fit=crop";
 const DRONE_IMG = "https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=1200&q=75&auto=format&fit=crop";
 
