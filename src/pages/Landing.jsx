@@ -326,21 +326,24 @@ export default function Landing() {
               <ul className="space-y-4 text-[14px] text-[#464555]">
                 <li><a className="hover:text-[#4f46e5] transition-colors" href="#features">Features</a></li>
                 <li><a className="hover:text-[#4f46e5] transition-colors" href="#pricing">Pricing</a></li>
-                <li><Link className="hover:text-[#4f46e5] transition-colors" to="/register">Get started</Link></li>
+                <li><Link className="hover:text-[#4f46e5] transition-colors" to="/rpas">Drone / RPAS</Link></li>
+                <li><Link className="hover:text-[#4f46e5] transition-colors" to="/download">Get the app</Link></li>
               </ul>
             </div>
             <div>
               <h4 className="text-[12px] text-[#191c1e] font-bold mb-6 uppercase tracking-widest">Company</h4>
               <ul className="space-y-4 text-[14px] text-[#464555]">
                 <li><Link className="hover:text-[#4f46e5] transition-colors" to="/about">About</Link></li>
+                <li><Link className="hover:text-[#4f46e5] transition-colors" to="/faq">FAQ</Link></li>
+                <li><Link className="hover:text-[#4f46e5] transition-colors" to="/security">Security &amp; data</Link></li>
                 <li><Link className="hover:text-[#4f46e5] transition-colors" to="/contact">Contact</Link></li>
               </ul>
             </div>
             <div>
               <h4 className="text-[12px] text-[#191c1e] font-bold mb-6 uppercase tracking-widest">Legal</h4>
               <ul className="space-y-4 text-[14px] text-[#464555]">
-                <li><Link className="hover:text-[#4f46e5] transition-colors" to="/contact">Privacy Policy</Link></li>
-                <li><Link className="hover:text-[#4f46e5] transition-colors" to="/contact">Terms of Service</Link></li>
+                <li><Link className="hover:text-[#4f46e5] transition-colors" to="/privacy">Privacy Policy</Link></li>
+                <li><Link className="hover:text-[#4f46e5] transition-colors" to="/terms">Terms of Service</Link></li>
               </ul>
             </div>
           </div>
