@@ -36,7 +36,7 @@ export default function TopNav() {
     >
       <nav className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         <Link to="/">
-          <Logo size={36} />
+          <Logo size={44} />
         </Link>
 
         <div className="hidden md:flex items-center gap-8">

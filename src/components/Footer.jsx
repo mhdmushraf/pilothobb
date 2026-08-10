@@ -33,7 +33,7 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
           <div className="col-span-2 md:col-span-1">
-            <Logo size={32} />
+            <Logo size={40} />
             <p className="text-xs text-cockpit-muted mt-3 max-w-[200px] leading-relaxed">
               The digital logbook for pilots worldwide.
             </p>
