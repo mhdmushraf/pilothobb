@@ -1,88 +1,95 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Check } from "lucide-react";
+import { Check, X } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import ScrollReveal from "@/components/ScrollReveal";
 import Seo from "@/components/Seo";
 
 const tiers = [
   {
-    name: "Student",
-    description: "For PPL & CPL students building hours.",
-    price: "Free trial",
-    period: "14 days · no card",
-    features: [
-      "Unlimited flight logging",
-      "Hobbs / Tach auto-totals",
-      "Currency & exam clocks",
-    ],
+    name: "Free",
+    tagline: "For student pilots",
+    price: "R0",
+    period: "free forever",
     cta: "Start free",
+    to: "/register",
     highlighted: false,
-    buttonClass: "bg-transparent border border-cockpit-border text-cockpit-cream hover:border-cockpit-amber/40 hover:bg-cockpit-panel-light",
+    features: [
+      "Up to 50 flight entries",
+      "Up to 3 aircraft",
+      "CPL hour dashboard (view only)",
+      "5 instructor signatures",
+      "Watermarked PDF logbook",
+      "CSV export — always",
+    ],
+    buttonClass:
+      "bg-transparent border border-cockpit-border text-cockpit-cream hover:border-cockpit-amber/40 hover:bg-cockpit-panel-light",
   },
   {
-    name: "Pilot Pro",
-    description: "The full logbook for active pilots.",
-    price: "$6.99",
-    period: "/month · or $69/year — save 18%",
-    features: [
-      "Everything in Student",
-      "Licence & medical renewals",
-      "Page-replica PDF export",
-      "Endorsements with photos",
-      "Camera meter scan (soon)",
-    ],
-    cta: "Get Pilot Pro",
+    name: "CPL",
+    tagline: "For active & commercial pilots",
+    price: "R499",
+    period: "/year · or R59/month (~$27/yr)",
+    cta: "Get CPL",
+    to: "/register",
     highlighted: true,
+    features: [
+      "Unlimited flights & aircraft",
+      "SACAA-shaped export",
+      "CA 61-91 auto pre-fill",
+      "Full CPL hour dashboard",
+      "Credit expiry alerts",
+      "Unlimited instructor signatures",
+      "Clean PDF logbook print",
+    ],
     buttonClass: "bg-cockpit-amber text-cockpit-bg hover:shadow-lg hover:shadow-cockpit-amber/30",
   },
   {
-    name: "Academy",
-    description: "For flight schools managing many students.",
-    price: "Talk to us",
-    period: "per-seat · billed yearly",
-    features: [
-      "Everything in Pilot Pro",
-      "Student roster & oversight",
-      "Bulk seats & school branding",
-    ],
+    name: "School",
+    tagline: "For flight schools & academies",
+    price: "R199",
+    period: "per student / year · min 10 seats",
     cta: "Contact sales",
+    to: "/contact",
     highlighted: false,
-    buttonClass: "bg-transparent border border-cockpit-border text-cockpit-cream hover:border-cockpit-amber/40 hover:bg-cockpit-panel-light",
+    features: [
+      "Everything in CPL",
+      "Student roster & oversight",
+      "Bulk seats, billed yearly",
+      "School branding",
+    ],
+    buttonClass:
+      "bg-transparent border border-cockpit-border text-cockpit-cream hover:border-cockpit-amber/40 hover:bg-cockpit-panel-light",
   },
 ];
+
+// Comparison matrix. Values: string = text, true = ✓, false = ✗
+const rows = [
+  ["Price", "R0", "R499/yr · R59/mo", "R199/student/yr"],
+  ["Flight entries", "50 flights", "Unlimited", "Unlimited"],
+  ["Aircraft", "3", "Unlimited", "Unlimited"],
+  ["SACAA export", false, true, true],
+  ["CA 61-91 pre-fill", false, true, true],
+  ["CPL hour dashboard", "View only", "Full", "Full"],
+  ["Credit expiry alerts", false, true, true],
+  ["Instructor signatures", "5 total", "Unlimited", "Unlimited"],
+  ["PDF logbook print", "Watermarked", "Clean", "Clean"],
+  ["CSV export", "Always", true, true],
+];
+
+function Cell({ v }) {
+  if (v === true) return <Check className="w-4 h-4 text-cockpit-valid inline" aria-label="Included" />;
+  if (v === false) return <X className="w-4 h-4 text-cockpit-muted/50 inline" aria-label="Not included" />;
+  return <span className="text-cockpit-muted">{v}</span>;
+}
 
 const faqs = [
-  {
-    q: "Which licensing authority does it work for?",
-    a: "PilotHobb is built around how pilots log worldwide; it adapts to FAA, EASA, UK CAA, CASA, SACAA and more.",
-  },
-  {
-    q: "Hobbs or Tach?",
-    a: "Chosen per aircraft. Time totals from the before and after readings, automatically.",
-  },
-  {
-    q: "Can I export my logbook?",
-    a: "Any time. Pick a page range and export a clean, authority-ready PDF.",
-  },
-  {
-    q: "What happens to my data if I cancel?",
-    a: "It stays yours. Export to PDF anytime — your logbook is never locked in.",
-  },
-  {
-    q: "Does the camera scan work?",
-    a: "Camera meter scan is rolling out after launch, included in Pilot Pro.",
-  },
-  {
-    q: "Is there a plan for flight schools?",
-    a: "Yes — the Academy plan offers per-seat pricing, student oversight, and school branding.",
-  },
-];
-
-const tabletClasses = [
-  "md:order-2 lg:order-none",
-  "md:order-1 md:col-span-2 lg:order-none lg:col-span-1",
-  "md:order-3 lg:order-none",
+  { q: "What currency is this in?", a: "Prices are in South African Rand (ZAR). The approximate USD figure is a guide; you’re billed in Rand." },
+  { q: "Is the free tier really free?", a: "Yes — R0, no card required. It covers a typical PPL student through roughly their first solo cross-country before you’d need to upgrade." },
+  { q: "What happens at 50 flights?", a: "Your existing entries stay fully visible and exportable. To add more flights, or to unlock SACAA export and credit tracking, you upgrade to CPL." },
+  { q: "Can I always export my data?", a: "Always. CSV export is available on every plan, including Free — your logbook is never held hostage. Clean, watermark-free PDF comes with CPL and School." },
+  { q: "How does the School plan work?", a: "R199 per student per year, billed yearly, minimum 10 seats — with a student roster, oversight, and school branding. Get in touch and we’ll set you up." },
+  { q: "Do prices change?", a: "Pricing shown is for launch and may be adjusted. Anyone already subscribed keeps the terms they signed up on for that period." },
 ];
 
 export default function Pricing() {
@@ -91,19 +98,19 @@ export default function Pricing() {
       <Seo
         path="/pricing"
         title="Pricing — PilotHobb Digital Pilot Logbook"
-        description="Simple pricing for PilotHobb, the digital logbook for student, private and commercial pilots. Track flight hours, currency, aircraft maintenance and drone (RPAS) time in one app."
+        description="Simple pricing for PilotHobb. Free for student pilots, R499/yr for CPL with SACAA export and credit tracking, and per-seat School plans for flight academies."
       />
       <PageHeader
         eyebrow="Pricing"
-        title="One subscription. Your whole flying career."
-        subtitle="Start free, keep your logbook for life. Cancel anytime — your data exports to PDF whenever you want it."
+        title="Free while you train. Ready when you fly for a living."
+        subtitle="Start free, keep your logbook for life, and upgrade when you need SACAA-ready exports and credit tracking. CSV export is always free."
       />
 
       {/* Pricing cards */}
       <section className="px-4 sm:px-6 py-6 max-w-5xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {tiers.map((tier, i) => (
-            <ScrollReveal key={tier.name} delay={i * 100} className={tabletClasses[i]}>
+            <ScrollReveal key={tier.name} delay={i * 100}>
               <div
                 className={`rounded-2xl p-6 h-full flex flex-col ${
                   tier.highlighted
@@ -113,19 +120,15 @@ export default function Pricing() {
               >
                 {tier.highlighted && (
                   <span className="inline-block self-start px-2.5 py-0.5 rounded-full bg-cockpit-amber/15 text-cockpit-amber text-[10px] font-semibold uppercase tracking-wider mb-3">
-                    Most Popular
+                    Most popular
                   </span>
                 )}
-                <h3 className="font-heading text-xl font-bold text-cockpit-cream mb-1">
-                  {tier.name}
-                </h3>
-                <p className="text-sm text-cockpit-muted mb-5">{tier.description}</p>
+                <h3 className="font-heading text-xl font-bold text-cockpit-cream mb-1">{tier.name}</h3>
+                <p className="text-sm text-cockpit-muted mb-5">{tier.tagline}</p>
                 <div className="mb-1">
-                  <span className="font-mono text-3xl font-bold text-cockpit-cream">
-                    {tier.price}
-                  </span>
+                  <span className="font-mono text-3xl font-bold text-cockpit-cream">{tier.price}</span>
                 </div>
-                <p className="text-xs text-cockpit-muted mb-6">{tier.period}</p>
+                <p className="text-xs text-cockpit-muted mb-6 min-h-[2rem]">{tier.period}</p>
                 <ul className="space-y-2.5 mb-6 flex-1">
                   {tier.features.map((f) => (
                     <li key={f} className="flex items-start gap-2 text-sm text-cockpit-muted">
@@ -135,7 +138,7 @@ export default function Pricing() {
                   ))}
                 </ul>
                 <Link
-                  to="/register"
+                  to={tier.to}
                   className={`inline-flex items-center justify-center px-4 py-2.5 rounded-xl font-semibold text-sm transition-all hover:-translate-y-0.5 ${tier.buttonClass}`}
                 >
                   {tier.cta}
@@ -144,17 +147,44 @@ export default function Pricing() {
             </ScrollReveal>
           ))}
         </div>
-        <p className="text-center text-xs text-cockpit-muted mt-6">
-          Prices shown are placeholders — final pricing set at launch. Shown in USD.
-        </p>
+      </section>
+
+      {/* Comparison table */}
+      <section className="px-4 sm:px-6 py-12 max-w-5xl mx-auto">
+        <ScrollReveal>
+          <h2 className="font-heading text-2xl font-bold text-cockpit-cream text-center mb-8">Compare plans</h2>
+          <div className="rounded-2xl border border-cockpit-border bg-cockpit-panel overflow-x-auto">
+            <table className="w-full text-sm min-w-[560px]">
+              <thead>
+                <tr className="border-b border-cockpit-border">
+                  <th className="text-left font-semibold text-cockpit-muted py-4 px-4 w-[34%]"></th>
+                  <th className="text-left font-heading font-bold text-cockpit-cream py-4 px-4">Free <span className="block text-[11px] font-body font-normal text-cockpit-muted">Student</span></th>
+                  <th className="text-left font-heading font-bold text-cockpit-amber py-4 px-4 bg-cockpit-amber/5">CPL</th>
+                  <th className="text-left font-heading font-bold text-cockpit-cream py-4 px-4">School</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((r, i) => (
+                  <tr key={i} className="border-b border-cockpit-border last:border-0">
+                    <td className="py-3.5 px-4 font-medium text-cockpit-cream">{r[0]}</td>
+                    <td className="py-3.5 px-4"><Cell v={r[1]} /></td>
+                    <td className="py-3.5 px-4 bg-cockpit-amber/5"><Cell v={r[2]} /></td>
+                    <td className="py-3.5 px-4"><Cell v={r[3]} /></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-center text-xs text-cockpit-muted mt-4">
+            Prices in ZAR (South African Rand). CSV export is included on every plan — your data is always yours.
+          </p>
+        </ScrollReveal>
       </section>
 
       {/* FAQ */}
-      <section className="px-4 sm:px-6 py-20 max-w-5xl mx-auto">
+      <section className="px-4 sm:px-6 py-16 max-w-5xl mx-auto">
         <ScrollReveal>
-          <h2 className="font-heading text-2xl sm:text-3xl font-bold text-cockpit-cream text-center mb-10">
-            Frequently asked
-          </h2>
+          <h2 className="font-heading text-2xl sm:text-3xl font-bold text-cockpit-cream text-center mb-10">Pricing questions</h2>
         </ScrollReveal>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {faqs.map((faq, i) => (
@@ -182,24 +212,17 @@ export default function Pricing() {
             <div className="absolute inset-0 bg-gradient-to-br from-cockpit-amber/10 to-transparent pointer-events-none" />
             <div className="relative">
               <h2 className="font-heading text-3xl sm:text-4xl font-bold text-cockpit-cream mb-3">
-                Start your logbook tonight.
+                Start your logbook tonight — free.
               </h2>
-              <div className="flex flex-wrap gap-3 justify-center mt-6">
-                <a href="#" className="inline-flex items-center gap-2.5 px-5 py-3 rounded-xl bg-cockpit-panel-light border border-cockpit-border hover:border-cockpit-amber/30 transition-colors">
-                  <svg viewBox="0 0 24 24" className="w-5 h-5 text-cockpit-cream" fill="currentColor">
-                    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.14 16.37 3.01 11.68 5.04 8.5c1.01-1.62 2.82-2.65 4.76-2.68 1.28-.03 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11"/>
-                  </svg>
-                  <span className="text-sm font-semibold text-cockpit-cream font-heading">Download for iPhone</span>
-                </a>
-                <a href="#" className="inline-flex items-center gap-2.5 px-5 py-3 rounded-xl bg-cockpit-panel-light border border-cockpit-border hover:border-cockpit-amber/30 transition-colors">
-                  <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none">
-                    <path d="M3 3.5v17l9-8.5-9-8.5z" fill="#4F46E5"/>
-                    <path d="M3 3.5l9 8.5 3.5-3.3L4.5 3.5H3z" fill="#191C1E" opacity="0.6"/>
-                    <path d="M3 20.5l9-8.5 3.5 3.3L4.5 20.5H3z" fill="#6B7280"/>
-                  </svg>
-                  <span className="text-sm font-semibold text-cockpit-cream font-heading">Download for Android</span>
-                </a>
-              </div>
+              <p className="text-cockpit-muted mb-6 max-w-lg mx-auto">
+                No card required. Upgrade to CPL the day you need a SACAA-ready export.
+              </p>
+              <Link
+                to="/register"
+                className="inline-flex items-center px-6 py-3 rounded-xl bg-cockpit-amber text-cockpit-bg font-semibold hover:shadow-lg hover:shadow-cockpit-amber/30 hover:-translate-y-0.5 transition-all"
+              >
+                Start free
+              </Link>
             </div>
           </div>
         </ScrollReveal>
