@@ -15,18 +15,18 @@ const AUTHORITIES = ["SACAA", "FAA", "EASA", "UK CAA", "CASA"];
 
 const TIERS = [
 {
-  name: "Student", price: "Free trial", period: "14 days · no card",
-  features: ["Unlimited flight logging", "Hobbs / Tach auto-totals", "Currency & exam clocks"],
+  name: "Free", price: "R0", period: "for student pilots · free forever",
+  features: ["Up to 50 flight entries", "Up to 3 aircraft", "CPL hour dashboard (view only)", "CSV export — always"],
   cta: "Start free", to: "/register", highlighted: false
 },
 {
-  name: "Pilot Pro", price: "$6.99", period: "/month · or $69/year — save 18%",
-  features: ["Everything in Student", "Licence & medical renewals", "Page-replica PDF export", "Endorsements with photos", "Camera meter scan (soon)"],
-  cta: "Get Pilot Pro", to: "/register", highlighted: true
+  name: "CPL", price: "R499", period: "/year · or R59/month (~$27/yr)",
+  features: ["Unlimited flights & aircraft", "SACAA-shaped export", "CA 61-91 auto pre-fill", "Credit expiry alerts", "Clean PDF logbook print"],
+  cta: "Get CPL", to: "/register", highlighted: true
 },
 {
-  name: "Academy", price: "Talk to us", period: "per-seat · billed yearly",
-  features: ["Everything in Pilot Pro", "Student roster & oversight", "Bulk seats & school branding"],
+  name: "School", price: "R199", period: "per student / year · min 10 seats",
+  features: ["Everything in CPL", "Student roster & oversight", "Bulk seats, billed yearly", "School branding"],
   cta: "Contact sales", to: "/contact", highlighted: false
 }];
 
