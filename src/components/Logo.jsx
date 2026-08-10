@@ -4,7 +4,7 @@ export const BRAND_ASSETS = {
   // Wing-only mark (square icon slots)
   mark: "/pilothobb-wing.png",
   // Full "PilotHobb" lockup (wing + wordmark) — for headers/footers
-  logo: "/pilothobb-lockup.png",
+  logo: "https://media.base44.com/images/public/6a455fc5475b58bb52305622/802a22ab0_Screenshot2026-08-10at113612PM.png",
   icon: "/pilothobb-wing.png",
   iconPng: "/pilothobb-wing.png",
 };
