@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { Download, FileText, FileSpreadsheet, Loader2 } from "lucide-react";
+import { Download, FileText, FileSpreadsheet, Loader2, FileBarChart } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import usePilot from "@/hooks/usePilot";
 import { jsPDF } from "jspdf";
@@ -43,6 +43,42 @@ export default function ExportData() {
     } finally { setBusy(""); }
   };
 
+  const exportSummary = async () => {
+    setBusy("sum");
+    try {
+      const flights = await load();
+      const byAc = {};
+      flights.forEach((f) => { const r = acReg(f.aircraft); if (!byAc[r]) byAc[r] = { hrs: 0, n: 0 }; byAc[r].hrs += f.flight_time || 0; byAc[r].n += 1; });
+      const doc = new jsPDF({ unit: "mm", format: "a4" });
+      doc.setFont("helvetica", "bold"); doc.setFontSize(18); doc.setTextColor(79, 70, 229);
+      doc.text("PilotHobb — Logbook Summary", 14, 18);
+      doc.setFont("helvetica", "normal"); doc.setFontSize(12); doc.setTextColor(30, 30, 30);
+      doc.text(pilot?.full_name || "Pilot", 14, 26);
+      doc.setFontSize(9); doc.setTextColor(110, 110, 110);
+      doc.text(`Generated ${new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}`, 14, 31);
+      autoTable(doc, {
+        startY: 38,
+        head: [["Total", "PIC", "Dual", "Night", "XC", "Instrument", "Flights"]],
+        body: [[(pilot?.total_time || 0).toFixed(1), (pilot?.total_pic || 0).toFixed(1), (pilot?.total_dual || 0).toFixed(1), (pilot?.total_night || 0).toFixed(1), (pilot?.total_xc || 0).toFixed(1), (pilot?.total_instrument || 0).toFixed(1), String(count ?? flights.length)]],
+        headStyles: { fillColor: [79, 70, 229], textColor: [255, 255, 255], fontStyle: "bold" },
+        bodyStyles: { font: "courier", fontSize: 11, textColor: [30, 30, 30], halign: "center" },
+        headStyles2: {}, margin: { left: 14, right: 14 },
+      });
+      const acRows = Object.entries(byAc).sort((a, b) => b[1].hrs - a[1].hrs).map(([reg, v]) => [reg, v.hrs.toFixed(1), String(v.n)]);
+      autoTable(doc, {
+        startY: (doc.lastAutoTable?.finalY || 50) + 8,
+        head: [["Aircraft", "Hours", "Flights"]],
+        body: acRows.length ? acRows : [["—", "0.0", "0"]],
+        headStyles: { fillColor: [20, 184, 166], textColor: [255, 255, 255], fontStyle: "bold" },
+        bodyStyles: { font: "courier", fontSize: 10, textColor: [40, 40, 40] },
+        alternateRowStyles: { fillColor: [242, 244, 246] }, margin: { left: 14, right: 14 },
+      });
+      doc.setFontSize(8); doc.setTextColor(150, 150, 150);
+      doc.text("PilotHobb · pilothobb.com — this summary reflects totals recorded in your account.", 14, 285);
+      doc.save("pilothobb-summary.pdf");
+    } finally { setBusy(""); }
+  };
+
   const exportCSV = async () => {
     setBusy("csv");
     try {
@@ -72,6 +108,10 @@ export default function ExportData() {
         <button onClick={exportCSV} disabled={!!busy} className="w-full flex items-center gap-4 rounded-2xl bg-cockpit-panel border border-cockpit-border p-4 active:scale-[0.99] transition-transform">
           <div className="w-11 h-11 rounded-xl bg-cockpit-valid/10 flex items-center justify-center shrink-0">{busy === "csv" ? <Loader2 className="w-5 h-5 text-cockpit-valid animate-spin" /> : <FileSpreadsheet className="w-5 h-5 text-cockpit-valid" />}</div>
           <div className="flex-1 text-left"><p className="text-sm font-semibold text-cockpit-cream">Export as CSV</p><p className="text-xs text-cockpit-muted">Spreadsheet-friendly, every field</p></div>
+        </button>
+        <button onClick={exportSummary} disabled={!!busy} className="w-full flex items-center gap-4 rounded-2xl bg-cockpit-panel border border-cockpit-border p-4 active:scale-[0.99] transition-transform">
+          <div className="w-11 h-11 rounded-xl bg-cockpit-glow-blue/10 flex items-center justify-center shrink-0">{busy === "sum" ? <Loader2 className="w-5 h-5 text-cockpit-glow-blue animate-spin" /> : <FileBarChart className="w-5 h-5 text-cockpit-glow-blue" />}</div>
+          <div className="flex-1 text-left"><p className="text-sm font-semibold text-cockpit-cream">Printable summary</p><p className="text-xs text-cockpit-muted">One-page totals &amp; hours by aircraft</p></div>
         </button>
       </div>
       <p className="text-[11px] text-cockpit-muted text-center mt-6">Your data is always yours — export anytime, cancel anytime.</p>
