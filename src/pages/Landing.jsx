@@ -102,6 +102,7 @@ function NavBar() {
           <a className="text-[15px] text-[#464555] font-medium hover:text-[#3525cd] transition-colors" href="#features">Features</a>
           <a className="text-[15px] text-[#464555] font-medium hover:text-[#3525cd] transition-colors" href="#pricing">Pricing</a>
           <Link className="text-[15px] text-[#464555] font-medium hover:text-[#3525cd] transition-colors" to="/about">About</Link>
+          <Link className="text-[15px] text-[#464555] font-medium hover:text-[#3525cd] transition-colors" to="/contact">Contact</Link>
         </nav>
         <div className="flex items-center gap-3">
           <Link to="/login" className="hidden md:block text-[15px] px-4 py-2 text-[#4f46e5] font-semibold hover:bg-[#f2f4f6] rounded-lg transition-colors">Login</Link>
@@ -114,6 +115,7 @@ function NavBar() {
           <a onClick={() => setOpen(false)} className="block py-3 font-medium text-[#464555]" href="#features">Features</a>
           <a onClick={() => setOpen(false)} className="block py-3 font-medium text-[#464555]" href="#pricing">Pricing</a>
           <Link onClick={() => setOpen(false)} className="block py-3 font-medium text-[#464555]" to="/about">About</Link>
+          <Link onClick={() => setOpen(false)} className="block py-3 font-medium text-[#464555]" to="/contact">Contact</Link>
           <Link onClick={() => setOpen(false)} className="block py-3 font-semibold text-[#4f46e5]" to="/login">Login</Link>
         </div>
       }
