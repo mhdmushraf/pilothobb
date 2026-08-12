@@ -8,8 +8,8 @@ import Seo from "@/components/Seo";
 
 const LOGO = "/pilothobb-wing.png";
 const LOCKUP = "https://media.base44.com/images/public/6a455fc5475b58bb52305622/ee9a14bca_802a22ab0_Screenshot2026-08-10at113612PM-removebg-preview.png";
-// ↓ After uploading pilothobb_demo.mp4 to Base44 media, paste its URL here to enable the player.
-const DEMO_VIDEO = "";
+// PilotHobb explainer video (hosted on Base44 media).
+const DEMO_VIDEO = "https://media.base44.com/videos/public/6a455fc5475b58bb52305622/84d4c3188_pilothobb_demo_v6.mp4";
 const HERO_IMG = "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&q=80&auto=format&fit=crop";
 const DRONE_IMG = "https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=1200&q=75&auto=format&fit=crop";
 
