@@ -9,8 +9,9 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import {
-  BookOpen, Plane, Trash2, X, FileDown, BarChart3, Loader2, ChevronRight, Pencil, Plus,
+  BookOpen, Plane, Trash2, X, FileDown, BarChart3, Loader2, ChevronRight, Pencil, Plus, Table2,
 } from "lucide-react";
+import LogbookView from "@/components/LogbookView";
 import EmptyState from "@/components/EmptyState";
 import SkeletonCard from "@/components/SkeletonCard";
 import BottomSheet from "@/components/BottomSheet";
@@ -180,6 +181,7 @@ export default function Logbook() {
   }, [flightIdParam, flights]);
   const [deleting, setDeleting] = useState(false);
   const [exporting, setExporting] = useState(false);
+  const [showLogbookView, setShowLogbookView] = useState(false);
 
   const activeFilters = useMemo(() => {
     const f = {};
@@ -406,7 +408,10 @@ export default function Logbook() {
         title="Logbook"
         subtitle={flights ? `${flights.length} flight${flights.length !== 1 ? "s" : ""} · ${totalTime.toFixed(1)} h` : ""}
         action={flights !== null && flights.length > 0 && (
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2 justify-end">
+            <Button variant="outline" size="sm" className="border-cockpit-amber/40 text-cockpit-amber hover:bg-cockpit-amber/10 h-8" onClick={() => setShowLogbookView(true)}>
+              <Table2 className="w-3.5 h-3.5" /> Logbook view
+            </Button>
             <Button variant="outline" size="sm" className="border-cockpit-border text-cockpit-muted hover:text-cockpit-cream h-8" onClick={handleExportPDF} disabled={exporting}>
               {exporting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <FileDown className="w-3.5 h-3.5" />}
               {exporting ? "Generating…" : "Export PDF"}
@@ -522,6 +527,11 @@ export default function Logbook() {
             </button>
           )}
         </>
+      )}
+
+      {/* Physical logbook view */}
+      {showLogbookView && (
+        <LogbookView pilot={pilot} aircraftList={aircraftList} onClose={() => setShowLogbookView(false)} />
       )}
 
       {/* Flight detail modal */}
