@@ -242,6 +242,16 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* STATS BAND */}
+      <section className="py-14 bg-white border-b border-[#e2e8f0]">
+        <div className="max-w-[1280px] mx-auto px-4 md:px-8 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          <Stat value={<CountUp end={32} />} label="Column official logbook" sub="Full SACAA-format export" />
+          <Stat value={<CountUp end={5} />} label="Authorities supported" sub="SACAA · FAA · EASA · UK CAA · CASA" />
+          <Stat value="0.1h" label="Logged to the tenth" sub="Hobbs &amp; Tach precision" />
+          <Stat value="PDF · CSV" label="Export anytime" sub="Your data, always yours" />
+        </div>
+      </section>
+
       {/* FEATURES */}
       <section id="features" className="py-24 bg-white">
         <div className="max-w-[1280px] mx-auto px-4 md:px-8">
@@ -343,6 +353,49 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* HOW IT WORKS */}
+      <section className="py-24 bg-[#f7f9fb]">
+        <div className="max-w-[1280px] mx-auto px-4 md:px-8">
+          <div className="text-center mb-16 max-w-2xl mx-auto">
+            <h2 className="font-heading text-[30px] md:text-[40px] font-bold mb-4">Your logbook, in three taps.</h2>
+            <p className="text-[18px] text-[#464555]">From meter reading to authority-ready record — without the paper.</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            <Step n="1" icon={Plane} title="Add your aircraft">Set each aircraft to Hobbs or Tach once. We remember the last reading so every flight starts from the right number.</Step>
+            <Step n="2" icon={Gauge} title="Log from the meter">Scan the Hobbs with your camera or type it in. Flight time, landings and take-offs total automatically.</Step>
+            <Step n="3" icon={ShieldCheck} title="Stay current &amp; export">Currency alerts keep medicals and ratings from lapsing — then export a clean PDF or the official 32-column logbook in one tap.</Step>
+          </div>
+        </div>
+      </section>
+
+      {/* PAPER vs PILOTHOBB */}
+      <section className="py-24 bg-white">
+        <div className="max-w-4xl mx-auto px-4 md:px-8">
+          <div className="text-center mb-14 max-w-2xl mx-auto">
+            <h2 className="font-heading text-[30px] md:text-[40px] font-bold mb-4">Retire the paper logbook.</h2>
+            <p className="text-[18px] text-[#464555]">Everything the green book does — without the smudges, the maths, or the risk of losing it.</p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="rounded-2xl border border-[#e2e8f0] bg-[#f7f9fb] p-8">
+              <p className="text-[13px] uppercase tracking-widest font-bold text-[#464555]/60 mb-5">Paper logbook</p>
+              <ul className="space-y-3.5">
+                {["Add up columns by hand", "Guess when your medical expires", "Re-total every page for a checkride", "One coffee spill from disaster", "Drone hours mixed in or on scraps"].map((t) => (
+                  <li key={t} className="flex items-start gap-3 text-[15px] text-[#464555]"><X className="w-5 h-5 text-[#94a3b8] shrink-0 mt-0.5" /> {t}</li>
+                ))}
+              </ul>
+            </div>
+            <div className="rounded-2xl border-2 border-[#4f46e5]/30 bg-[#4f46e5]/[0.04] p-8 shadow-lg">
+              <p className="text-[13px] uppercase tracking-widest font-bold text-[#4f46e5] mb-5">PilotHobb</p>
+              <ul className="space-y-3.5">
+                {["Totals calculated to the tenth, instantly", "Currency to the day, colour-coded", "Authority-ready PDF in one tap", "Backed up in the cloud, exportable anytime", "RPAS hours kept cleanly separate"].map((t) => (
+                  <li key={t} className="flex items-start gap-3 text-[15px] text-[#191c1e] font-medium"><CheckCircle2 className="w-5 h-5 text-[#10b981] shrink-0 mt-0.5" /> {t}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* PRICING */}
       <section id="pricing" className="py-24 bg-[#f7f9fb]">
         <div className="max-w-6xl mx-auto px-4 md:px-8">
@@ -374,6 +427,30 @@ export default function Landing() {
             )}
           </div>
           <p className="text-center text-[13px] text-[#464555]/70 mt-8">Prices in ZAR. CSV export is free on every plan — your data is always yours. <Link to="/pricing" className="text-[#4f46e5] font-semibold">Compare plans</Link></p>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section id="faq" className="py-24 bg-white">
+        <div className="max-w-3xl mx-auto px-4 md:px-8">
+          <div className="text-center mb-14">
+            <h2 className="font-heading text-[30px] md:text-[40px] font-bold mb-4">Questions, answered.</h2>
+            <p className="text-[18px] text-[#464555]">Everything pilots ask before they switch.</p>
+          </div>
+          <div className="space-y-3">
+            {FAQS.map((f, i) => {
+              const open = openFaq === i;
+              return (
+                <div key={f.q} className="rounded-2xl border border-[#e2e8f0] bg-[#f7f9fb] overflow-hidden">
+                  <button onClick={() => setOpenFaq(open ? -1 : i)} className="w-full flex items-center justify-between gap-4 p-5 text-left">
+                    <span className="font-heading text-[17px] font-semibold text-[#191c1e]">{f.q}</span>
+                    <ChevronDown className={`w-5 h-5 text-[#4f46e5] shrink-0 transition-transform ${open ? "rotate-180" : ""}`} />
+                  </button>
+                  {open && <div className="px-5 pb-5 -mt-1 text-[15px] text-[#464555] leading-relaxed">{f.a}</div>}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </section>
 
