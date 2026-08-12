@@ -102,7 +102,7 @@ function StatCard({ label, value, accent, bar }) {
   );
 }
 
-function FlightRow({ flight }) {
+function FlightRow({ flight, reg }) {
   return (
     <Link
       to="/logbook"
@@ -135,8 +135,8 @@ function FlightRow({ flight }) {
           <span className="text-xs text-cockpit-muted font-mono">
             {flight.date ? new Date(flight.date).toLocaleDateString("en-GB", { day: "2-digit", month: "short" }) : ""}
           </span>
-          {flight.aircraft && (
-            <span className="text-[10px] text-cockpit-muted">{flight.aircraft}</span>
+          {reg && (
+            <span className="text-[10px] text-cockpit-muted font-mono">{reg}</span>
           )}
         </div>
       </div>
@@ -151,22 +151,26 @@ export default function Dashboard() {
   const { pilot, loading: pilotLoading } = usePilot();
   const [licences, setLicences] = useState(null);
   const [flights, setFlights] = useState(null);
+  const [aircraft, setAircraft] = useState([]);
   const navigate = useNavigate();
 
   const loadData = async () => {
     const today = new Date().toISOString().split("T")[0];
     try {
-      const [lic, fl] = await Promise.all([
+      const [lic, fl, ac] = await Promise.all([
         base44.entities.Licence.filter({ expiry_date: { $gte: today } }, "expiry_date", 3),
         base44.entities.Flight.list("-date", 4),
+        base44.entities.Aircraft.list(),
       ]);
       setLicences(lic);
       setFlights(fl);
+      setAircraft(ac);
     } catch {
       setLicences([]);
       setFlights([]);
     }
   };
+  const acReg = (id) => aircraft.find((a) => a.id === (typeof id === "string" ? id : id?.id))?.registration || "";
 
   useEffect(() => { loadData(); }, []);
 
@@ -361,7 +365,7 @@ export default function Dashboard() {
               }
             />
           ) : (
-            flights.map((f) => <FlightRow key={f.id} flight={f} />)
+            flights.map((f) => <FlightRow key={f.id} flight={f} reg={acReg(f.aircraft)} />)
           )}
         </div>
       </div>
