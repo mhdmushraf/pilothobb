@@ -99,7 +99,7 @@ export default function QuickLog() {
           {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}{saving ? "Saving…" : "Log flight"}
         </button>
         {msg && <p className="text-xs text-center text-cockpit-muted">{msg}</p>}
-        <p className="text-[11px] text-cockpit-muted text-center">Need Hobbs readings, night or IFR time? Use the full <a href="/addflight" className="text-cockpit-amber font-semibold">Add Flight</a> form.</p>
+        <p className="text-[11px] text-cockpit-muted text-center">Need Hobbs readings, night or IFR time? Use the full <a href="/add-flight" className="text-cockpit-amber font-semibold">Add Flight</a> form.</p>
       </div>
 
       <p className="text-[11px] uppercase tracking-widest text-cockpit-muted pt-5 pb-2 pl-1">Recent</p>
