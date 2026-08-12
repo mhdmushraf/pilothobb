@@ -87,12 +87,12 @@ export default function LogbookSummary({ pilot, aircraftList = [], onClose }) {
 
   return (
     <div className="fixed inset-0 z-[60] flex flex-col bg-black/50">
-      <div className="flex items-center justify-between px-4 py-3 bg-white border-b border-slate-200">
-        <div>
+      <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 bg-white border-b border-slate-200">
+        <div className="min-w-0">
           <p className="text-sm font-bold text-slate-900">Logbook Summary</p>
           <p className="text-[11px] text-slate-500">{pilot?.full_name || "Pilot"} · hours by aircraft type</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button onClick={exportPDF} className="flex items-center gap-1.5 text-xs font-semibold text-white bg-indigo-600 rounded-lg px-3 py-1.5 hover:bg-indigo-700">
             <FileDown className="w-3.5 h-3.5" /> Export PDF
           </button>
