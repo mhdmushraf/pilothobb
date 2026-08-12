@@ -1,16 +1,31 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { Download, FileText, FileSpreadsheet, Loader2, FileBarChart } from "lucide-react";
+import { Download, FileText, FileSpreadsheet, Loader2, FileBarChart, RefreshCw } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import usePilot from "@/hooks/usePilot";
+import { recalcPilotTotals } from "@/lib/flightTotals";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 
 export default function ExportData() {
-  const { pilot } = usePilot();
+  const { pilot, reload } = usePilot();
   const [aircraft, setAircraft] = useState([]);
   const [count, setCount] = useState(null);
   const [busy, setBusy] = useState("");
+  const [recalcMsg, setRecalcMsg] = useState("");
+
+  const recalcTotals = async () => {
+    setBusy("recalc"); setRecalcMsg("");
+    try {
+      const flights = await base44.entities.Flight.filter({}, "-date", 5000);
+      const patch = recalcPilotTotals(flights);
+      if (pilot?.id) await base44.entities.Pilot.update(pilot.id, patch);
+      if (reload) await reload();
+      setRecalcMsg(`Done — ${patch.total_time.toFixed(1)}h total · ${patch.total_pic.toFixed(1)}h PIC · ${patch.total_landings} landings from ${flights.length} flights.`);
+    } catch {
+      setRecalcMsg("Couldn’t recalculate — please try again.");
+    } finally { setBusy(""); }
+  };
   useEffect(() => {
     base44.entities.Aircraft.list().then(setAircraft).catch(() => {});
     base44.entities.Flight.list("-date", 1).then(() => {}).catch(() => {});
@@ -114,6 +129,17 @@ export default function ExportData() {
           <div className="flex-1 text-left"><p className="text-sm font-semibold text-cockpit-cream">Printable summary</p><p className="text-xs text-cockpit-muted">One-page totals &amp; hours by aircraft</p></div>
         </button>
       </div>
+
+      <div className="mt-6 rounded-2xl bg-cockpit-panel border border-cockpit-border p-4">
+        <p className="text-sm font-semibold text-cockpit-cream flex items-center gap-1.5"><RefreshCw className="w-4 h-4 text-cockpit-glow-blue" /> Recalculate totals</p>
+        <p className="text-xs text-cockpit-muted mt-1">Rebuilds your total hours, PIC/dual and landings from every logged flight. Use this if your dashboard totals look out of sync.</p>
+        <button onClick={recalcTotals} disabled={!!busy} className="mt-3 w-full flex items-center justify-center gap-2 rounded-xl bg-cockpit-glow-blue/10 border border-cockpit-glow-blue/30 text-cockpit-glow-blue font-semibold py-2.5 text-sm disabled:opacity-50">
+          {busy === "recalc" ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
+          {busy === "recalc" ? "Recalculating…" : "Recalculate from logbook"}
+        </button>
+        {recalcMsg && <p className="text-xs text-center text-cockpit-valid mt-2">{recalcMsg}</p>}
+      </div>
+
       <p className="text-[11px] text-cockpit-muted text-center mt-6">Your data is always yours — export anytime, cancel anytime.</p>
     </div>
   );
