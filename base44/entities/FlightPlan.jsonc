@@ -1,0 +1,83 @@
+{
+  "name": "FlightPlan",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "from_aerodrome": {
+      "type": "string"
+    },
+    "to_aerodrome": {
+      "type": "string"
+    },
+    "distance_nm": {
+      "type": "number"
+    },
+    "cruise_speed": {
+      "type": "number"
+    },
+    "fuel_burn_rate": {
+      "type": "number"
+    },
+    "reserve_min": {
+      "type": "number",
+      "default": 45
+    },
+    "wind_dir": {
+      "type": "number"
+    },
+    "wind_speed": {
+      "type": "number"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "title"
+  ],
+  "rls": {
+    "create": true,
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

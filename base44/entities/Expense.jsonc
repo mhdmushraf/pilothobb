@@ -1,0 +1,78 @@
+{
+  "name": "Expense",
+  "type": "object",
+  "properties": {
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "Fuel",
+        "Maintenance",
+        "Landing fees",
+        "Training",
+        "Insurance",
+        "Hangar",
+        "Subscriptions",
+        "Other"
+      ]
+    },
+    "amount": {
+      "type": "number"
+    },
+    "aircraft": {
+      "type": "string",
+      "relationType": "reference",
+      "referenceEntity": "Aircraft"
+    },
+    "description": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "date",
+    "category",
+    "amount"
+  ],
+  "rls": {
+    "create": true,
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

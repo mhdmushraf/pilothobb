@@ -1,0 +1,85 @@
+{
+  "name": "FuelLog",
+  "type": "object",
+  "properties": {
+    "aircraft": {
+      "type": "string",
+      "relationType": "reference",
+      "referenceEntity": "Aircraft"
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "litres": {
+      "type": "number"
+    },
+    "cost_per_litre": {
+      "type": "number"
+    },
+    "total_cost": {
+      "type": "number"
+    },
+    "reading": {
+      "type": "number"
+    },
+    "fuel_type": {
+      "type": "string",
+      "enum": [
+        "Avgas 100LL",
+        "Jet A-1",
+        "Mogas",
+        "Other"
+      ]
+    },
+    "location": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "date",
+    "litres"
+  ],
+  "rls": {
+    "create": true,
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}
