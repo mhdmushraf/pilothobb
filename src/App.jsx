@@ -53,6 +53,10 @@ import MaintenanceLog from '@/pages/MaintenanceLog';
 import PilotNotes from '@/pages/PilotNotes';
 import Aerodromes from '@/pages/Aerodromes';
 import Goals from '@/pages/Goals';
+import FuelTracker from '@/pages/FuelTracker';
+import Expenses from '@/pages/Expenses';
+import FlightPlanning from '@/pages/FlightPlanning';
+import QuickLog from '@/pages/QuickLog';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -124,6 +128,22 @@ const AuthenticatedApp = () => {
           <Route path="/pilot-notes" element={<PilotNotes />} />
           <Route path="/aerodromes" element={<Aerodromes />} />
           <Route path="/goals" element={<Goals />} />
+
+          {/* New pages */}
+          <Route path="/fuel-tracker" element={<FuelTracker />} />
+          <Route path="/expenses" element={<Expenses />} />
+          <Route path="/flight-planning" element={<FlightPlanning />} />
+          <Route path="/quick-log" element={<QuickLog />} />
+
+          {/* Aliases for requested pages that map to existing screens */}
+          <Route path="/airports" element={<Aerodromes />} />
+          <Route path="/maintenance" element={<MaintenanceLog />} />
+          <Route path="/currency-alerts" element={<Currency />} />
+          <Route path="/briefing" element={<PilotNotes />} />
+          <Route path="/summary" element={<ExportData />} />
+          <Route path="/wallet" element={<Documents />} />
+          <Route path="/medical-records" element={<Documents />} />
+          <Route path="/endorsements" element={<Documents />} />
         </Route>
       </Route>
 
