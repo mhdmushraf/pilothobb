@@ -6,6 +6,9 @@ const BACK_ROUTES = [
   "/settings", "/documents", "/career", "/tracking", "/add-flight", "/edit-flight",
   "/analytics", "/currency", "/schedule", "/checklists", "/export", "/flight-map",
   "/maintenance-log", "/pilot-notes", "/aerodromes", "/goals",
+  "/fuel-tracker", "/expenses", "/flight-planning", "/quick-log",
+  "/airports", "/maintenance", "/currency-alerts", "/briefing", "/summary",
+  "/wallet", "/medical-records", "/endorsements",
 ];
 
 export default function AppHeader({ icon: Icon, title, subtitle, action }) {
