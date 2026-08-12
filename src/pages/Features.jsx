@@ -1,6 +1,7 @@
 import React from "react";
-import { Gauge, ShieldAlert, Camera, BookOpen, Image, Briefcase } from "lucide-react";
+import { Gauge, ShieldAlert, Camera, BookOpen, Image, Briefcase, BarChart3, Wrench, FileDown, Check } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
+import StoreButtons from "@/components/StoreButtons";
 import FeatureDetail from "@/components/landing/FeatureDetail";
 import FeaturesCTA from "@/components/landing/FeaturesCTA";
 import Seo from "@/components/Seo";
@@ -12,6 +13,15 @@ import {
   EndorsementVisual,
   CareerVisual,
 } from "@/components/landing/FeatureVisuals";
+
+const CATS = [
+  { icon: Gauge, title: "Flight logging", items: ["Hobbs or Tach — flight time auto-calculated", "Scan the meter with your camera", "Touch-and-go, take-off & landing totals", "Quick Log from takeoff/landing times", "PIC, Dual, PICUS & Co-pilot roles", "Night, cross-country & instrument time", "RPAS / drone hours logged separately"] },
+  { icon: ShieldAlert, title: "Currency & compliance", items: ["Licences, ratings & medicals with expiry rings", "Theory-exam & English-proficiency validity", "Night & instrument recency from your flights", "‘Expiring soon’ alerts on your dashboard"] },
+  { icon: BookOpen, title: "Records & documents", items: ["Fleet management by type & category", "Exams, licences & RPAS credentials", "Endorsements with a photo of the page", "Maintenance log with upcoming intervals", "Personal pilot notes & debriefs"] },
+  { icon: BarChart3, title: "Insights & career", items: ["Dashboard totals, month snapshot & insights", "6-month analytics trends", "Career totals & hours by aircraft type", "Achievement badges", "Goals with progress tracking", "Logbook activity heatmap"] },
+  { icon: Wrench, title: "Operations tools", items: ["Fuel tracker — cost & burn rate", "Expenses by category", "Flight planning — fuel, time & wind", "Aircraft schedule & bookings", "Aerodrome directory", "Pre-flight & emergency checklists"] },
+  { icon: FileDown, title: "Your logbook, exportable", items: ["Filterable flight list", "Official SACAA 32-column logbook view", "Summary by aircraft type, any date range", "PDF + CSV export anytime", "Your data is never locked in"] },
+];
 
 export default function Features() {
   return (
@@ -92,6 +102,40 @@ export default function Features() {
           description="PIC and dual per type, and the date last flown each — always current for licence applications and interviews."
           visual={<CareerVisual />}
         />
+      </section>
+
+      {/* Full capability catalog */}
+      <section className="px-4 sm:px-6 py-16 max-w-5xl mx-auto">
+        <div className="text-center mb-12 max-w-2xl mx-auto">
+          <h2 className="font-heading text-2xl sm:text-3xl font-bold text-cockpit-cream mb-3">Everything in Pilot Hobb</h2>
+          <p className="text-cockpit-muted">One app for logging, currency, records, insights and operations — for manned aircraft and drones alike.</p>
+        </div>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {CATS.map((c) => {
+            const Icon = c.icon;
+            return (
+              <div key={c.title} className="rounded-2xl bg-cockpit-panel border border-cockpit-border p-6">
+                <div className="w-11 h-11 rounded-xl bg-cockpit-amber/10 border border-cockpit-amber/20 flex items-center justify-center mb-4"><Icon className="w-5 h-5 text-cockpit-amber" /></div>
+                <h3 className="font-heading text-lg font-semibold text-cockpit-cream mb-3">{c.title}</h3>
+                <ul className="space-y-2">
+                  {c.items.map((it) => (
+                    <li key={it} className="flex items-start gap-2 text-sm text-cockpit-muted"><Check className="w-4 h-4 text-cockpit-valid mt-0.5 shrink-0" /> {it}</li>
+                  ))}
+                </ul>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Download band */}
+      <section className="px-4 sm:px-6 pb-20 max-w-3xl mx-auto">
+        <div className="rounded-3xl bg-[#0f172a] text-white p-8 sm:p-10 text-center">
+          <h2 className="font-heading text-2xl sm:text-3xl font-bold mb-3">Take it to the cockpit.</h2>
+          <p className="text-white/70 mb-6 max-w-md mx-auto">Get Pilot Hobb on your phone — or start free in your browser right now.</p>
+          <StoreButtons className="mb-4" />
+          <p className="text-white/50 text-xs">App store links go live at launch.</p>
+        </div>
       </section>
 
       <FeaturesCTA />
