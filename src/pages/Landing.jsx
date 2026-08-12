@@ -6,6 +6,7 @@ import {
   Plane, ChevronDown, Minus } from
 "lucide-react";
 import Seo from "@/components/Seo";
+import StoreButtons from "@/components/StoreButtons";
 
 const LOGO = "/pilothobb-wing.png";
 const LOCKUP = "https://media.base44.com/images/public/6a455fc5475b58bb52305622/ee9a14bca_802a22ab0_Screenshot2026-08-10at113612PM-removebg-preview.png";
@@ -608,6 +609,8 @@ export default function Landing() {
               Start free <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
+          <div className="pt-2"><StoreButtons /></div>
+          <p className="text-white/50 text-xs">iPhone &amp; Android apps go live at launch · start in your browser today.</p>
         </div>
       </section>
 
