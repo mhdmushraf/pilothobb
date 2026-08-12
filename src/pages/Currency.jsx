@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { ShieldCheck, Moon, Compass, Stethoscope, RefreshCw } from "lucide-react";
+import { ShieldCheck, Moon, Compass, Stethoscope, RefreshCw, AlertTriangle } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 
 function dayDiff(dstr) {
@@ -50,6 +50,23 @@ export default function Currency() {
   return (
     <div className="px-4 pt-6 pb-24 max-w-lg mx-auto">
       <AppHeader icon={ShieldCheck} title="Currency Tracker" subtitle="Medicals · reviews · recency" />
+      {Array.isArray(licences) && (() => {
+        const soon = licences.map((l) => ({ l, d: dayDiff(l.expiry_date) })).filter((x) => x.d !== null && x.d <= 90).sort((a, b) => a.d - b.d);
+        if (!soon.length) return null;
+        return (
+          <div className="rounded-2xl border p-4 mb-3" style={{ background: "rgba(245,158,11,0.06)", borderColor: "rgba(245,158,11,0.3)" }}>
+            <p className="text-sm font-semibold text-cockpit-cream flex items-center gap-1.5 mb-2"><AlertTriangle className="w-4 h-4 text-cockpit-amber" /> Expiring soon</p>
+            <div className="space-y-1.5">
+              {soon.map(({ l, d }) => (
+                <div key={l.id} className="flex items-center justify-between">
+                  <span className="text-sm text-cockpit-cream">{l.name}</span>
+                  <span className="text-xs font-mono font-bold" style={{ color: statusColor(d) }}>{d <= 0 ? "EXPIRED" : `${d}d · ${fmt(l.expiry_date)}`}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })()}
       {licences === null ? <div className="text-center py-20 text-cockpit-muted">Loading…</div> : (
         <div className="space-y-3">
           {/* Recency computed cards */}
