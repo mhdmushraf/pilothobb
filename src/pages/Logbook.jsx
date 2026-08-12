@@ -409,24 +409,25 @@ export default function Logbook() {
         icon={BookOpen}
         title="Logbook"
         subtitle={flights ? `${flights.length} flight${flights.length !== 1 ? "s" : ""} · ${totalTime.toFixed(1)} h` : ""}
-        action={flights !== null && flights.length > 0 && (
-          <div className="flex flex-wrap gap-2 justify-end">
-            <Button variant="outline" size="sm" className="border-cockpit-amber/40 text-cockpit-amber hover:bg-cockpit-amber/10 h-8" onClick={() => setShowLogbookView(true)}>
-              <Table2 className="w-3.5 h-3.5" /> Logbook view
-            </Button>
-            <Button variant="outline" size="sm" className="border-cockpit-amber/40 text-cockpit-amber hover:bg-cockpit-amber/10 h-8" onClick={() => setShowSummary(true)}>
-              <ClipboardList className="w-3.5 h-3.5" /> Summary
-            </Button>
-            <Button variant="outline" size="sm" className="border-cockpit-border text-cockpit-muted hover:text-cockpit-cream h-8" onClick={handleExportPDF} disabled={exporting}>
-              {exporting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <FileDown className="w-3.5 h-3.5" />}
-              {exporting ? "Generating…" : "Export PDF"}
-            </Button>
-            <Button variant="outline" size="sm" className="border-cockpit-border text-cockpit-muted hover:text-cockpit-cream h-8" onClick={() => navigate("/career")}>
-              <BarChart3 className="w-3.5 h-3.5" /> Career summary
-            </Button>
-          </div>
-        )}
       />
+
+      {flights !== null && flights.length > 0 && (
+        <div className="grid grid-cols-2 gap-2 mb-4 sm:flex sm:flex-wrap">
+          <Button variant="outline" size="sm" className="w-full sm:w-auto justify-center border-cockpit-amber/40 text-cockpit-amber hover:bg-cockpit-amber/10 h-9" onClick={() => setShowLogbookView(true)}>
+            <Table2 className="w-3.5 h-3.5" /> Logbook view
+          </Button>
+          <Button variant="outline" size="sm" className="w-full sm:w-auto justify-center border-cockpit-amber/40 text-cockpit-amber hover:bg-cockpit-amber/10 h-9" onClick={() => setShowSummary(true)}>
+            <ClipboardList className="w-3.5 h-3.5" /> Summary
+          </Button>
+          <Button variant="outline" size="sm" className="w-full sm:w-auto justify-center border-cockpit-border text-cockpit-muted hover:text-cockpit-cream h-9" onClick={handleExportPDF} disabled={exporting}>
+            {exporting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <FileDown className="w-3.5 h-3.5" />}
+            {exporting ? "Generating…" : "Export PDF"}
+          </Button>
+          <Button variant="outline" size="sm" className="w-full sm:w-auto justify-center border-cockpit-border text-cockpit-muted hover:text-cockpit-cream h-9" onClick={() => navigate("/career")}>
+            <BarChart3 className="w-3.5 h-3.5" /> Career summary
+          </Button>
+        </div>
+      )}
 
       {/* Filters */}
       <div className="mb-4 space-y-3">
