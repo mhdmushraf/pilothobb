@@ -37,7 +37,7 @@ function computeRow(f, ac, pilotName) {
     date: ddmmyy(f.date),
     type: ac?.type || "—",
     reg: ac?.registration || "—",
-    pic: f.pilot_role === "PIC" ? (pilotName || "SELF") : "—",
+    pic: f.pic_name || (f.pilot_role === "PIC" ? (pilotName || "SELF") : "—"),
     details: f.remarks || f.route || `${f.from_aerodrome || ""}${f.to_aerodrome ? "–" + f.to_aerodrome : ""}` || "—",
     c,
   };
@@ -78,6 +78,31 @@ export default function LogbookView({ pilot, aircraftList = [], onClose }) {
     return t;
   }, [rows]);
 
+  const OPEN_FIELDS = [
+    ["opening_se_day_dual", "SE Day Dual", 14], ["opening_se_day_pic", "SE Day PIC", 15],
+    ["opening_se_night_dual", "SE Night Dual", 18], ["opening_se_night_pic", "SE Night PIC", 19],
+    ["opening_me_day_dual", "ME Day Dual", 22], ["opening_me_day_pic", "ME Day PIC", 23],
+    ["opening_instrument", "Instrument", "c8"], ["opening_ldg_day", "Landings Day", "c30"],
+    ["opening_ldg_night", "Landings Night", "c31"],
+  ];
+  const [opening, setOpening] = useState(() => {
+    const o = {}; OPEN_FIELDS.forEach(([k]) => { o[k] = pilot?.[k] || 0; }); return o;
+  });
+  const [editOpen, setEditOpen] = useState(false);
+  const [openForm, setOpenForm] = useState({});
+  const [savingOpen, setSavingOpen] = useState(false);
+  const openCol = {};
+  OPEN_FIELDS.forEach(([k, , col]) => { openCol[col] = opening[k] || 0; });
+  const openVal = (key) => openCol[key] || 0;
+  const grand = (key) => (openCol[key] || 0) + (totals[key] || 0);
+  const saveOpening = async () => {
+    if (!pilot?.id) { setEditOpen(false); return; }
+    setSavingOpen(true);
+    const patch = {}; OPEN_FIELDS.forEach(([k]) => { patch[k] = Number(openForm[k]) || 0; });
+    try { await base44.entities.Pilot.update(pilot.id, patch); setOpening(patch); setEditOpen(false); }
+    catch { /* ignore */ } finally { setSavingOpen(false); }
+  };
+
   const th = "border border-slate-300 px-1.5 py-1 text-[10px] font-semibold text-slate-700 text-center whitespace-nowrap";
   const td = "border border-slate-200 px-1.5 py-1 text-[11px] text-slate-800 text-center whitespace-nowrap";
   const tdL = "border border-slate-200 px-1.5 py-1 text-[11px] text-slate-800 text-left whitespace-nowrap";
@@ -93,6 +118,9 @@ export default function LogbookView({ pilot, aircraftList = [], onClose }) {
           <p className="text-[11px] text-slate-500">{pilot?.full_name || "Pilot"}{pilot?.authority ? ` · ${pilot.authority}` : ""} · SACAA-format</p>
         </div>
         <div className="flex items-center gap-2">
+          <button onClick={() => { const f = {}; OPEN_FIELDS.forEach(([k]) => { f[k] = opening[k] || 0; }); setOpenForm(f); setEditOpen(true); }} className="flex items-center gap-1.5 text-xs font-semibold text-indigo-600 border border-indigo-300 rounded-lg px-3 py-1.5 hover:bg-indigo-50">
+            <Pencil className="w-3.5 h-3.5" /> Opening balances
+          </button>
           <button onClick={() => window.print()} className="flex items-center gap-1.5 text-xs font-semibold text-slate-600 border border-slate-300 rounded-lg px-3 py-1.5 hover:bg-slate-50">
             <Printer className="w-3.5 h-3.5" /> Print
           </button>
@@ -160,14 +188,16 @@ export default function LogbookView({ pilot, aircraftList = [], onClose }) {
               </tr>
             </thead>
             <tbody>
-              {/* Opening hours (not tracked in-app) */}
+              {/* Opening hours (carried forward from a previous logbook) */}
               <tr style={{ background: "#F1F5FB" }}>
                 <td className={th} colSpan={7} style={{ textAlign: "center" }}>OPENING HOURS</td>
-                <td className={td}>-</td><td className={td}>-</td>
+                <td className={td}>{HRS(openVal("c8"))}</td>
+                <td className={td}>-</td>
                 <td className={td}>-</td><td className={td}>-</td><td className={td}>-</td>
                 <td className={td}>-</td>
-                {ENGINE_KEYS.map((k) => <td key={k} className={td}>-</td>)}
-                <td className={td}>-</td><td className={td}>-</td>
+                {ENGINE_KEYS.map((k, i) => <td key={k} className={td} style={{ background: (i % 8) < 4 ? DAY : NIGHT }}>{HRS(openVal(k))}</td>)}
+                <td className={td} style={{ background: DAY }}>{INT(openVal("c30"))}</td>
+                <td className={td} style={{ background: NIGHT }}>{INT(openVal("c31"))}</td>
                 <td className={td}></td>
               </tr>
               {/* System totals */}
@@ -180,6 +210,18 @@ export default function LogbookView({ pilot, aircraftList = [], onClose }) {
                 {ENGINE_KEYS.map((k, i) => <td key={k} className={td} style={{ background: (i % 8) < 4 ? DAY : NIGHT }}>{HRS(totals[k])}</td>)}
                 <td className={td} style={{ background: DAY }}>{INT(totals.c30)}</td>
                 <td className={td} style={{ background: NIGHT }}>{INT(totals.c31)}</td>
+                <td className={td}></td>
+              </tr>
+              {/* Grand total (opening + system) */}
+              <tr style={{ background: "#EDE9FE", fontWeight: 700 }}>
+                <td className={th} colSpan={7} style={{ textAlign: "center" }}>TOTAL (OPENING + SYSTEM)</td>
+                <td className={td}>{HRS(grand("c8"))}</td>
+                <td className={td}>{HRS(totals.c9)}</td>
+                <td className={td}>-</td><td className={td}>-</td><td className={td}>-</td>
+                <td className={td}>{HRS(totals.c13)}</td>
+                {ENGINE_KEYS.map((k, i) => <td key={k} className={td} style={{ background: (i % 8) < 4 ? DAY : NIGHT }}>{HRS(grand(k))}</td>)}
+                <td className={td} style={{ background: DAY }}>{INT(grand("c30"))}</td>
+                <td className={td} style={{ background: NIGHT }}>{INT(grand("c31"))}</td>
                 <td className={td}></td>
               </tr>
               {/* Flight rows */}
@@ -209,6 +251,27 @@ export default function LogbookView({ pilot, aircraftList = [], onClose }) {
           </table>
         )}
       </div>
+
+      {editOpen && (
+        <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40 p-4">
+          <div className="bg-white rounded-2xl w-full max-w-md p-5 max-h-[90%] overflow-auto">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-sm font-bold text-slate-900">Opening balances</p>
+              <button onClick={() => setEditOpen(false)}><X className="w-4 h-4 text-slate-500" /></button>
+            </div>
+            <p className="text-[11px] text-slate-500 mb-3">Hours &amp; landings carried forward from a previous (paper) logbook. These fill the OPENING HOURS row and are added into the grand total.</p>
+            <div className="grid grid-cols-2 gap-2">
+              {OPEN_FIELDS.map(([k, label]) => (
+                <label key={k} className="text-[11px] text-slate-600">{label}
+                  <input type="number" step="0.1" value={openForm[k] ?? 0} onChange={(e) => setOpenForm({ ...openForm, [k]: e.target.value })}
+                    className="mt-1 w-full border border-slate-300 rounded-lg px-2 py-1.5 text-sm text-slate-800" />
+                </label>
+              ))}
+            </div>
+            <button onClick={saveOpening} disabled={savingOpen} className="mt-4 w-full bg-slate-900 text-white rounded-lg py-2 text-sm font-semibold disabled:opacity-50">{savingOpen ? "Saving…" : "Save balances"}</button>
+          </div>
+        </div>
+      )}
 
       <style>{`
         @media print {
