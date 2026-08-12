@@ -141,12 +141,12 @@ export default function LogbookView({ pilot, aircraftList = [], onClose }) {
 
   return (
     <div className="fixed inset-0 z-[60] flex flex-col bg-black/50">
-      <div className="flex items-center justify-between px-4 py-3 bg-white border-b border-slate-200">
-        <div>
+      <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 bg-white border-b border-slate-200">
+        <div className="min-w-0">
           <p className="text-sm font-bold text-slate-900">Pilot Logbook — official view</p>
           <p className="text-[11px] text-slate-500">{pilot?.full_name || "Pilot"}{pilot?.authority ? ` · ${pilot.authority}` : ""} · SACAA-format</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button onClick={() => { const f = {}; OPEN_FIELDS.forEach(([k]) => { f[k] = opening[k] || 0; }); setOpenForm(f); setEditOpen(true); }} className="flex items-center gap-1.5 text-xs font-semibold text-indigo-600 border border-indigo-300 rounded-lg px-3 py-1.5 hover:bg-indigo-50">
             <Pencil className="w-3.5 h-3.5" /> Opening balances
           </button>
