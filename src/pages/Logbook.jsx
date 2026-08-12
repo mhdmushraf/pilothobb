@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import LogbookView from "@/components/LogbookView";
 import LogbookSummary from "@/components/LogbookSummary";
+import ActivityHeatmap from "@/components/ActivityHeatmap";
 import EmptyState from "@/components/EmptyState";
 import SkeletonCard from "@/components/SkeletonCard";
 import BottomSheet from "@/components/BottomSheet";
@@ -428,6 +429,8 @@ export default function Logbook() {
           </Button>
         </div>
       )}
+
+      {flights !== null && flights.length > 0 && <ActivityHeatmap />}
 
       {/* Filters */}
       <div className="mb-4 space-y-3">
