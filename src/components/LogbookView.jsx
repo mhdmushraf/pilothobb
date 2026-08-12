@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
-import { X, Loader2, Printer, Pencil } from "lucide-react";
+import { X, Loader2, Printer, Pencil, FileDown } from "lucide-react";
+import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
 
 /* SACAA-style physical logbook view.
    Reconstructs the numbered 32-column civil logbook layout from the pilot's
@@ -103,9 +105,36 @@ export default function LogbookView({ pilot, aircraftList = [], onClose }) {
     catch { /* ignore */ } finally { setSavingOpen(false); }
   };
 
-  const th = "border border-slate-300 px-1.5 py-1 text-[10px] font-semibold text-slate-700 text-center whitespace-nowrap";
-  const td = "border border-slate-200 px-1.5 py-1 text-[11px] text-slate-800 text-center whitespace-nowrap";
-  const tdL = "border border-slate-200 px-1.5 py-1 text-[11px] text-slate-800 text-left whitespace-nowrap";
+  const exportPDF = () => {
+    const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a3" });
+    doc.setFont("helvetica", "bold"); doc.setFontSize(13); doc.setTextColor(30, 30, 30);
+    doc.text(`Pilot Logbook — ${pilot?.full_name || "Pilot"}`, 10, 12);
+    doc.setFont("helvetica", "normal"); doc.setFontSize(8); doc.setTextColor(90, 90, 90);
+    doc.text(`${pilot?.authority || ""} · SACAA-format · Generated ${new Date().toLocaleDateString("en-GB")}`, 10, 17);
+    const head = [["Date", "Type", "Reg", "Pilot in Command", "Flight Details", "Nav", "Ins Place", "Ins Act", "Ins FSTD", "Inst SE", "Inst ME", "Inst FSTD", "FSTD Act", "14 Dual", "15 PIC", "16 PICUS", "17 CoPlt", "18 Dual", "19 PIC", "20 PICUS", "21 CoPlt", "22 Dual", "23 PIC", "24 PICUS", "25 CoPlt", "26 Dual", "27 PIC", "28 PICUS", "29 CoPlt", "30 LdgD", "31 LdgN", "Remarks"]];
+    const eng = (getter) => ENGINE_KEYS.map((k) => HRS(getter(k)));
+    const openG = (k) => openVal(k);
+    const sysG = (k) => totals[k] || 0;
+    const grG = (k) => grand(k);
+    const body = [
+      ["OPENING HOURS", "", "", "", "", "-", "-", HRS(openG("c8")), "-", "-", "-", "-", "-", ...eng(openG), INT(openG("c30")), INT(openG("c31")), ""],
+      ["HOURS FROM SYSTEM FLIGHTS", "", "", "", "", "-", "-", HRS(sysG("c8")), HRS(sysG("c9")), "-", "-", "-", HRS(sysG("c13")), ...eng(sysG), INT(sysG("c30")), INT(sysG("c31")), ""],
+      ["TOTAL (OPENING + SYSTEM)", "", "", "", "", "-", "-", HRS(grG("c8")), HRS(sysG("c9")), "-", "-", "-", HRS(sysG("c13")), ...eng(grG), INT(grG("c30")), INT(grG("c31")), ""],
+      ...rows.map((r) => [r.date, r.type, r.reg, r.pic, r.details, "-", "-", HRS(r.c.c8), HRS(r.c.c9), "-", "-", "-", HRS(r.c.c13), ...ENGINE_KEYS.map((k) => HRS(r.c[k] || 0)), INT(r.c.c30), INT(r.c.c31), ""]),
+    ];
+    autoTable(doc, {
+      startY: 22, head, body,
+      styles: { fontSize: 5.5, cellPadding: 0.8, lineColor: [140, 140, 140], lineWidth: 0.1, textColor: [30, 30, 30], halign: "center" },
+      headStyles: { fillColor: [79, 70, 229], textColor: [255, 255, 255], fontSize: 5.5, halign: "center" },
+      columnStyles: { 0: { halign: "left", cellWidth: 16 }, 3: { halign: "left", cellWidth: 26 }, 4: { halign: "left", cellWidth: 30 }, 31: { halign: "left", cellWidth: 24 } },
+      margin: { left: 8, right: 8 },
+    });
+    doc.save("pilothobb-logbook-official.pdf");
+  };
+
+  const th = "border border-slate-400 px-1.5 py-1 text-[10px] font-semibold text-slate-700 text-center whitespace-nowrap";
+  const td = "border border-slate-300 px-1.5 py-1 text-[11px] text-slate-800 text-center whitespace-nowrap";
+  const tdL = "border border-slate-300 px-1.5 py-1 text-[11px] text-slate-800 text-left whitespace-nowrap";
   const numCell = (v, tint) => <td className={td} style={tint ? { background: tint } : undefined}>{HRS(v)}</td>;
 
   const DAY = "#FDFBEA", NIGHT = "#EEF1FB"; // faint column tints
@@ -121,6 +150,9 @@ export default function LogbookView({ pilot, aircraftList = [], onClose }) {
           <button onClick={() => { const f = {}; OPEN_FIELDS.forEach(([k]) => { f[k] = opening[k] || 0; }); setOpenForm(f); setEditOpen(true); }} className="flex items-center gap-1.5 text-xs font-semibold text-indigo-600 border border-indigo-300 rounded-lg px-3 py-1.5 hover:bg-indigo-50">
             <Pencil className="w-3.5 h-3.5" /> Opening balances
           </button>
+          <button onClick={exportPDF} className="flex items-center gap-1.5 text-xs font-semibold text-white bg-indigo-600 rounded-lg px-3 py-1.5 hover:bg-indigo-700">
+            <FileDown className="w-3.5 h-3.5" /> Export PDF
+          </button>
           <button onClick={() => window.print()} className="flex items-center gap-1.5 text-xs font-semibold text-slate-600 border border-slate-300 rounded-lg px-3 py-1.5 hover:bg-slate-50">
             <Printer className="w-3.5 h-3.5" /> Print
           </button>
@@ -134,7 +166,7 @@ export default function LogbookView({ pilot, aircraftList = [], onClose }) {
         {flights === null ? (
           <div className="flex items-center justify-center py-24 text-slate-400"><Loader2 className="w-5 h-5 animate-spin mr-2" /> Loading logbook…</div>
         ) : (
-          <table className="border-collapse" style={{ minWidth: 1600 }}>
+          <table className="border-collapse border border-slate-400" style={{ minWidth: 1600 }}>
             <thead className="sticky top-0 z-10 bg-white">
               {/* Row 1 — group headers */}
               <tr>
