@@ -264,7 +264,11 @@ export default function Landing() {
                 <PlayCircle className="w-5 h-5" /> See how it works
               </button>
             </div>
-            <div className="mt-10">
+            <div className="mt-6">
+              <p className="text-[11px] uppercase tracking-widest text-[#464555]/70 font-semibold mb-2">Get the app</p>
+              <StoreButtons />
+            </div>
+            <div className="mt-8">
               <p className="text-[12px] uppercase tracking-widest text-[#464555]/70 font-semibold mb-3">Built for pilots under</p>
               <div className="flex flex-wrap gap-2">
                 {AUTHORITIES.map((a) =>
@@ -609,7 +613,7 @@ export default function Landing() {
               Start free <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
-          <div className="pt-2"><StoreButtons /></div>
+          <div className="pt-2"><StoreButtons className="justify-center" /></div>
           <p className="text-white/50 text-xs">iPhone &amp; Android apps go live at launch · start in your browser today.</p>
         </div>
       </section>
