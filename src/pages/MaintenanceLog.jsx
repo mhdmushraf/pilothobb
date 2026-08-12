@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { Wrench, Plus, Trash2, X } from "lucide-react";
+import { Wrench, Plus, Trash2, X, CalendarClock } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 
 const TYPES = ["MPI", "Annual", "100-hour", "Oil change", "Repair", "Inspection", "AD/SB", "Other"];
@@ -26,10 +26,40 @@ export default function MaintenanceLog() {
   };
   const del = async (id) => { await base44.entities.MaintenanceRecord.delete(id); load(); };
 
+  const upcoming = React.useMemo(() => {
+    if (!records || !aircraft.length) return [];
+    const out = [];
+    const daysTo = (dstr, add) => { const e = new Date(dstr); e.setDate(e.getDate() + add); const t = new Date(); t.setHours(0, 0, 0, 0); e.setHours(0, 0, 0, 0); return Math.round((e - t) / 86400000); };
+    aircraft.forEach((ac) => {
+      const recs = records.filter((r) => r.aircraft === ac.id);
+      const annual = recs.filter((r) => r.type === "Annual" || r.type === "MPI").sort((a, b) => (b.date || "").localeCompare(a.date || ""))[0];
+      if (annual && annual.date) out.push({ id: ac.id + "-a", reg: ac.registration, label: annual.type + " due", detail: `${daysTo(annual.date, 365)}d`, warn: daysTo(annual.date, 365) <= 60 });
+      const hourly = recs.filter((r) => (r.type === "100-hour" || r.type === "Oil change") && r.reading != null).sort((a, b) => (b.reading || 0) - (a.reading || 0))[0];
+      const cur = ac.current_reading;
+      if (hourly && cur != null) { const rem = Math.round((hourly.reading + 100) - cur); out.push({ id: ac.id + "-h", reg: ac.registration, label: hourly.type + " due", detail: `${rem}h`, warn: rem <= 10 }); }
+    });
+    return out;
+  }, [records, aircraft]);
+
   return (
     <div className="px-4 pt-6 pb-24 max-w-lg mx-auto">
       <AppHeader icon={Wrench} title="Maintenance Log" subtitle="Service history & inspections"
         action={<button onClick={() => setOpen(true)} className="flex items-center gap-1.5 bg-cockpit-amber text-white rounded-full px-3.5 py-2 text-sm font-semibold"><Plus className="w-4 h-4" /> Add</button>} />
+
+      {upcoming.length > 0 && (
+        <div className="rounded-2xl bg-cockpit-panel border border-cockpit-border p-4 mb-3">
+          <p className="text-sm font-semibold text-cockpit-cream flex items-center gap-1.5 mb-2"><CalendarClock className="w-4 h-4 text-cockpit-glow-blue" /> Upcoming intervals</p>
+          <div className="space-y-1.5">
+            {upcoming.map((u) => (
+              <div key={u.id} className="flex items-center justify-between">
+                <span className="text-sm text-cockpit-cream"><span className="font-mono font-bold">{u.reg}</span> <span className="text-cockpit-muted text-xs">{u.label}</span></span>
+                <span className="text-xs font-mono font-bold" style={{ color: u.warn ? "#EF4444" : "#10B981" }}>{u.detail}</span>
+              </div>
+            ))}
+          </div>
+          <p className="text-[10px] text-cockpit-muted mt-2">Annual estimated 12 months from last service · hours based on current Hobbs reading.</p>
+        </div>
+      )}
 
       {records === null ? <div className="text-center py-20 text-cockpit-muted">Loading…</div> : records.length === 0 ? (
         <div className="text-center py-16 text-cockpit-muted"><Wrench className="w-8 h-8 mx-auto mb-2" /><p className="text-sm">No maintenance records yet.</p></div>
