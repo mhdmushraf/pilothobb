@@ -133,7 +133,7 @@ export default function Features() {
         <div className="rounded-3xl bg-[#0f172a] text-white p-8 sm:p-10 text-center">
           <h2 className="font-heading text-2xl sm:text-3xl font-bold mb-3">Take it to the cockpit.</h2>
           <p className="text-white/70 mb-6 max-w-md mx-auto">Get Pilot Hobb on your phone — or start free in your browser right now.</p>
-          <StoreButtons className="mb-4" />
+          <StoreButtons className="justify-center mb-4" />
           <p className="text-white/50 text-xs">App store links go live at launch.</p>
         </div>
       </section>
