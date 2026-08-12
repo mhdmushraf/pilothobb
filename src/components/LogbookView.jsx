@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
-import { X, Loader2, Printer } from "lucide-react";
+import { X, Loader2, Printer, Pencil } from "lucide-react";
 
 /* SACAA-style physical logbook view.
    Reconstructs the numbered 32-column civil logbook layout from the pilot's
