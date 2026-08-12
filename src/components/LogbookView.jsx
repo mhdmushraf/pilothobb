@@ -199,7 +199,7 @@ export default function LogbookView({ pilot, aircraftList = [], onClose }) {
                   {ENGINE_KEYS.map((k, i) => numCell(r.c[k] || 0, (i % 8) < 4 ? DAY : NIGHT))}
                   <td className={td} style={{ background: DAY }}>{INT(r.c.c30)}</td>
                   <td className={td} style={{ background: NIGHT }}>{INT(r.c.c31)}</td>
-                  <td className={tdL} style={{ whiteSpace: "normal", minWidth: 140 }}>{r.details !== "—" ? "" : ""}</td>
+                  <td className={tdL} style={{ whiteSpace: "normal", minWidth: 140 }}></td>
                 </tr>
               ))}
               {rows.length === 0 && (
