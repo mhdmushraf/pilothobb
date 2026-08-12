@@ -285,6 +285,61 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* PRODUCT SHOWCASE */}
+      <section className="py-24 bg-white overflow-hidden">
+        <div className="max-w-[1280px] mx-auto px-4 md:px-8 grid md:grid-cols-2 gap-14 items-center">
+          <Reveal>
+            <span className="inline-flex items-center gap-2 text-[#4f46e5] text-[12px] font-semibold tracking-widest uppercase mb-3"><Sparkles className="w-4 h-4" /> In your pocket</span>
+            <h2 className="font-heading text-[30px] md:text-[40px] font-bold mb-5 leading-tight">Your whole cockpit, on the home screen.</h2>
+            <p className="text-[18px] text-[#464555] leading-relaxed mb-8">Total time, currency and your last flights the moment you open the app — no digging, no spreadsheets. Log a flight in seconds; see everything at a glance.</p>
+            <ul className="space-y-3 mb-8">
+              {["Live total time, down to the tenth", "Night & instrument currency, colour-coded", "This-month snapshot and smart insights"].map((t) => (
+                <li key={t} className="flex items-center gap-3 text-[15px] text-[#191c1e]"><CheckCircle2 className="w-5 h-5 text-[#10b981] shrink-0" /> {t}</li>
+              ))}
+            </ul>
+            <Link to="/register" className="inline-flex items-center gap-2 bg-[#4f46e5] text-white px-8 py-3.5 rounded-xl font-bold shadow-lg hover:-translate-y-0.5 transition-all">Start free <ArrowRight className="w-4 h-4" /></Link>
+          </Reveal>
+          <Reveal className="flex justify-center">
+            <div className="ph-float relative" style={{ width: 280 }}>
+              <div className="rounded-[2.6rem] bg-[#0f172a] p-2.5" style={{ boxShadow: "0 40px 80px -20px rgba(15,23,42,0.45)" }}>
+                <div className="rounded-[2.1rem] bg-[#f7f9fb] overflow-hidden relative" style={{ height: 566 }}>
+                  <div className="absolute top-2 left-1/2 -translate-x-1/2 w-24 h-5 bg-[#0f172a] rounded-full z-10" />
+                  <div className="px-4 pt-9 pb-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="font-heading font-bold text-[15px] text-[#191c1e]">Pilot<span className="text-[#4f46e5]">Hobb</span></span>
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-[11px] font-bold" style={{ background: "linear-gradient(135deg,#4f46e5,#14b8a6)" }}>MM</div>
+                    </div>
+                    <p className="text-[11px] text-[#464555]">Good afternoon, Captain</p>
+                    <p className="text-[15px] font-bold text-[#191c1e] leading-tight mb-3">M. Musharaf</p>
+                    <div className="rounded-2xl border border-[#e2e8f0] bg-white p-4 text-center mb-3 shadow-sm">
+                      <p className="text-[9px] tracking-widest text-[#464555]/70 uppercase mb-1">Total Time</p>
+                      <p className="font-mono text-[34px] font-bold text-[#191c1e] leading-none">44.5<span className="text-[13px] text-[#464555] ml-1">HRS</span></p>
+                      <p className="text-[9px] text-[#464555]/70 mt-1 font-mono">52 LDG · 12 T/O</p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 mb-3">
+                      <div className="rounded-xl border border-[#e2e8f0] bg-white p-2.5"><p className="text-[8px] uppercase tracking-widest text-[#464555]/70">PIC</p><p className="font-mono text-lg font-bold text-[#4f46e5] leading-none mt-0.5">12.4</p></div>
+                      <div className="rounded-xl border border-[#e2e8f0] bg-white p-2.5"><p className="text-[8px] uppercase tracking-widest text-[#464555]/70">Dual</p><p className="font-mono text-lg font-bold text-[#191c1e] leading-none mt-0.5">24.2</p></div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 mb-3">
+                      <div className="rounded-xl border border-[#e2e8f0] bg-white p-2.5 flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-[#10b981]" /><div><p className="text-[8px] uppercase tracking-widest text-[#464555]/70">Night</p><p className="font-mono text-[12px] font-bold text-[#10b981] leading-none">72d</p></div></div>
+                      <div className="rounded-xl border border-[#e2e8f0] bg-white p-2.5 flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-[#f59e0b]" /><div><p className="text-[8px] uppercase tracking-widest text-[#464555]/70">Instrument</p><p className="font-mono text-[12px] font-bold text-[#f59e0b] leading-none">18d</p></div></div>
+                    </div>
+                    <div className="rounded-xl border border-[#e2e8f0] bg-white p-3">
+                      <p className="text-[8px] uppercase tracking-widest text-[#464555]/70 mb-2">Recent</p>
+                      <div className="flex items-center justify-between">
+                        <div><p className="font-mono text-[12px] font-semibold text-[#191c1e]">FAHG–FAHG</p><p className="text-[9px] text-[#464555]/70 font-mono">17 Jul · ZS-MAE</p></div>
+                        <span className="font-mono text-[13px] font-bold text-[#4f46e5]">2.0h</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+        <style>{`@keyframes phFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}.ph-float{animation:phFloat 6s ease-in-out infinite}`}</style>
+      </section>
+
       {/* FEATURES */}
       <section id="features" className="py-24 bg-white">
         <div className="max-w-[1280px] mx-auto px-4 md:px-8">
