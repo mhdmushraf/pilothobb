@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import {
   Menu, X, ArrowRight, PlayCircle, ShieldCheck, Gauge, FileDown,
   Wrench, PlaneTakeoff, CheckCircle2, Sparkles, ArrowLeftRight, Camera,
-  Plane, ChevronDown } from
+  Plane, ChevronDown, Minus } from
 "lucide-react";
 import Seo from "@/components/Seo";
 
@@ -175,9 +175,42 @@ function Step({ n, icon: Icon, title, children }) {
   );
 }
 
+function Reveal({ children, className = "" }) {
+  const ref = React.useRef(null);
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver((es) => {
+      es.forEach((e) => { if (e.isIntersecting) { setShown(true); io.disconnect(); } });
+    }, { threshold: 0.15 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return <div ref={ref} className={`${className} transition-all duration-700 ease-out ${shown ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>{children}</div>;
+}
+
+const COMPARE = [
+["Manned + RPAS in one logbook", true, false],
+["Official SACAA 32-column export", true, false],
+["Scan the Hobbs with your camera", true, false],
+["Currency to the day, with alerts", true, "partial"],
+["Fuel, expenses & maintenance built in", true, false],
+["Free-forever tier", true, "partial"],
+["PDF + CSV export, no lock-in", true, true]];
+
+function Mark({ v }) {
+  if (v === true) return <CheckCircle2 className="w-5 h-5 text-[#10b981]" />;
+  if (v === "partial") return <Minus className="w-5 h-5 text-[#f59e0b]" />;
+  return <X className="w-5 h-5 text-[#cbd5e1]" />;
+}
+
 export default function Landing() {
   const [showVideo, setShowVideo] = useState(false);
   const [openFaq, setOpenFaq] = useState(0);
+  const [rb, setRb] = useState(3421.5);
+  const [ra, setRa] = useState(3423.2);
+  const tryFt = Math.max(0, Math.round(((Number(ra) || 0) - (Number(rb) || 0)) * 10) / 10);
   return (
     <div id="top" className="bg-[#f7f9fb] text-[#191c1e] font-body min-h-screen">
       <Seo
@@ -353,6 +386,35 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* TRY IT LIVE */}
+      <section className="py-24 bg-[#0f172a] text-white relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-80 h-80 rounded-full" style={{ background: "rgba(79,70,229,0.3)", filter: "blur(120px)" }} />
+        <div className="max-w-[1000px] mx-auto px-4 md:px-8 relative z-10">
+          <Reveal>
+            <div className="text-center mb-12 max-w-2xl mx-auto">
+              <span className="inline-flex items-center gap-2 text-[#818cf8] text-[12px] font-semibold tracking-widest uppercase mb-3"><Gauge className="w-4 h-4" /> Try it live</span>
+              <h2 className="font-heading text-[30px] md:text-[40px] font-bold mb-4">No more mental math on the ramp.</h2>
+              <p className="text-[18px] text-white/70">Enter your Hobbs readings — watch flight time calculate the instant you type. That's exactly how every flight logs.</p>
+            </div>
+            <div className="bg-white/[0.06] backdrop-blur-md border border-white/15 rounded-3xl p-8 md:p-10">
+              <div className="grid md:grid-cols-3 gap-6 items-end">
+                <label className="block"><span className="text-[11px] uppercase tracking-widest text-white/50 font-semibold">Reading before</span>
+                  <input type="number" step="0.1" value={rb} onChange={(e) => setRb(e.target.value)} className="w-full mt-2 bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white font-mono text-lg focus:border-[#818cf8] outline-none" /></label>
+                <label className="block"><span className="text-[11px] uppercase tracking-widest text-white/50 font-semibold">Reading after</span>
+                  <input type="number" step="0.1" value={ra} onChange={(e) => setRa(e.target.value)} className="w-full mt-2 bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white font-mono text-lg focus:border-[#818cf8] outline-none" /></label>
+                <div className="text-center md:text-left">
+                  <p className="text-[11px] uppercase tracking-widest text-white/50 font-semibold">Flight time</p>
+                  <p className="font-mono text-5xl font-bold text-[#14b8a6] leading-none mt-2">{tryFt.toFixed(1)}<span className="text-2xl">h</span></p>
+                </div>
+              </div>
+              <div className="mt-7 h-2 bg-white/10 rounded-full overflow-hidden"><div className="h-full bg-[#14b8a6] transition-all duration-300" style={{ width: `${Math.min(100, (tryFt / 3) * 100)}%` }} /></div>
+              <p className="text-white/50 text-[13px] mt-4 flex items-center gap-2"><Camera className="w-4 h-4" /> In the app, scan the meter with your camera instead of typing.</p>
+              <div className="mt-7"><Link to="/register" className="inline-flex items-center gap-2 bg-white text-[#0f172a] px-8 py-3.5 rounded-xl font-bold hover:bg-[#e2e8f0] transition-all">Log flights this fast — free <ArrowRight className="w-4 h-4" /></Link></div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
       {/* HOW IT WORKS */}
       <section className="py-24 bg-[#f7f9fb]">
         <div className="max-w-[1280px] mx-auto px-4 md:px-8">
@@ -393,6 +455,33 @@ export default function Landing() {
               </ul>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* COMPARISON MATRIX */}
+      <section className="py-24 bg-[#f7f9fb]">
+        <div className="max-w-4xl mx-auto px-4 md:px-8">
+          <Reveal>
+            <div className="text-center mb-12 max-w-2xl mx-auto">
+              <h2 className="font-heading text-[30px] md:text-[40px] font-bold mb-4">Everything a logbook should do. Most don't.</h2>
+              <p className="text-[18px] text-[#464555]">The essentials other logbook apps leave out — all built in.</p>
+            </div>
+            <div className="rounded-2xl border border-[#e2e8f0] bg-white overflow-hidden shadow-sm divide-y divide-[#e2e8f0]">
+              <div className="grid grid-cols-[1fr_76px_76px] items-center px-4 md:px-6 py-3 bg-[#f7f9fb]">
+                <span />
+                <span className="text-center text-[12px] font-bold text-[#4f46e5]">PilotHobb</span>
+                <span className="text-center text-[12px] font-bold text-[#464555]/60">Others</span>
+              </div>
+              {COMPARE.map(([label, a, b]) => (
+                <div key={label} className="grid grid-cols-[1fr_76px_76px] items-center px-4 md:px-6 py-3.5">
+                  <span className="text-[14px] md:text-[15px] text-[#191c1e]">{label}</span>
+                  <span className="flex justify-center"><Mark v={a} /></span>
+                  <span className="flex justify-center"><Mark v={b} /></span>
+                </div>
+              ))}
+            </div>
+            <p className="text-center text-[12px] text-[#464555]/60 mt-4">Comparison vs typical general-purpose pilot logbook apps.</p>
+          </Reveal>
         </div>
       </section>
 
