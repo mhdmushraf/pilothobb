@@ -70,7 +70,7 @@ export default function FuelTracker() {
       {logs === null ? <div className="text-center py-20 text-cockpit-muted">Loading…</div> : (
         <>
           {stats && (
-            <div className="grid grid-cols-4 gap-2 mb-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
               <Tile label="Litres" value={stats.totalL.toFixed(0)} />
               <Tile label="Spend" value={stats.totalCost.toLocaleString(undefined, { maximumFractionDigits: 0 })} />
               <Tile label="Avg /L" value={stats.avgPerL ? stats.avgPerL.toFixed(2) : "—"} />
