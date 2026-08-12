@@ -41,7 +41,7 @@ export default function Analytics() {
         <div className="text-center py-20 text-cockpit-muted">Loading…</div>
       ) : (
         <div className="space-y-4">
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {[["Total", sum("total"), "text-cockpit-amber"], ["PIC", sum("pic"), "text-cockpit-cream"], ["Dual", sum("dual"), "text-cockpit-cream"], ["Night", sum("night"), "text-cockpit-glow-blue"]].map(([l, v, c]) => (
               <Card key={l} className="text-center !p-3">
                 <p className="text-[10px] uppercase tracking-wider text-cockpit-muted">{l}</p>
