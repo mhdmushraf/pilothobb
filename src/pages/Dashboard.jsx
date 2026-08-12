@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { Plane, ChevronRight, Shield, Clock, Plus } from "lucide-react";
+import { Plane, ChevronRight, Shield, Clock, Plus, Sparkles, Moon, Compass, TrendingUp, TrendingDown } from "lucide-react";
 import usePilot from "@/hooks/usePilot";
 import SkeletonCard from "@/components/SkeletonCard";
 import EmptyState from "@/components/EmptyState";
@@ -102,6 +102,19 @@ function StatCard({ label, value, accent, bar }) {
   );
 }
 
+function RecencyChip({ label, days, icon: Icon }) {
+  const col = days <= 0 ? "#EF4444" : days <= 14 ? "#F59E0B" : "#10B981";
+  return (
+    <div className="rounded-xl border border-cockpit-border bg-cockpit-panel p-3 flex items-center gap-2.5">
+      <Icon className="w-4 h-4 shrink-0" style={{ color: col }} />
+      <div className="min-w-0">
+        <p className="text-[10px] text-cockpit-muted uppercase tracking-wider">{label}</p>
+        <p className="font-mono text-sm font-bold leading-none mt-0.5" style={{ color: col }}>{days <= 0 ? "Lapsed" : `${days}d left`}</p>
+      </div>
+    </div>
+  );
+}
+
 function FlightRow({ flight, reg }) {
   return (
     <Link
@@ -159,7 +172,7 @@ export default function Dashboard() {
     try {
       const [lic, fl, ac] = await Promise.all([
         base44.entities.Licence.filter({ expiry_date: { $gte: today } }, "expiry_date", 3),
-        base44.entities.Flight.list("-date", 4),
+        base44.entities.Flight.list("-date", 300),
         base44.entities.Aircraft.list(),
       ]);
       setLicences(lic);
@@ -171,6 +184,50 @@ export default function Dashboard() {
     }
   };
   const acReg = (id) => aircraft.find((a) => a.id === (typeof id === "string" ? id : id?.id))?.registration || "";
+
+  const monthStats = useMemo(() => {
+    if (!flights) return null;
+    const now = new Date();
+    const som = new Date(now.getFullYear(), now.getMonth(), 1);
+    const solm = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    let thisH = 0, lastH = 0, thisN = 0, thisLdg = 0;
+    flights.forEach((f) => {
+      if (!f.date) return;
+      const d = new Date(f.date);
+      if (d >= som) { thisH += f.flight_time || 0; thisN += 1; thisLdg += f.landings || 0; }
+      else if (d >= solm && d < som) { lastH += f.flight_time || 0; }
+    });
+    return { thisH, lastH, thisN, thisLdg, delta: thisH - lastH };
+  }, [flights]);
+
+  const recency = useMemo(() => {
+    if (!flights) return null;
+    const now = new Date();
+    const daysSince = (d) => Math.floor((now - new Date(d)) / 86400000);
+    const lastNight = flights.find((f) => f.date && ((f.night_time || 0) > 0 || (f.night_landings || 0) > 0));
+    const lastInstr = flights.find((f) => f.date && ((f.instrument_actual || 0) + (f.instrument_sim || 0)) > 0);
+    return {
+      nightLeft: lastNight ? 90 - daysSince(lastNight.date) : null,
+      instrLeft: lastInstr ? 180 - daysSince(lastInstr.date) : null,
+    };
+  }, [flights]);
+
+  const insight = useMemo(() => {
+    if (!flights || flights.length === 0) return null;
+    const facts = [];
+    const total = flights.reduce((s, f) => s + (f.flight_time || 0), 0);
+    facts.push(`Your average flight is ${(total / flights.length).toFixed(1)} h.`);
+    facts.push(`You've logged ${flights.length} flight${flights.length !== 1 ? "s" : ""} so far.`);
+    const byAc = {};
+    flights.forEach((f) => { const id = typeof f.aircraft === "string" ? f.aircraft : f.aircraft?.id; if (id) byAc[id] = (byAc[id] || 0) + (f.flight_time || 0); });
+    const top = Object.entries(byAc).sort((a, b) => b[1] - a[1])[0];
+    if (top) { const reg = acReg(top[0]); if (reg) facts.push(`Most-flown aircraft: ${reg} at ${top[1].toFixed(1)} h.`); }
+    const night = flights.reduce((s, f) => s + (f.night_time || 0), 0);
+    if (total > 0 && night > 0) facts.push(`${Math.round((night / total) * 100)}% of your time is flown at night.`);
+    const totalLdg = flights.reduce((s, f) => s + (f.landings || 0), 0);
+    if (totalLdg > 0) facts.push(`${totalLdg} landings logged across your career.`);
+    return facts[new Date().getDate() % facts.length];
+  }, [flights, aircraft]);
 
   useEffect(() => { loadData(); }, []);
 
@@ -276,10 +333,38 @@ export default function Dashboard() {
       </Link>
 
       {/* 4. Stat cards */}
-      <div className="flex gap-3 mb-5">
+      <div className="flex gap-3 mb-4">
         <StatCard label="PIC" value={pilot?.total_pic} accent="text-cockpit-amber" bar="#4F46E5" />
         <StatCard label="Dual" value={pilot?.total_dual} accent="text-cockpit-cream" bar="#E2E8F0" />
       </div>
+
+      {/* 4b. This month snapshot */}
+      {monthStats && (
+        <div className="rounded-2xl border border-cockpit-border p-4 mb-4 shadow-lg shadow-black/20" style={{ background: "linear-gradient(180deg,#FFFFFF,#F2F4F6)" }}>
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-[11px] text-cockpit-muted uppercase tracking-widest">This month</p>
+            {monthStats.lastH > 0 && (
+              <span className={`text-[11px] font-mono font-semibold flex items-center gap-1 ${monthStats.delta >= 0 ? "text-cockpit-valid" : "text-cockpit-expired"}`}>
+                {monthStats.delta >= 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+                {Math.abs(monthStats.delta).toFixed(1)}h vs last
+              </span>
+            )}
+          </div>
+          <div className="flex items-end gap-5">
+            <div><p className="font-mono text-3xl font-bold text-cockpit-amber leading-none">{monthStats.thisH.toFixed(1)}</p><p className="text-[10px] text-cockpit-muted uppercase mt-1">hours</p></div>
+            <div className="pb-0.5"><p className="font-mono text-lg font-bold text-cockpit-cream leading-none">{monthStats.thisN}</p><p className="text-[10px] text-cockpit-muted uppercase mt-1">flights</p></div>
+            <div className="pb-0.5"><p className="font-mono text-lg font-bold text-cockpit-cream leading-none">{monthStats.thisLdg}</p><p className="text-[10px] text-cockpit-muted uppercase mt-1">landings</p></div>
+          </div>
+        </div>
+      )}
+
+      {/* 4c. Smart insight */}
+      {insight && (
+        <div className="rounded-2xl border p-4 mb-5 flex items-start gap-3 shadow-lg shadow-black/20" style={{ background: "linear-gradient(180deg,#FFFFFF,#F2F4F6)", borderColor: "rgba(79,70,229,.25)" }}>
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: "rgba(79,70,229,.12)" }}><Sparkles className="w-4 h-4 text-cockpit-amber" /></div>
+          <div className="min-w-0"><p className="text-[10px] text-cockpit-muted uppercase tracking-widest">Insight</p><p className="text-sm text-cockpit-cream mt-0.5">{insight}</p></div>
+        </div>
+      )}
 
       {/* 5. Reminder banner */}
       {showBanner && (
@@ -306,6 +391,12 @@ export default function Dashboard() {
             <Shield className="w-3.5 h-3.5" /> Currency
           </h2>
         </div>
+        {recency && (recency.nightLeft !== null || recency.instrLeft !== null) && (
+          <div className="grid grid-cols-2 gap-2 mb-3">
+            {recency.nightLeft !== null && <RecencyChip label="Night" days={recency.nightLeft} icon={Moon} />}
+            {recency.instrLeft !== null && <RecencyChip label="Instrument" days={recency.instrLeft} icon={Compass} />}
+          </div>
+        )}
         {licences === null ? (
           <div className="rounded-2xl bg-cockpit-panel border border-cockpit-border px-4">
             <div className="py-4 space-y-3">
@@ -365,7 +456,7 @@ export default function Dashboard() {
               }
             />
           ) : (
-            flights.map((f) => <FlightRow key={f.id} flight={f} reg={acReg(f.aircraft)} />)
+            flights.slice(0, 4).map((f) => <FlightRow key={f.id} flight={f} reg={acReg(f.aircraft)} />)
           )}
         </div>
       </div>
