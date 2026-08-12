@@ -1,9 +1,19 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { FileText, Briefcase, Settings, ChevronRight, User, BarChart3, ShieldCheck,
-  CalendarDays, ClipboardCheck, Download, Map as MapIcon, Wrench, StickyNote, Building2, Target } from "lucide-react";
+  CalendarDays, ClipboardCheck, Download, Map as MapIcon, Wrench, StickyNote, Building2, Target,
+  Zap, Route, Fuel, Receipt } from "lucide-react";
 
 const sections = [
+  {
+    title: "Plan & log",
+    items: [
+      { path: "/quick-log", label: "Quick Log", description: "Log a flight in seconds", icon: Zap },
+      { path: "/flight-planning", label: "Flight Planning", description: "Fuel, time & wind calculator", icon: Route },
+      { path: "/fuel-tracker", label: "Fuel Tracker", description: "Fills, burn rate & spend", icon: Fuel },
+      { path: "/expenses", label: "Expenses", description: "Costs by category", icon: Receipt },
+    ],
+  },
   {
     title: "Insights",
     items: [
