@@ -45,7 +45,7 @@ function Badge({ href, sub, main, icon }) {
 
 export default function StoreButtons({ className = "" }) {
   return (
-    <div className={`flex flex-col sm:flex-row gap-3 justify-center ${className}`}>
+    <div className={`flex flex-col sm:flex-row gap-3 ${className}`}>
       <Badge href={APP_STORE_URL} sub="Download on the" main="App Store" icon={AppleIcon} />
       <Badge href={PLAY_STORE_URL} sub="Get it on" main="Google Play" icon={PlayIcon} />
     </div>
