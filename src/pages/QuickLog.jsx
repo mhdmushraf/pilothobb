@@ -25,7 +25,7 @@ export default function QuickLog() {
   const [recent, setRecent] = useState(null);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState("");
-  const blank = { aircraft: "", date: todayStr(), from_aerodrome: "", to_aerodrome: "", takeoff: "", landing: "", pilot_role: "PIC", landings: 1 };
+  const blank = { aircraft: "", date: todayStr(), from_aerodrome: "", to_aerodrome: "", takeoff: "", landing: "", pilot_role: "PIC", landings: 1, pic_name: "" };
   const [form, setForm] = useState(blank);
 
   const loadRecent = () => base44.entities.Flight.list("-date", 8).then(setRecent).catch(() => setRecent([]));
@@ -48,6 +48,7 @@ export default function QuickLog() {
         date: form.date, aircraft: form.aircraft, is_rpas: isRpas,
         flight_time: ft, pilot_role: form.pilot_role,
         from_aerodrome: form.from_aerodrome, to_aerodrome: form.to_aerodrome,
+        pic_name: form.pic_name || undefined,
         takeoffs: 1, landings: Number(form.landings) || 1,
         [ROLE_FIELD[form.pilot_role]]: ft,
       };
@@ -90,6 +91,7 @@ export default function QuickLog() {
           </select>
           <label className="ph-lbl">Landings<input className="ph-inp mt-1" type="number" inputMode="numeric" value={form.landings} onChange={(e) => setForm({ ...form, landings: e.target.value })} /></label>
         </div>
+        <input className="ph-inp" placeholder="Pilot in Command (name) — optional" value={form.pic_name} onChange={(e) => setForm({ ...form, pic_name: e.target.value })} />
 
         <div className="rounded-xl bg-cockpit-amber/5 border border-cockpit-amber/20 p-4 text-center">
           <p className="text-[11px] text-cockpit-muted uppercase tracking-wider mb-1">Flight time</p>
