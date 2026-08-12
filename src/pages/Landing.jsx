@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Menu, X, ArrowRight, PlayCircle, ShieldCheck, Gauge, FileDown,
-  Wrench, PlaneTakeoff, CheckCircle2, Sparkles, ArrowLeftRight, Camera } from
+  Wrench, PlaneTakeoff, CheckCircle2, Sparkles, ArrowLeftRight, Camera,
+  Plane, ChevronDown } from
 "lucide-react";
 import Seo from "@/components/Seo";
 
@@ -31,6 +32,13 @@ const TIERS = [
   features: ["Everything in CPL", "Student roster & oversight", "Bulk seats, billed yearly", "School branding"],
   cta: "Contact sales", to: "/contact", highlighted: false
 }];
+
+const FAQS = [
+{ q: "Does PilotHobb track drone (RPAS) hours?", a: "Yes — RPAS time logs into its own totals, separate from manned hours, with mission type, VLOS/BVLOS category, battery cycles and observer, exactly how authorities require." },
+{ q: "Can I log flights using Hobbs or Tach time?", a: "Yes. Set each aircraft to Hobbs or Tach; we pre-fill the reading before, you enter after, and flight time calculates automatically. You can even scan the meter with your phone camera." },
+{ q: "Does it track licence and medical expiry?", a: "Yes — licences, ratings, medicals, exam validity and English proficiency, with days-remaining and colour-coded status so nothing lapses." },
+{ q: "Which authorities are supported?", a: "SACAA, FAA, EASA, UK CAA and CASA — for manned licences (Student, PPL, CPL, ATPL) and remote pilot licences like SACAA RPL and FAA Part 107." },
+{ q: "Is my data locked in?", a: "Never. Export a clean PDF or a full CSV of your entire logbook anytime, on any plan. Cancel whenever — your records are always yours." }];
 
 
 const landingJsonLd = {
@@ -117,8 +125,59 @@ function CardIcon({ children, tone = "indigo" }) {
   return <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 ${bg}`}>{children}</div>;
 }
 
+function CountUp({ end, decimals = 0, duration = 1200 }) {
+  const [val, setVal] = useState(0);
+  const ref = React.useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    let started = false;
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting && !started) {
+          started = true;
+          const start = performance.now();
+          const tick = (now) => {
+            const p = Math.min(1, (now - start) / duration);
+            setVal(end * (1 - Math.pow(1 - p, 3)));
+            if (p < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+        }
+      });
+    }, { threshold: 0.4 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [end, duration]);
+  return <span ref={ref}>{val.toFixed(decimals)}</span>;
+}
+
+function Stat({ value, label, sub }) {
+  return (
+    <div>
+      <div className="font-mono text-[34px] md:text-[42px] font-bold text-[#3525cd] leading-none">{value}</div>
+      <div className="text-[14px] font-semibold text-[#191c1e] mt-2">{label}</div>
+      <div className="text-[12px] text-[#464555]/70 mt-1">{sub}</div>
+    </div>
+  );
+}
+
+function Step({ n, icon: Icon, title, children }) {
+  return (
+    <div className="bg-white border border-[#e2e8f0] rounded-2xl p-8 shadow-sm hover:shadow-lg transition-all">
+      <div className="flex items-center gap-3 mb-5">
+        <span className="w-9 h-9 rounded-full bg-[#4f46e5] text-white font-mono font-bold flex items-center justify-center">{n}</span>
+        <Icon className="w-6 h-6 text-[#4f46e5]" />
+      </div>
+      <h3 className="font-heading text-[22px] font-semibold mb-2">{title}</h3>
+      <p className="text-[#464555] leading-relaxed">{children}</p>
+    </div>
+  );
+}
+
 export default function Landing() {
   const [showVideo, setShowVideo] = useState(false);
+  const [openFaq, setOpenFaq] = useState(0);
   return (
     <div id="top" className="bg-[#f7f9fb] text-[#191c1e] font-body min-h-screen">
       <Seo
