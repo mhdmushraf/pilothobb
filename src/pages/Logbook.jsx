@@ -9,9 +9,10 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import {
-  BookOpen, Plane, Trash2, X, FileDown, BarChart3, Loader2, ChevronRight, Pencil, Plus, Table2,
+  BookOpen, Plane, Trash2, X, FileDown, BarChart3, Loader2, ChevronRight, Pencil, Plus, Table2, ClipboardList,
 } from "lucide-react";
 import LogbookView from "@/components/LogbookView";
+import LogbookSummary from "@/components/LogbookSummary";
 import EmptyState from "@/components/EmptyState";
 import SkeletonCard from "@/components/SkeletonCard";
 import BottomSheet from "@/components/BottomSheet";
@@ -182,6 +183,7 @@ export default function Logbook() {
   const [deleting, setDeleting] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [showLogbookView, setShowLogbookView] = useState(false);
+  const [showSummary, setShowSummary] = useState(false);
 
   const activeFilters = useMemo(() => {
     const f = {};
@@ -412,6 +414,9 @@ export default function Logbook() {
             <Button variant="outline" size="sm" className="border-cockpit-amber/40 text-cockpit-amber hover:bg-cockpit-amber/10 h-8" onClick={() => setShowLogbookView(true)}>
               <Table2 className="w-3.5 h-3.5" /> Logbook view
             </Button>
+            <Button variant="outline" size="sm" className="border-cockpit-amber/40 text-cockpit-amber hover:bg-cockpit-amber/10 h-8" onClick={() => setShowSummary(true)}>
+              <ClipboardList className="w-3.5 h-3.5" /> Summary
+            </Button>
             <Button variant="outline" size="sm" className="border-cockpit-border text-cockpit-muted hover:text-cockpit-cream h-8" onClick={handleExportPDF} disabled={exporting}>
               {exporting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <FileDown className="w-3.5 h-3.5" />}
               {exporting ? "Generating…" : "Export PDF"}
@@ -532,6 +537,11 @@ export default function Logbook() {
       {/* Physical logbook view */}
       {showLogbookView && (
         <LogbookView pilot={pilot} aircraftList={aircraftList} onClose={() => setShowLogbookView(false)} />
+      )}
+
+      {/* Logbook summary by aircraft type */}
+      {showSummary && (
+        <LogbookSummary pilot={pilot} aircraftList={aircraftList} onClose={() => setShowSummary(false)} />
       )}
 
       {/* Flight detail modal */}
