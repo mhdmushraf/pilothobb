@@ -107,6 +107,7 @@ export default function AddFlight() {
     takeoffs: 1,
     landings: 1,
     pilot_role: "PIC",
+    pic_name: "",
     night_time: 0,
     night_landings: 0,
     night_takeoffs: 0,
@@ -150,6 +151,7 @@ export default function AddFlight() {
         takeoffs: flight.takeoffs ?? 1,
         landings: flight.landings ?? 1,
         pilot_role: flight.pilot_role || "PIC",
+        pic_name: flight.pic_name || "",
         night_time: flight.night_time ?? 0,
         night_landings: flight.night_landings ?? 0,
         night_takeoffs: flight.night_takeoffs ?? 0,
@@ -257,6 +259,7 @@ export default function AddFlight() {
         is_rpas: isRpas,
         flight_time: flightTime,
         pilot_role: form.pilot_role,
+        pic_name: form.pic_name || undefined,
         night_time: r1(form.night_time),
         night_landings: Number(form.night_landings) || 0,
         night_takeoffs: Number(form.night_takeoffs) || 0,
@@ -550,6 +553,11 @@ export default function AddFlight() {
         <Input type="number" step="0.1" value={flightTime}
           onChange={(e) => set(ROLE_TIME_FIELD[form.pilot_role], e.target.value)}
           className="bg-cockpit-panel-light border-cockpit-border text-cockpit-amber font-mono" />
+      </Field>
+      <Field label="Pilot in Command (name)" hint="Instructor's name on dual flights; shown in the official logbook view.">
+        <Input value={form.pic_name} onChange={(e) => set("pic_name", e.target.value)}
+          placeholder="e.g. J. Smith"
+          className="bg-cockpit-panel-light border-cockpit-border text-cockpit-cream" />
       </Field>
       <div className="grid grid-cols-2 gap-3">
         <Field label="Night time">
