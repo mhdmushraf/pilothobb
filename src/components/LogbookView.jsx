@@ -166,7 +166,7 @@ export default function LogbookView({ pilot, aircraftList = [], onClose }) {
         {flights === null ? (
           <div className="flex items-center justify-center py-24 text-slate-400"><Loader2 className="w-5 h-5 animate-spin mr-2" /> Loading logbook…</div>
         ) : (
-          <table className="border-collapse border border-slate-400" style={{ minWidth: 1600 }}>
+          <table className="border-collapse border border-slate-400" style={{ minWidth: 1600, width: "100%" }}>
             <thead className="sticky top-0 z-10 bg-white">
               {/* Row 1 — group headers */}
               <tr>
