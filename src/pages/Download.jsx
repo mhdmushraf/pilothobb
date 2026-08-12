@@ -42,7 +42,7 @@ export default function Download() {
 
       <section className="px-4 sm:px-6 pb-10 max-w-3xl mx-auto">
         <ScrollReveal>
-          <StoreButtons className="mb-8" />
+          <StoreButtons className="justify-center mb-8" />
           <p className="text-center text-xs text-cockpit-muted mb-10">
             App store links go live at launch. In the meantime, you can start in your browser.
           </p>
