@@ -14,10 +14,16 @@ function isInstalledApp() {
   return standalone || iosStandalone;
 }
 
+function hasSeenIntro() {
+  try { return window.localStorage.getItem('ph_intro_seen') === '1'; } catch (e) { return false; }
+}
+
 export default function RootEntry() {
   const { isAuthenticated } = useAuth();
   if (isInstalledApp()) {
-    return <Navigate to={isAuthenticated ? '/dashboard' : '/login'} replace />;
+    if (isAuthenticated) return <Navigate to="/dashboard" replace />;
+    // First launch of the installed app → show the swipe intro, then login.
+    return <Navigate to={hasSeenIntro() ? '/login' : '/intro'} replace />;
   }
   return <Landing />; // browsers (mobile + desktop) see the marketing site
 }
