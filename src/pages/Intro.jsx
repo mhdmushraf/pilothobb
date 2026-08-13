@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { PlaneTakeoff, CalendarClock, FileDown, Radar, ArrowRight, ChevronLeft } from "lucide-react";
+import WingMark from "@/components/WingMark";
 
 const WING = "/pilothobb-wing.png";
 
@@ -80,7 +81,7 @@ export default function Intro() {
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
-        <img src={WING} alt="PilotHobb" className="ph-intro__wing-sm" draggable={false} />
+        <WingMark className="ph-intro__wing-sm" />
         <button
           type="button"
           onClick={finish}
@@ -115,7 +116,7 @@ export default function Intro() {
                 {s.hero ? (
                   <div className="ph-intro__herowrap">
                     <span className="ph-intro__halo" />
-                    <img src={WING} alt="PilotHobb" className="ph-intro__wing-lg" draggable={false} />
+                    <WingMark className="ph-intro__wing-lg" />
                   </div>
                 ) : (
                   <div className="ph-intro__badge">
@@ -173,7 +174,7 @@ export default function Intro() {
           position:relative; z-index:2; display:flex; align-items:center; justify-content:space-between;
           padding:14px 18px 6px;
         }
-        .ph-intro__wing-sm{ height:24px; width:auto; opacity:.95; filter: brightness(0) invert(1); }
+        .ph-intro__wing-sm{ height:26px; width:26px; opacity:.95; color:#fff; }
         .ph-intro__back{ width:34px; height:34px; display:flex; align-items:center; justify-content:center;
           border-radius:50%; color:#fff; background:rgba(255,255,255,.12); transition:opacity .2s; }
         .ph-intro__skip{ color:rgba(255,255,255,.82); font-size:14px; font-weight:500; padding:6px 8px; transition:opacity .2s; }
@@ -192,8 +193,8 @@ export default function Intro() {
           background: radial-gradient(circle, rgba(255,255,255,.40) 0%, rgba(255,255,255,0) 62%);
           animation: phHalo 2.8s ease-in-out infinite;
         }
-        .ph-intro__wing-lg{ width:110px; height:auto; position:relative; z-index:2;
-          filter: brightness(0) invert(1) drop-shadow(0 10px 26px rgba(0,0,0,.30)); animation: phFloat 3.6s ease-in-out infinite; }
+        .ph-intro__wing-lg{ width:124px; height:124px; position:relative; z-index:2; color:#fff;
+          filter: drop-shadow(0 10px 26px rgba(0,0,0,.30)); animation: phFloat 3.6s ease-in-out infinite; }
         .ph-intro__badge{
           width:120px; height:120px; border-radius:32px; display:flex; align-items:center; justify-content:center;
           color:#fff; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.22);
