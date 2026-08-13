@@ -26,9 +26,85 @@
     <meta name="twitter:title" content="PilotHobb — Your logbook, down to the tenth of an hour" />
     <meta name="twitter:description" content="Log every flight from the Hobbs, track currency to the day, export a clean logbook. For pilots worldwide." />
     <meta name="twitter:image" content="https://media.base44.com/images/public/6a455fc5475b58bb52305622/e1ada923f_pilothobb-og-image.jpg" />
+    <style id="ph-splash-css">
+      #ph-boot-splash, .ph-splash {
+        position: fixed; inset: 0; z-index: 2147483000;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        background: radial-gradient(130% 130% at 50% 34%, #6E66F2 0%, #4F46E5 46%, #3A2FBE 100%);
+        overflow: hidden; -webkit-font-smoothing: antialiased;
+        font-family: 'Clash Display','General Sans',ui-sans-serif,system-ui,sans-serif;
+      }
+      .ph-splash__grid {
+        position: absolute; inset: 0;
+        background-image:
+          linear-gradient(rgba(255,255,255,.07) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,.07) 1px, transparent 1px);
+        background-size: 46px 46px;
+        -webkit-mask-image: radial-gradient(circle at 50% 40%, #000 0%, transparent 66%);
+        mask-image: radial-gradient(circle at 50% 40%, #000 0%, transparent 66%);
+        animation: phGrid 18s linear infinite;
+      }
+      .ph-splash__stage { position: relative; width: 168px; height: 168px; display:flex; align-items:center; justify-content:center; }
+      .ph-splash__halo {
+        position:absolute; top:50%; left:50%; width:200px; height:200px; margin:-100px 0 0 -100px; border-radius:50%;
+        background: radial-gradient(circle, rgba(255,255,255,.42) 0%, rgba(255,255,255,0) 62%);
+        animation: phHalo 2.6s ease-in-out infinite;
+      }
+      .ph-splash__ring {
+        position:absolute; top:50%; left:50%; width:168px; height:168px; margin:-84px 0 0 -84px; border-radius:50%;
+        box-sizing:border-box; border:2px solid rgba(255,255,255,.16);
+      }
+      .ph-splash__ring::before {
+        content:""; position:absolute; top:-2px; left:-2px; width:168px; height:168px; border-radius:50%; box-sizing:border-box;
+        border:2px solid transparent; border-top-color: rgba(255,255,255,.95); border-right-color: rgba(255,255,255,.45);
+        animation: phSpin 1.5s cubic-bezier(.6,.15,.35,.9) infinite;
+      }
+      .ph-splash__wing {
+        width: 84px; height:auto; position:relative; z-index:2;
+        filter: drop-shadow(0 8px 22px rgba(0,0,0,.30));
+        animation: phIn .8s cubic-bezier(.2,.8,.2,1) both, phFloat 3.4s ease-in-out .8s infinite;
+      }
+      .ph-splash__word {
+        margin-top: 30px; color:#fff; font-weight:700; letter-spacing:.01em; font-size: 26px; opacity:0;
+        animation: phRise .7s ease-out .35s forwards;
+      }
+      .ph-splash__word b { color:#7FE8D6; font-weight:700; }
+      .ph-splash__tag {
+        margin-top: 9px; color: rgba(255,255,255,.72); font-size:12px; letter-spacing:.2em; text-transform:uppercase;
+        opacity:0; font-family:'General Sans',ui-sans-serif,system-ui,sans-serif; animation: phRise .7s ease-out .55s forwards;
+      }
+      .ph-splash__dots { margin-top: 22px; display:flex; gap:7px; opacity:0; animation: phRise .6s ease-out .72s forwards; }
+      .ph-splash__dots i { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,.9); display:block; animation: phDot 1.1s ease-in-out infinite; }
+      .ph-splash__dots i:nth-child(2){ animation-delay:.16s; }
+      .ph-splash__dots i:nth-child(3){ animation-delay:.32s; }
+      @keyframes phSpin { to { transform: rotate(360deg); } }
+      @keyframes phHalo { 0%,100%{ transform:scale(.9); opacity:.5; } 50%{ transform:scale(1.12); opacity:.95; } }
+      @keyframes phFloat { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-9px); } }
+      @keyframes phIn { 0%{ opacity:0; transform: translateY(14px) scale(.86); } 100%{ opacity:1; transform: translateY(0) scale(1); } }
+      @keyframes phRise { 0%{ opacity:0; transform: translateY(8px);} 100%{ opacity:1; transform:none; } }
+      @keyframes phDot { 0%,100%{ transform: translateY(0); opacity:.5; } 50%{ transform: translateY(-6px); opacity:1; } }
+      @keyframes phGrid { to { background-position: 46px 46px, 46px 46px; } }
+      .ph-splash--fadeout { opacity:0 !important; transition: opacity .45s ease; pointer-events:none; }
+      @media (prefers-reduced-motion: reduce){
+        .ph-splash__ring::before,.ph-splash__halo,.ph-splash__wing,.ph-splash__grid,.ph-splash__dots i { animation: none !important; }
+        .ph-splash__word,.ph-splash__tag,.ph-splash__dots { opacity:1 !important; animation:none !important; }
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div id="ph-boot-splash">
+        <div class="ph-splash__grid"></div>
+        <div class="ph-splash__stage">
+          <span class="ph-splash__halo"></span>
+          <span class="ph-splash__ring"></span>
+          <img class="ph-splash__wing" src="/pilothobb-wing.png" alt="PilotHobb" />
+        </div>
+        <div class="ph-splash__word">Pilot<b>Hobb</b></div>
+        <div class="ph-splash__tag">Preflight check</div>
+        <div class="ph-splash__dots"><i></i><i></i><i></i></div>
+      </div>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
     <script>
       if ("serviceWorker" in navigator) {
