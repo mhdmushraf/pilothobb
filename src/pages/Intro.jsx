@@ -173,7 +173,7 @@ export default function Intro() {
           position:relative; z-index:2; display:flex; align-items:center; justify-content:space-between;
           padding:14px 18px 6px;
         }
-        .ph-intro__wing-sm{ height:24px; width:auto; opacity:.95; }
+        .ph-intro__wing-sm{ height:24px; width:auto; opacity:.95; filter: brightness(0) invert(1); }
         .ph-intro__back{ width:34px; height:34px; display:flex; align-items:center; justify-content:center;
           border-radius:50%; color:#fff; background:rgba(255,255,255,.12); transition:opacity .2s; }
         .ph-intro__skip{ color:rgba(255,255,255,.82); font-size:14px; font-weight:500; padding:6px 8px; transition:opacity .2s; }
@@ -193,7 +193,7 @@ export default function Intro() {
           animation: phHalo 2.8s ease-in-out infinite;
         }
         .ph-intro__wing-lg{ width:110px; height:auto; position:relative; z-index:2;
-          filter: drop-shadow(0 10px 26px rgba(0,0,0,.30)); animation: phFloat 3.6s ease-in-out infinite; }
+          filter: brightness(0) invert(1) drop-shadow(0 10px 26px rgba(0,0,0,.30)); animation: phFloat 3.6s ease-in-out infinite; }
         .ph-intro__badge{
           width:120px; height:120px; border-radius:32px; display:flex; align-items:center; justify-content:center;
           color:#fff; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.22);
