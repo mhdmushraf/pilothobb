@@ -1,4 +1,5 @@
 import React from "react";
+import WingMark from "@/components/WingMark";
 
 // Branded animated boot/loading splash.
 // Styles + keyframes live in index.html's <style id="ph-splash-css"> so this
@@ -10,7 +11,7 @@ export default function Splash() {
       <div className="ph-splash__stage">
         <span className="ph-splash__halo" />
         <span className="ph-splash__ring" />
-        <img className="ph-splash__wing" src="/pilothobb-wing.png" alt="PilotHobb" draggable={false} />
+        <WingMark className="ph-splash__wing" />
       </div>
       <div className="ph-splash__word">Pilot<b>Hobb</b></div>
       <div className="ph-splash__tag">Preflight check</div>
