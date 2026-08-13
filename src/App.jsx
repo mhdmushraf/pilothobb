@@ -8,6 +8,7 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import ScrollToTop from './components/ScrollToTop';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import Splash from '@/components/Splash';
 
 // Auth pages
 import Login from '@/pages/Login';
@@ -62,11 +63,7 @@ const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
 
   if (isLoadingPublicSettings || isLoadingAuth) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-cockpit-bg">
-        <div className="w-8 h-8 border-4 border-cockpit-border border-t-cockpit-amber rounded-full animate-spin"></div>
-      </div>
-    );
+    return <Splash />;
   }
 
   if (authError) {
