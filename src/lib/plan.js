@@ -1,12 +1,15 @@
 // Plan tiers and free-tier limits for PilotHobb.
 export const FREE_LIMITS = { flights: 50, aircraft: 3, signatures: 5 };
 
-// Prices (South African Rand).
+// Card charges run through Tap in USD (Tap does not support ZAR). ZAR values are
+// kept as the reference price shown to South African customers ("≈ R499").
 export const PRICES = {
-  annualZar: 499,
-  monthlyZar: 59,
-  annualLabel: "R499/yr",
-  monthlyLabel: "R59/mo",
+  annualUsd: 27,
+  monthlyUsd: 3.2,
+  annualLabel: "$27/yr",
+  monthlyLabel: "$3.20/mo",
+  annualZarRef: 499,
+  monthlyZarRef: 59,
 };
 
 export const isFreePlan = (pilot) => !pilot || (pilot.plan || "free") === "free";
