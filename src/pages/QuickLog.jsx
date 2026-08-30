@@ -5,6 +5,8 @@ import usePilot from "@/hooks/usePilot";
 import { computeTotals } from "@/lib/flightTotals";
 import { Zap, Check, Loader2, Plane } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
+import UpgradeSheet from "@/components/UpgradeSheet";
+import { flightLimitReached } from "@/lib/plan";
 
 const todayStr = () => new Date().toISOString().split("T")[0];
 const r1 = (n) => Math.round((Number(n) || 0) * 10) / 10;
@@ -25,6 +27,7 @@ export default function QuickLog() {
   const [recent, setRecent] = useState(null);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState("");
+  const [showUpgrade, setShowUpgrade] = useState(false);
   const blank = { aircraft: "", date: todayStr(), from_aerodrome: "", to_aerodrome: "", takeoff: "", landing: "", pilot_role: "PIC", landings: 1, pic_name: "" };
   const [form, setForm] = useState(blank);
 
@@ -39,6 +42,7 @@ export default function QuickLog() {
 
   const save = async () => {
     if (!form.aircraft || ft <= 0) { setMsg("Pick an aircraft and enter valid times."); return; }
+    if (flightLimitReached(pilot)) { setShowUpgrade(true); return; }
     setSaving(true); setMsg("");
     let created = null;
     try {
@@ -55,6 +59,7 @@ export default function QuickLog() {
       created = await base44.entities.Flight.create(data);
       if (pilot && ac) {
         const { pilotPatch, aircraftPatch } = computeTotals(created, pilot, ac, 1);
+        pilotPatch.flight_count = (pilot.flight_count || 0) + 1;
         await base44.entities.Pilot.update(pilot.id, pilotPatch);
         await base44.entities.Aircraft.update(ac.id, aircraftPatch);
       }
@@ -123,6 +128,10 @@ export default function QuickLog() {
         </div>
       )}
       <style>{`.ph-inp{width:100%;background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:12px 14px;color:#191C1E;font-size:15px}.ph-lbl{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#6B7280}`}</style>
+
+      {showUpgrade && (
+        <UpgradeSheet trigger="flights" onClose={() => setShowUpgrade(false)} />
+      )}
     </div>
   );
 }
