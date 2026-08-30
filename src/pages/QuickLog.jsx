@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
+import { toast } from "@/components/ui/use-toast";
 import usePilot from "@/hooks/usePilot";
 import { computeTotals } from "@/lib/flightTotals";
 import { Zap, Check, Loader2, Plane } from "lucide-react";
@@ -23,6 +24,9 @@ function diffHours(t1, t2) {
 
 export default function QuickLog() {
   const { pilot } = usePilot();
+  const navigate = useNavigate();
+  const [params] = useSearchParams();
+  const first = params.get("first") === "1";
   const [aircraft, setAircraft] = useState([]);
   const [recent, setRecent] = useState(null);
   const [saving, setSaving] = useState(false);
@@ -37,6 +41,17 @@ export default function QuickLog() {
     loadRecent();
   }, []);
   const acReg = (id) => { const a = aircraft.find((x) => x.id === (typeof id === "string" ? id : id?.id)); return a?.registration || "—"; };
+
+  // First-flight coaching: prefill route with the pilot's home aerodrome.
+  useEffect(() => {
+    if (first && pilot?.home_aerodrome) {
+      setForm((f) => ({
+        ...f,
+        from_aerodrome: f.from_aerodrome || pilot.home_aerodrome,
+        to_aerodrome: f.to_aerodrome || pilot.home_aerodrome,
+      }));
+    }
+  }, [first, pilot]);
 
   const ft = diffHours(form.takeoff, form.landing);
 
@@ -63,6 +78,11 @@ export default function QuickLog() {
         await base44.entities.Pilot.update(pilot.id, pilotPatch);
         await base44.entities.Aircraft.update(ac.id, aircraftPatch);
       }
+      if (first) {
+        toast({ title: "First flight logged. Your CPL dashboard is live." });
+        navigate("/dashboard");
+        return;
+      }
       setMsg(`Logged ${ft.toFixed(1)}h on ${acReg(form.aircraft)}`);
       setForm((f) => ({ ...blank, aircraft: f.aircraft, date: f.date }));
       loadRecent();
@@ -75,6 +95,13 @@ export default function QuickLog() {
   return (
     <div className="px-4 pt-6 pb-24 max-w-lg mx-auto">
       <AppHeader icon={Zap} title="Quick Log" subtitle="Log a flight in seconds" />
+
+      {first && (
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <p className="text-sm text-cockpit-cream">Log your most recent flight — 30 seconds</p>
+          <Link to="/dashboard" className="text-sm text-cockpit-muted shrink-0">Later</Link>
+        </div>
+      )}
 
       <div className="rounded-2xl bg-cockpit-panel border border-cockpit-border p-5 space-y-3">
         <select className="ph-inp" value={form.aircraft} onChange={(e) => setForm({ ...form, aircraft: e.target.value })}>
