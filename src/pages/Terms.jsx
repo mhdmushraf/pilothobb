@@ -62,6 +62,24 @@ const sections = [
     ],
   },
   {
+    h: "Governing law",
+    body: [
+      "These Terms are governed by the laws of the United Arab Emirates. The Service is provided by Linkzone Global FZCO, Dubai.",
+    ],
+  },
+  {
+    h: "Refunds",
+    body: [
+      "Annual plans: a 14-day refund is available if fewer than 10 flights have been logged after purchase. Monthly plans can be cancelled at any time; there is no refund for the current month.",
+    ],
+  },
+  {
+    h: "School plan billing",
+    body: [
+      "School plans are invoiced yearly and require a minimum of 10 seats.",
+    ],
+  },
+  {
     h: "Contact",
     body: [
       "Questions about these terms can be sent to hello@pilothobb.com.",
