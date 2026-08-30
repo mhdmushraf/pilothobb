@@ -70,22 +70,25 @@ base44 dashboard open
 
 ## Backend function environment variables
 
-The Tap Payments and bank-transfer flows read these from the backend function
-environment (set them in the Base44 dashboard → backend function secrets). Never
-hardcode keys in the repo.
+Card payments run through **Stripe** (subscription Checkout). Set these in the
+Base44 dashboard → backend function secrets. Never hardcode keys in the repo.
 
 | Variable | Used by | Purpose |
 | --- | --- | --- |
-| `TAP_SECRET_KEY` | `tapCreateCharge`, `tapWebhook` | Tap secret API key; also verifies the webhook hashstring. |
-| `TAP_PUBLIC_KEY` | `paymentConfig` | Tap publishable key (exposed to the client for card UI). |
+| `STRIPE_SECRET_KEY` | `stripeCreateCheckout`, `stripeWebhook` | Stripe secret API key (`sk_test_…` / `sk_live_…`). |
+| `STRIPE_WEBHOOK_SECRET` | `stripeWebhook` | Signing secret (`whsec_…`) from the Stripe webhook endpoint you register. |
 | `BANK_ACCOUNT_NAME` | `paymentConfig` | Bank-transfer account name shown on the Upgrade page. |
 | `BANK_IBAN` | `paymentConfig` | Bank-transfer IBAN. |
 | `BANK_SWIFT` | `paymentConfig` | Bank-transfer SWIFT/BIC. |
 | `BANK_NAME` | `paymentConfig` | Bank name. |
-| `APP_URL` | `tapCreateCharge` (optional) | Base app URL for the Tap redirect (defaults to the request origin, then `https://pilothobb.com`). |
+| `APP_URL` | `stripeCreateCheckout` (optional) | Base app URL for the Stripe success/cancel redirect (defaults to the request origin, then `https://pilothobb.com`). |
 
-The Tap webhook URL is derived automatically from the deployed `tapCreateCharge`
-function URL (same origin, `tapWebhook` path), so no webhook URL env var is needed.
+**Stripe setup:** create the account, then in Stripe → Developers → Webhooks add an
+endpoint pointing at the deployed `stripeWebhook` function URL, subscribed to
+`checkout.session.completed`, `invoice.paid`, and `customer.subscription.deleted`.
+Copy that endpoint's signing secret into `STRIPE_WEBHOOK_SECRET`. Prices are
+created inline by `stripeCreateCheckout` (USD $27/yr, $3.20/mo) — no dashboard
+products needed. The old `tap*` functions are unused and can be ignored.
 
 ## Docs & Support
 
