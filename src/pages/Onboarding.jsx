@@ -90,7 +90,7 @@ export default function Onboarding() {
         english_valid_until: englishValidUntil || undefined,
         onboarded: true,
       });
-      navigate("/dashboard");
+      navigate("/quicklog?first=1");
     } catch (e) {
       console.error("Onboarding failed", e);
       setSubmitting(false);
