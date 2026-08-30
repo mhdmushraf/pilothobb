@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { Download, FileText, FileSpreadsheet, Loader2, FileBarChart, RefreshCw } from "lucide-react";
+import { Download, FileText, FileSpreadsheet, Loader2, FileBarChart, RefreshCw, Lock, Sparkles } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import usePilot from "@/hooks/usePilot";
+import UpgradeSheet from "@/components/UpgradeSheet";
+import { hasPaidPlan } from "@/lib/plan";
 import { recalcPilotTotals } from "@/lib/flightTotals";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -13,6 +15,22 @@ export default function ExportData() {
   const [count, setCount] = useState(null);
   const [busy, setBusy] = useState("");
   const [recalcMsg, setRecalcMsg] = useState("");
+  const [showUpgrade, setShowUpgrade] = useState(false);
+  const paid = hasPaidPlan(pilot);
+
+  // Diagonal watermark on free-plan PDFs.
+  const watermark = (doc) => {
+    const pages = doc.getNumberOfPages();
+    for (let i = 1; i <= pages; i++) {
+      doc.setPage(i);
+      const w = doc.internal.pageSize.getWidth();
+      const h = doc.internal.pageSize.getHeight();
+      doc.setFont("helvetica", "bold"); doc.setFontSize(46); doc.setTextColor(210, 214, 224);
+      doc.text("PilotHobb — FREE", w / 2, h / 2, { align: "center", angle: 32 });
+      doc.setFont("helvetica", "normal"); doc.setFontSize(11); doc.setTextColor(200, 204, 214);
+      doc.text("Upgrade to CPL for a clean, authority-ready logbook · pilothobb.com", w / 2, h / 2 + 14, { align: "center", angle: 32 });
+    }
+  };
 
   const recalcTotals = async () => {
     setBusy("recalc"); setRecalcMsg("");
@@ -54,6 +72,7 @@ export default function ExportData() {
         bodyStyles: { font: "courier", fontSize: 8, textColor: [40, 40, 40] },
         alternateRowStyles: { fillColor: [242, 244, 246] }, margin: { left: 14, right: 14 },
       });
+      if (!paid) watermark(doc);
       doc.save("pilothobb-logbook.pdf");
     } finally { setBusy(""); }
   };
@@ -90,6 +109,7 @@ export default function ExportData() {
       });
       doc.setFontSize(8); doc.setTextColor(150, 150, 150);
       doc.text("PilotHobb · pilothobb.com — this summary reflects totals recorded in your account.", 14, 285);
+      if (!paid) watermark(doc);
       doc.save("pilothobb-summary.pdf");
     } finally { setBusy(""); }
   };
@@ -128,6 +148,13 @@ export default function ExportData() {
           <div className="w-11 h-11 rounded-xl bg-cockpit-glow-blue/10 flex items-center justify-center shrink-0">{busy === "sum" ? <Loader2 className="w-5 h-5 text-cockpit-glow-blue animate-spin" /> : <FileBarChart className="w-5 h-5 text-cockpit-glow-blue" />}</div>
           <div className="flex-1 text-left"><p className="text-sm font-semibold text-cockpit-cream">Printable summary</p><p className="text-xs text-cockpit-muted">One-page totals &amp; hours by aircraft</p></div>
         </button>
+
+        {!paid && (
+          <button onClick={() => setShowUpgrade(true)} className="w-full flex items-center gap-4 rounded-2xl bg-cockpit-amber/5 border border-cockpit-amber/30 p-4 active:scale-[0.99] transition-transform">
+            <div className="w-11 h-11 rounded-xl bg-cockpit-amber/15 flex items-center justify-center shrink-0"><Lock className="w-5 h-5 text-cockpit-amber" /></div>
+            <div className="flex-1 text-left"><p className="text-sm font-semibold text-cockpit-cream flex items-center gap-1.5">SACAA-format logbook &amp; clean PDF <Sparkles className="w-3.5 h-3.5 text-cockpit-amber" /></p><p className="text-xs text-cockpit-muted">Free PDFs are watermarked. Upgrade to CPL for authority-ready exports.</p></div>
+          </button>
+        )}
       </div>
 
       <div className="mt-6 rounded-2xl bg-cockpit-panel border border-cockpit-border p-4">
@@ -141,6 +168,10 @@ export default function ExportData() {
       </div>
 
       <p className="text-[11px] text-cockpit-muted text-center mt-6">Your data is always yours — export anytime, cancel anytime.</p>
+
+      {showUpgrade && (
+        <UpgradeSheet trigger="export" onClose={() => setShowUpgrade(false)} />
+      )}
     </div>
   );
 }
