@@ -55,6 +55,16 @@ const sections = [
     ],
   },
   {
+    h: "Your rights under POPIA (South Africa) and UAE PDPL",
+    body: [
+      "We hold your profile details, your flight records, the documents you upload, and payment references. We never store card numbers — card payments are processed by Tap.",
+      "Our lawful basis for processing this data is performance of our contract with you (providing the logbook service).",
+      "You can access, correct, and delete your data at any time. Account and data deletion is available in-app via Settings → Delete account.",
+      "Your data is hosted on Base44 infrastructure. We do not sell your personal data.",
+      "To make a request under POPIA or the UAE PDPL, contact us at hello@pilothobb.com.",
+    ],
+  },
+  {
     h: "Children",
     body: [
       "PilotHobb is intended for pilots and is not directed to children under 16. We do not knowingly collect data from children.",
