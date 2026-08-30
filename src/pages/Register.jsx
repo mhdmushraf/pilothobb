@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { useAuth } from "@/lib/AuthContext";
 import { AtSign, KeyRound, Eye, EyeOff, UserRound, ShieldCheck, Loader2, ArrowRight, Check, Plane } from "lucide-react";
@@ -41,12 +41,14 @@ export default function Register() {
   const [showOtp, setShowOtp] = useState(false);
   const [otpCode, setOtpCode] = useState("");
   const navigate = useNavigate();
+  const [params] = useSearchParams();
   const { checkUserAuth } = useAuth();
+  const nextPath = (() => { const n = params.get("next"); return n && n.startsWith("/") ? n : "/dashboard"; })();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    if (!agree) { setError("Please acknowledge the Operator Agreement to continue."); return; }
+    if (!agree) { setError("Please agree to the Terms and Privacy Policy to continue."); return; }
     setLoading(true);
     try {
       await base44.auth.register({ email, password });
@@ -66,7 +68,7 @@ export default function Register() {
       const result = await base44.auth.verifyOtp({ email, otpCode });
       if (result?.access_token) base44.auth.setToken(result.access_token);
       await checkUserAuth();
-      navigate("/dashboard");
+      navigate(nextPath);
     } catch (err) {
       setError(err.message || "Invalid verification code");
     } finally {
@@ -156,7 +158,7 @@ export default function Register() {
                 className={`mt-0.5 w-5 h-5 rounded-md border flex items-center justify-center shrink-0 transition-colors ${agree ? "bg-[#4f46e5] border-[#4f46e5]" : "bg-white border-[#c7c4d8]"}`}>
                 {agree && <Check className="w-4 h-4 text-white" />}
               </button>
-              <span className="text-sm text-[#464555] leading-relaxed">I acknowledge the <span className="text-[#4f46e5] font-semibold">Operator Agreement</span> and commit to maintaining standard aviation safety protocols during all logged sorties.</span>
+              <span className="text-sm text-[#464555] leading-relaxed">I agree to the <Link to="/terms" target="_blank" onClick={(e) => e.stopPropagation()} className="text-[#4f46e5] font-semibold underline">Terms</Link> and <Link to="/privacy" target="_blank" onClick={(e) => e.stopPropagation()} className="text-[#4f46e5] font-semibold underline">Privacy Policy</Link>.</span>
             </label>
 
             <button type="submit" disabled={loading}
