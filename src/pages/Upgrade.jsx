@@ -21,7 +21,7 @@ export default function Upgrade() {
   const navigate = useNavigate();
   const { pilot, loading, reload } = usePilot();
   const [params] = useSearchParams();
-  const returning = params.get("tap") === "return";
+  const returning = params.get("stripe") === "return";
 
   const [plan, setPlan] = useState("annual");
   const [busy, setBusy] = useState("");
@@ -41,7 +41,7 @@ export default function Upgrade() {
   const payByCard = async () => {
     setBusy("card"); setError("");
     try {
-      const res = await base44.functions.invoke("tapCreateCharge", { plan: meta.key });
+      const res = await base44.functions.invoke("stripeCreateCheckout", { plan: meta.key });
       if (res?.url) { window.location.href = res.url; return; }
       setError(res?.error || "Could not start the card payment. Please try again.");
     } catch (e) {
