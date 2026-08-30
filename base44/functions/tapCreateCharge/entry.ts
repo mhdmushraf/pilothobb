@@ -1,11 +1,11 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
 
-// NOTE: amounts follow the spec (49900 / 5900). Tap's `amount` is the value that
-// will be charged in the given currency — verify against Tap's ZAR unit
-// convention with a test charge before taking live payments.
+// Tap does not support ZAR, so we charge in USD. `amount` is in USD major units
+// (e.g. 27.00). `zarRef` is stored only as the reference price shown to the
+// customer ("≈ R499"). Confirm the amount with a Tap test charge before going live.
 const PLANS = {
-  cpl_annual: { amount: 49900, zar: 499 },
-  cpl_monthly: { amount: 5900, zar: 59 },
+  cpl_annual: { amount: 27, zarRef: 499 },
+  cpl_monthly: { amount: 3.2, zarRef: 59 },
 };
 
 const genRef = () =>
@@ -40,7 +40,7 @@ Deno.serve(async (req) => {
       headers: { Authorization: `Bearer ${secret}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         amount: plan.amount,
-        currency: 'ZAR',
+        currency: 'USD',
         customer: { first_name: firstName, email: user.email },
         source: { id: 'src_all' },
         redirect: { url: `${appUrl}/upgrade?tap=return` },
@@ -57,7 +57,7 @@ Deno.serve(async (req) => {
     await base44.entities.PaymentRequest.create({
       pilot_id: pilot?.id || '',
       plan: planKey,
-      amount_zar: plan.zar,
+      amount_zar: plan.zarRef,
       method: 'tap',
       reference: genRef(),
       status: 'pending',
