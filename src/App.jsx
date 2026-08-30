@@ -59,6 +59,8 @@ import FuelTracker from '@/pages/FuelTracker';
 import Expenses from '@/pages/Expenses';
 import FlightPlanning from '@/pages/FlightPlanning';
 import QuickLog from '@/pages/QuickLog';
+import Upgrade from '@/pages/Upgrade';
+import AdminPayments from '@/pages/AdminPayments';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -106,6 +108,8 @@ const AuthenticatedApp = () => {
       {/* App (protected) */}
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
         <Route path="/onboarding" element={<Onboarding />} />
+        <Route path="/upgrade" element={<Upgrade />} />
+        <Route path="/admin/payments" element={<AdminPayments />} />
         <Route element={<AppLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/logbook" element={<Logbook />} />
