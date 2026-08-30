@@ -13,8 +13,8 @@ const genRef = () =>
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"[Math.floor(Math.random() * 36)]).join("");
 
 const PLAN_META = {
-  annual: { key: "cpl_annual", zar: PRICES.annualZar, label: PRICES.annualLabel, note: "Best value · billed yearly" },
-  monthly: { key: "cpl_monthly", zar: PRICES.monthlyZar, label: PRICES.monthlyLabel, note: "Billed monthly · cancel anytime" },
+  annual: { key: "cpl_annual", usd: PRICES.annualUsd, zarRef: PRICES.annualZarRef, label: PRICES.annualLabel, note: "Best value · billed yearly" },
+  monthly: { key: "cpl_monthly", usd: PRICES.monthlyUsd, zarRef: PRICES.monthlyZarRef, label: PRICES.monthlyLabel, note: "Billed monthly · cancel anytime" },
 };
 
 export default function Upgrade() {
@@ -56,7 +56,7 @@ export default function Upgrade() {
       const pr = await base44.entities.PaymentRequest.create({
         pilot_id: pilot?.id || "",
         plan: meta.key,
-        amount_zar: meta.zar,
+        amount_zar: meta.zarRef,
         method: "bank_transfer",
         reference,
         status: "pending",
@@ -144,6 +144,7 @@ export default function Upgrade() {
                   {highlight && <span className="inline-block text-[10px] font-bold uppercase tracking-wide text-cockpit-amber mb-1">Best value</span>}
                   <p className="text-sm text-cockpit-muted">{p === "annual" ? "CPL Annual" : "CPL Monthly"}</p>
                   <p className="font-heading text-2xl font-bold text-cockpit-cream mt-0.5">{m.label}</p>
+                  <p className="text-[11px] text-cockpit-muted">≈ R{m.zarRef}</p>
                   <p className="text-[11px] text-cockpit-muted mt-1">{m.note}</p>
                   {active && <Check className="w-4 h-4 text-cockpit-amber mt-2" />}
                 </button>
@@ -175,7 +176,7 @@ export default function Upgrade() {
               <Row label="Bank" value={bank?.bankName} />
               <Row label="IBAN" value={bank?.iban} />
               <Row label="SWIFT" value={bank?.swift} />
-              <Row label="Amount" value={`R${meta.zar}`} />
+              <Row label="Amount" value={`$${meta.usd} (≈ R${meta.zarRef})`} />
 
               <div className="mt-4">
                 <p className="text-[11px] text-cockpit-muted uppercase tracking-wider mb-1">Reference</p>
