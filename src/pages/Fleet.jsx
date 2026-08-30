@@ -8,6 +8,9 @@ import AircraftCard from "@/components/fleet/AircraftCard";
 import AddAircraftModal from "@/components/fleet/AddAircraftModal";
 import AircraftDetail from "@/components/fleet/AircraftDetail";
 import AppHeader from "@/components/AppHeader";
+import UpgradeSheet from "@/components/UpgradeSheet";
+import usePilot from "@/hooks/usePilot";
+import { aircraftLimitReached } from "@/lib/plan";
 
 const PAGE_SIZE = 20;
 
@@ -16,7 +19,14 @@ export default function Fleet() {
   const [hasMore, setHasMore] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
+  const [showUpgrade, setShowUpgrade] = useState(false);
   const [selected, setSelected] = useState(null);
+  const { pilot, reload: reloadPilot } = usePilot();
+
+  const tryAdd = () => {
+    if (aircraftLimitReached(pilot)) setShowUpgrade(true);
+    else setShowAdd(true);
+  };
   const [searchParams, setSearchParams] = useSearchParams();
   const aircraftIdParam = searchParams.get("aircraftId");
 
@@ -71,7 +81,7 @@ export default function Fleet() {
         subtitle="Your aircraft & drones"
         action={
           <button
-            onClick={() => setShowAdd(true)}
+            onClick={tryAdd}
             className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-cockpit-amber/15 border border-cockpit-amber/30 text-cockpit-amber text-sm font-medium hover:bg-cockpit-amber/20 transition-colors"
           >
             <Plus className="w-4 h-4" /> Add aircraft
@@ -90,7 +100,7 @@ export default function Fleet() {
           description="Add your first aircraft to start tracking flights"
           action={
             <button
-              onClick={() => setShowAdd(true)}
+              onClick={tryAdd}
               className="inline-flex items-center gap-1.5 text-sm font-medium text-cockpit-amber"
             >
               <Plus className="w-4 h-4" /> Add aircraft
@@ -119,15 +129,27 @@ export default function Fleet() {
       {showAdd && (
         <AddAircraftModal
           onClose={() => setShowAdd(false)}
-          onSaved={() => {
+          onSaved={async () => {
             setShowAdd(false);
             loadAircraft();
+            if (pilot?.id) {
+              try {
+                await base44.entities.Pilot.update(pilot.id, {
+                  aircraft_count: (pilot.aircraft_count || 0) + 1,
+                });
+                reloadPilot();
+              } catch { /* count is best-effort */ }
+            }
           }}
         />
       )}
 
       {selected && (
         <AircraftDetail aircraft={selected} onClose={closeAircraft} />
+      )}
+
+      {showUpgrade && (
+        <UpgradeSheet trigger="aircraft" onClose={() => setShowUpgrade(false)} />
       )}
     </div>
   );
