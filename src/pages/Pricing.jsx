@@ -94,6 +94,7 @@ const faqs = [
 ];
 
 export default function Pricing() {
+  const { isAuthenticated } = useAuth();
   return (
     <>
       <Seo
