@@ -57,6 +57,7 @@ export default function UpgradeSheet({ trigger = "flights", onClose }) {
           <span className="font-heading text-3xl font-bold text-cockpit-cream">{PRICES.annualLabel}</span>
           <span className="text-sm text-cockpit-muted">or {PRICES.monthlyLabel}</span>
         </div>
+        <p className="text-[11px] text-cockpit-muted text-center mt-1">≈ R{PRICES.annualZarRef} / R{PRICES.monthlyZarRef} · billed in USD</p>
         <ul className="mt-4 space-y-2">
           {PERKS.map((p) => (
             <li key={p} className="flex items-start gap-2 text-sm text-cockpit-cream">
