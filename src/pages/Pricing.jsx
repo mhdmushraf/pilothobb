@@ -30,7 +30,7 @@ const tiers = [
     name: "CPL",
     tagline: "For active & commercial pilots",
     price: "R499",
-    period: "/year · or R59/month (~$27/yr)",
+    period: "/year · R59/month · charged in USD (≈ $27 / $3.20)",
     cta: "Get CPL",
     to: "/register",
     highlighted: true,
