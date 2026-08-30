@@ -1,0 +1,78 @@
+{
+  "name": "PaymentRequest",
+  "type": "object",
+  "properties": {
+    "pilot_id": {
+      "type": "string",
+      "description": "Pilot record id this payment is for"
+    },
+    "plan": {
+      "type": "string",
+      "enum": [
+        "cpl_annual",
+        "cpl_monthly",
+        "school"
+      ]
+    },
+    "amount_zar": {
+      "type": "number"
+    },
+    "method": {
+      "type": "string",
+      "enum": [
+        "tap",
+        "bank_transfer"
+      ]
+    },
+    "reference": {
+      "type": "string",
+      "description": "Unique payment reference, format PH-<6 uppercase alphanumerics>"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "paid",
+        "rejected"
+      ],
+      "default": "pending"
+    },
+    "proof_url": {
+      "type": "string"
+    },
+    "tap_charge_id": {
+      "type": "string"
+    },
+    "admin_note": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "pilot_id"
+  ],
+  "rls": {
+    "create": true,
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
