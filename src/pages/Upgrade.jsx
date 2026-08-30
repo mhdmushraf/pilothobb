@@ -164,7 +164,7 @@ export default function Upgrade() {
                 className="w-full flex items-center justify-center gap-2 bg-cockpit-panel border border-cockpit-border text-cockpit-cream font-semibold rounded-xl py-3.5 disabled:opacity-50">
                 {busy === "bank" ? <Loader2 className="w-4 h-4 animate-spin" /> : <Landmark className="w-4 h-4" />} Pay by bank transfer
               </button>
-              <p className="text-[11px] text-cockpit-muted text-center flex items-center justify-center gap-1"><ShieldCheck className="w-3 h-3" /> Card payments secured by Tap. We never store your card details.</p>
+              <p className="text-[11px] text-cockpit-muted text-center flex items-center justify-center gap-1"><ShieldCheck className="w-3 h-3" /> Card payments secured by Stripe. We never store your card details.</p>
             </div>
           )}
 
