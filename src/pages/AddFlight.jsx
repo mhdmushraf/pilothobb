@@ -17,6 +17,8 @@ import {
 import SkeletonCard from "@/components/SkeletonCard";
 import MeterScanner from "@/components/MeterScanner";
 import AppHeader from "@/components/AppHeader";
+import UpgradeSheet from "@/components/UpgradeSheet";
+import { flightLimitReached } from "@/lib/plan";
 import { tap } from "@/lib/haptic";
 
 const r1 = (n) => Math.round((Number(n) || 0) * 10) / 10;
@@ -87,6 +89,7 @@ export default function AddFlight() {
   const [scanning, setScanning] = useState(false);
   const [showScanner, setShowScanner] = useState(false);
   const [originalFlight, setOriginalFlight] = useState(null);
+  const [showUpgrade, setShowUpgrade] = useState(false);
   const fileRef = useRef(null);
   const readingAfterRef = useRef(null);
 
@@ -249,6 +252,11 @@ export default function AddFlight() {
 
   const handleSave = async () => {
     tap();
+    // Free-plan gate — new flights only (edits never blocked).
+    if (!isEdit && flightLimitReached(pilot)) {
+      setShowUpgrade(true);
+      return;
+    }
     setSaving(true);
     setError(null);
     let created = null;
@@ -314,6 +322,7 @@ export default function AddFlight() {
         navigate("/logbook", { state: { optimisticFlight: created } });
 
         const { pilotPatch, aircraftPatch } = computeTotals(created, pilot, aircraft, 1);
+        pilotPatch.flight_count = (pilot.flight_count || 0) + 1;
         await base44.entities.Pilot.update(pilot.id, pilotPatch);
         await base44.entities.Aircraft.update(aircraft.id, aircraftPatch);
       }
@@ -730,6 +739,10 @@ export default function AddFlight() {
           to { opacity: 1; transform: translateY(0); }
         }
       `}</style>
+
+      {showUpgrade && (
+        <UpgradeSheet trigger="flights" onClose={() => setShowUpgrade(false)} />
+      )}
 
       {showScanner && (
         <MeterScanner
