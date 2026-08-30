@@ -137,6 +137,7 @@ const AuthenticatedApp = () => {
           <Route path="/expenses" element={<Expenses />} />
           <Route path="/flight-planning" element={<FlightPlanning />} />
           <Route path="/quick-log" element={<QuickLog />} />
+          <Route path="/quicklog" element={<QuickLog />} />
 
           {/* Aliases for requested pages that map to existing screens */}
           <Route path="/airports" element={<Aerodromes />} />
