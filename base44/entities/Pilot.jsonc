@@ -102,6 +102,34 @@
     "description": {
       "type": "string",
       "maxLength": 1000
+    },
+    "plan": {
+      "type": "string",
+      "enum": [
+        "free",
+        "cpl",
+        "school"
+      ],
+      "default": "free"
+    },
+    "plan_valid_until": {
+      "type": "string",
+      "format": "date"
+    },
+    "plan_source": {
+      "type": "string",
+      "enum": [
+        "tap",
+        "stripe",
+        "bank_transfer",
+        "admin"
+      ]
+    },
+    "stripe_customer_id": {
+      "type": "string"
+    },
+    "stripe_subscription_id": {
+      "type": "string"
     }
   },
   "required": [
