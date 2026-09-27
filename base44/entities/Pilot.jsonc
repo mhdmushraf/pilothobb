@@ -130,6 +130,21 @@
     },
     "stripe_subscription_id": {
       "type": "string"
+    },
+    "subscription_status": {
+      "type": "string",
+      "enum": [
+        "none",
+        "trialing",
+        "active",
+        "past_due",
+        "canceling",
+        "canceled"
+      ],
+      "default": "none"
+    },
+    "trial_ends_at": {
+      "type": "string"
     }
   },
   "required": [
