@@ -32,50 +32,76 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
     const sr = base44.asServiceRole;
 
+    const toDate = (unix) => (unix ? new Date(unix * 1000).toISOString().split('T')[0] : undefined);
+    const toIso = (unix) => (unix ? new Date(unix * 1000).toISOString() : undefined);
+
     if (event.type === 'checkout.session.completed') {
       const session = event.data.object;
       const planKey = session.metadata?.plan || 'cpl_annual';
       const pilotId = session.metadata?.pilot_id || session.client_reference_id;
+      const subId = session.subscription;
+
+      // Started with a 5-day trial — no charge yet. Grant access and record trial state.
+      let status = 'trialing'; let trialEnd; let periodEnd;
+      if (subId) {
+        try {
+          const sub = await stripe.subscriptions.retrieve(subId);
+          status = sub.status || 'trialing';
+          trialEnd = toIso(sub.trial_end);
+          periodEnd = toDate(sub.current_period_end);
+        } catch { /* fall back to computed validity */ }
+      }
 
       const prs = await sr.entities.PaymentRequest.filter({ stripe_session_id: session.id });
-      const pr = prs[0];
-      if (pr && pr.status !== 'paid') {
-        await sr.entities.PaymentRequest.update(pr.id, {
-          status: 'paid',
-          stripe_subscription_id: session.subscription || undefined,
+      if (prs[0]) {
+        await sr.entities.PaymentRequest.update(prs[0].id, {
+          stripe_subscription_id: subId || undefined,
         });
       }
       if (pilotId) {
         await sr.entities.Pilot.update(pilotId, {
           plan: 'cpl',
           plan_source: 'stripe',
-          plan_valid_until: validUntil(planKey),
+          subscription_status: status,
+          trial_ends_at: trialEnd,
+          plan_valid_until: periodEnd || validUntil(planKey),
           stripe_customer_id: session.customer || undefined,
-          stripe_subscription_id: session.subscription || undefined,
+          stripe_subscription_id: subId || undefined,
         });
       }
     } else if (event.type === 'invoice.paid') {
-      // Subscription renewal — extend the validity window.
       const invoice = event.data.object;
       const subId = invoice.subscription;
+      const realCharge = (invoice.amount_paid || 0) > 0; // trial-start invoice is $0
       if (subId) {
-        const sub = await stripe.subscriptions.retrieve(subId);
-        const planKey = sub.metadata?.plan || 'cpl_annual';
-        const pilotId = sub.metadata?.pilot_id;
+        let planKey = 'cpl_annual'; let pilotId; let periodEnd;
+        try {
+          const sub = await stripe.subscriptions.retrieve(subId);
+          planKey = sub.metadata?.plan || 'cpl_annual';
+          pilotId = sub.metadata?.pilot_id;
+          periodEnd = toDate(sub.current_period_end);
+        } catch { /* fall through */ }
         let pilot = null;
-        if (pilotId) { try { const p = await sr.entities.Pilot.filter({ id: pilotId }); pilot = p[0]; } catch { /* fall through */ } }
+        if (pilotId) { try { const p = await sr.entities.Pilot.filter({ id: pilotId }); pilot = p[0]; } catch { /* ignore */ } }
         if (!pilot) { const ps = await sr.entities.Pilot.filter({ stripe_subscription_id: subId }); pilot = ps[0]; }
         if (pilot) {
           await sr.entities.Pilot.update(pilot.id, {
-            plan: 'cpl', plan_source: 'stripe', plan_valid_until: validUntil(planKey),
+            plan: 'cpl',
+            plan_source: 'stripe',
+            subscription_status: realCharge ? 'active' : (pilot.subscription_status || 'trialing'),
+            plan_valid_until: periodEnd || validUntil(planKey),
           });
+        }
+        if (realCharge) {
+          const prs = await sr.entities.PaymentRequest.filter({ stripe_subscription_id: subId, status: 'pending' });
+          if (prs[0]) { await sr.entities.PaymentRequest.update(prs[0].id, { status: 'paid' }); }
         }
       }
     } else if (event.type === 'customer.subscription.deleted') {
       const sub = event.data.object;
       const ps = await sr.entities.Pilot.filter({ stripe_subscription_id: sub.id });
       const pilot = ps[0];
-      if (pilot) await sr.entities.Pilot.update(pilot.id, { plan: 'free' });
+      if (pilot) await sr.entities.Pilot.update(pilot.id, { plan: 'free', subscription_status: 'canceled' });
     }
 
     return Response.json({ received: true });
