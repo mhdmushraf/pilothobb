@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { Settings as SettingsIcon, Save, LogOut, BarChart3, Trash2, KeyRound } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Settings as SettingsIcon, Save, LogOut, BarChart3, Trash2, KeyRound, Sparkles, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -18,6 +19,7 @@ const LICENCE_TYPES = ["Student", "PPL", "CPL", "ATPL"];
 export default function Settings() {
   const { pilot, loading, reload } = usePilot();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [form, setForm] = useState(null);
   const [saving, setSaving] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
@@ -97,6 +99,41 @@ export default function Settings() {
       <AppHeader icon={SettingsIcon} title="Settings" />
 
       <ProfilePhoto pilot={pilot} onUpdated={reload} />
+
+      {/* Plan / upgrade */}
+      {(() => {
+        const paid = pilot.plan === "cpl" || pilot.plan === "school";
+        const st = pilot.subscription_status || "none";
+        const onPlan = paid || ["trialing", "active", "canceling"].includes(st);
+        return onPlan ? (
+          <button onClick={() => navigate("/upgrade")}
+            className="w-full mb-5 flex items-center gap-3 rounded-2xl bg-cockpit-panel border border-cockpit-valid/40 p-4 text-left">
+            <div className="w-10 h-10 rounded-xl bg-cockpit-valid/10 border border-cockpit-valid/20 flex items-center justify-center shrink-0">
+              <Sparkles className="w-5 h-5 text-cockpit-valid" />
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-cockpit-cream">
+                {st === "trialing" ? "Free trial active" : st === "canceling" ? "Subscription ending" : "PilotHobb CPL"}
+              </p>
+              <p className="text-xs text-cockpit-muted">Tap to manage your plan</p>
+            </div>
+            <ChevronRight className="w-4 h-4 text-cockpit-muted" />
+          </button>
+        ) : (
+          <button onClick={() => navigate("/upgrade")}
+            className="w-full mb-5 flex items-center gap-3 rounded-2xl p-4 text-left text-white"
+            style={{ background: "linear-gradient(135deg,#6366F1,#4F46E5)", boxShadow: "0 10px 26px rgba(79,70,229,.28)" }}>
+            <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center shrink-0">
+              <Sparkles className="w-5 h-5 text-white" />
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-bold">Unlock PilotHobb CPL</p>
+              <p className="text-xs text-white/85">Start your 5-day free trial — unlimited logging & exports</p>
+            </div>
+            <ChevronRight className="w-4 h-4 text-white/90" />
+          </button>
+        );
+      })()}
 
       <div className="space-y-4">
         <div>
