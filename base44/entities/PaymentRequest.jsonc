@@ -21,7 +21,8 @@
       "type": "string",
       "enum": [
         "tap",
-        "bank_transfer"
+        "bank_transfer",
+        "stripe"
       ]
     },
     "reference": {
@@ -41,6 +42,12 @@
       "type": "string"
     },
     "tap_charge_id": {
+      "type": "string"
+    },
+    "stripe_session_id": {
+      "type": "string"
+    },
+    "stripe_subscription_id": {
       "type": "string"
     },
     "admin_note": {
