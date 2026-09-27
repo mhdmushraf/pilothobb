@@ -117,10 +117,7 @@ export default function Upgrade() {
   const trialDays = daysLeft(pilot?.trial_ends_at);
 
   return (
-    <div className="min-h-screen bg-cockpit-bg px-5 pt-6 pb-24 max-w-lg mx-auto ph-upgrade">
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap');
-        .ph-upgrade .ph-display{font-family:'Space Grotesk',ui-sans-serif,system-ui,-apple-system,sans-serif;letter-spacing:-0.02em;}
-        .ph-upgrade{font-feature-settings:'tnum' 1;}`}</style>
+    <div className="min-h-screen bg-cockpit-bg px-5 pt-6 pb-24 max-w-lg mx-auto">
       <Seo noindex title="Upgrade — PilotHobb" description="Start your PilotHobb CPL free trial." />
 
       <button onClick={() => navigate(-1)} className="flex items-center gap-1 text-sm text-cockpit-muted mb-5 hover:text-cockpit-cream transition-colors">
@@ -211,8 +208,8 @@ export default function Upgrade() {
                     ? <span className="inline-block text-[10px] font-bold uppercase tracking-wider text-cockpit-amber mb-1">Best value · save 30%</span>
                     : <span className="inline-block text-[10px] font-bold uppercase tracking-wider text-cockpit-muted mb-1">Flexible</span>}
                   <p className="text-[13px] text-cockpit-muted">{p === "annual" ? "CPL Annual" : "CPL Monthly"}</p>
-                  <p className="ph-display text-[26px] font-bold text-cockpit-cream mt-0.5 leading-none">
-                    ${m.usd}<span className="text-[13px] font-medium text-cockpit-muted">{m.per}</span>
+                  <p className="font-heading text-[26px] font-bold text-cockpit-cream mt-0.5 leading-none">
+                    ${m.usd}<span className="font-body text-[13px] font-medium text-cockpit-muted">{m.per}</span>
                   </p>
                   <p className="text-[11px] text-cockpit-muted mt-1">≈ R{m.zarRef}</p>
                   {active && <Check className="w-4 h-4 text-cockpit-amber mt-2" />}
