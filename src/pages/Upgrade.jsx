@@ -41,7 +41,9 @@ export default function Upgrade() {
 
   const meta = PLAN_META[plan];
   const status = pilot?.subscription_status || "none";
-  const hasSub = !!pilot?.stripe_subscription_id && ["trialing", "active", "past_due", "canceling"].includes(status);
+  const hasStripeSub = !!pilot?.stripe_subscription_id && ["trialing", "active", "past_due", "canceling"].includes(status);
+  const hasPlan = pilot?.plan === "cpl" || pilot?.plan === "school";
+  const hasSub = hasStripeSub || hasPlan;
 
   useEffect(() => {
     if (returning && reload) reload();
@@ -173,7 +175,7 @@ export default function Upgrade() {
             Back to dashboard
           </button>
 
-          {(status === "trialing" || status === "active" || status === "past_due") && (
+          {hasStripeSub && (status === "trialing" || status === "active" || status === "past_due") && (
             <button onClick={cancelSub} disabled={!!busy}
               className="mt-2 w-full flex items-center justify-center gap-2 text-sm text-cockpit-muted hover:text-cockpit-expired py-2 disabled:opacity-50">
               {busy === "cancel" ? <Loader2 className="w-4 h-4 animate-spin" /> : <X className="w-4 h-4" />}
