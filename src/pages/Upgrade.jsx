@@ -129,7 +129,7 @@ export default function Upgrade() {
           <Sparkles className="w-6 h-6 text-cockpit-amber" />
         </div>
         <div>
-          <h1 className="ph-display text-[26px] font-bold text-cockpit-cream leading-tight">PilotHobb CPL</h1>
+          <h1 className="font-heading text-[26px] font-bold text-cockpit-cream leading-tight">PilotHobb CPL</h1>
           <p className="text-[13px] text-cockpit-muted mt-0.5">Unlimited logging · authority-ready exports</p>
         </div>
       </div>
@@ -147,7 +147,7 @@ export default function Upgrade() {
         <div className="rounded-2xl bg-cockpit-panel border border-cockpit-valid/40 p-5">
           <div className="flex items-center gap-2 text-cockpit-valid mb-1">
             <ShieldCheck className="w-5 h-5" />
-            <span className="ph-display font-bold text-lg">
+            <span className="font-heading font-bold text-lg">
               {status === "trialing" ? "Free trial active"
                 : status === "canceling" ? "Subscription ending"
                 : status === "past_due" ? "Payment needs attention"
@@ -244,7 +244,7 @@ export default function Upgrade() {
           {/* Bank transfer instructions */}
           {bankReq && (
             <div className="mt-5 rounded-2xl bg-cockpit-panel border border-cockpit-border p-5">
-              <p className="ph-display text-base font-bold text-cockpit-cream mb-3">Bank transfer</p>
+              <p className="font-heading text-base font-bold text-cockpit-cream mb-3">Bank transfer</p>
               <Row label="Account name" value={bank?.accountName} />
               <Row label="Bank" value={bank?.bankName} />
               <Row label="IBAN" value={bank?.iban} />
@@ -254,7 +254,7 @@ export default function Upgrade() {
               <div className="mt-4">
                 <p className="text-[11px] text-cockpit-muted uppercase tracking-wider mb-1">Reference</p>
                 <div className="flex items-center gap-2">
-                  <span className="flex-1 ph-display text-2xl font-bold text-cockpit-amber tracking-wide">{bankReq.reference}</span>
+                  <span className="flex-1 font-heading text-2xl font-bold text-cockpit-amber tracking-wide">{bankReq.reference}</span>
                   <button onClick={copyRef} className="p-2 rounded-lg bg-cockpit-amber/10 border border-cockpit-amber/30 text-cockpit-amber">
                     {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                   </button>
