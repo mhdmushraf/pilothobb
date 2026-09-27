@@ -54,8 +54,9 @@ export default function Upgrade() {
     setBusy("card"); setError("");
     try {
       const res = await base44.functions.invoke("stripeCreateCheckout", { plan: meta.key });
-      if (res?.url) { window.location.href = res.url; return; }
-      setError(res?.error || "Could not start your trial. Please try again.");
+      const url = res?.data?.url ?? res?.url;
+      if (url) { window.location.href = url; return; }
+      setError(res?.data?.error ?? res?.error ?? "Could not start your trial. Please try again.");
     } catch (e) {
       setError(e.message || "Could not start your trial.");
     } finally { setBusy(""); }
@@ -66,8 +67,8 @@ export default function Upgrade() {
     setBusy("cancel"); setError("");
     try {
       const res = await base44.functions.invoke("stripeCancelSubscription", {});
-      if (res?.ok) { reload && reload(); }
-      else setError(res?.error || "Could not cancel. Please try again.");
+      if (res?.data?.ok ?? res?.ok) { reload && reload(); }
+      else setError(res?.data?.error ?? res?.error ?? "Could not cancel. Please try again.");
     } catch (e) {
       setError(e.message || "Could not cancel.");
     } finally { setBusy(""); }
