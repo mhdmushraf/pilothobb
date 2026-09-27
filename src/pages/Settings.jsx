@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { Settings as SettingsIcon, Save, LogOut, BarChart3, Trash2 } from "lucide-react";
+import { Settings as SettingsIcon, Save, LogOut, BarChart3, Trash2, KeyRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -21,6 +21,9 @@ export default function Settings() {
   const [form, setForm] = useState(null);
   const [saving, setSaving] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
+  const [pw, setPw] = useState({ current: "", next: "", confirm: "" });
+  const [pwSaving, setPwSaving] = useState(false);
+  const [pwErr, setPwErr] = useState("");
 
   useEffect(() => {
     if (pilot) {
@@ -53,6 +56,23 @@ export default function Settings() {
       toast({ title: "Failed to save", variant: "destructive" });
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleChangePassword = async () => {
+    setPwErr("");
+    if (!pw.current || !pw.next) { setPwErr("Please fill in all fields."); return; }
+    if (pw.next.length < 8) { setPwErr("New password must be at least 8 characters."); return; }
+    if (pw.next !== pw.confirm) { setPwErr("New passwords don't match."); return; }
+    setPwSaving(true);
+    try {
+      await base44.auth.changePassword({ currentPassword: pw.current, newPassword: pw.next });
+      toast({ title: "Password updated" });
+      setPw({ current: "", next: "", confirm: "" });
+    } catch (e) {
+      setPwErr(e?.message || "Couldn't update password. Check your current password and try again.");
+    } finally {
+      setPwSaving(false);
     }
   };
 
@@ -176,6 +196,48 @@ export default function Settings() {
                 <span className="font-mono font-bold text-cockpit-cream">{(val ?? 0).toFixed(1)}</span>
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* Change password */}
+        <div className="rounded-2xl bg-cockpit-panel border border-cockpit-border p-4 mt-6">
+          <SectionTitle icon={KeyRound}>Change password</SectionTitle>
+          <div className="space-y-3">
+            <Input
+              type="password"
+              autoComplete="current-password"
+              placeholder="Current password"
+              value={pw.current}
+              onChange={(e) => setPw({ ...pw, current: e.target.value })}
+              className="bg-cockpit-panel-light border-cockpit-border text-cockpit-cream"
+            />
+            <Input
+              type="password"
+              autoComplete="new-password"
+              placeholder="New password"
+              value={pw.next}
+              onChange={(e) => setPw({ ...pw, next: e.target.value })}
+              className="bg-cockpit-panel-light border-cockpit-border text-cockpit-cream"
+            />
+            <Input
+              type="password"
+              autoComplete="new-password"
+              placeholder="Confirm new password"
+              value={pw.confirm}
+              onChange={(e) => setPw({ ...pw, confirm: e.target.value })}
+              className="bg-cockpit-panel-light border-cockpit-border text-cockpit-cream"
+            />
+            {pwErr && <p className="text-xs text-cockpit-expired">{pwErr}</p>}
+            <Button
+              onClick={handleChangePassword}
+              disabled={pwSaving}
+              className="w-full bg-cockpit-panel-light border border-cockpit-border text-cockpit-cream hover:bg-cockpit-border/40 rounded-xl h-11"
+            >
+              <KeyRound className="w-4 h-4 mr-2" /> {pwSaving ? "Updating…" : "Update password"}
+            </Button>
+            <p className="text-[11px] text-cockpit-muted">
+              Forgot your current password? <a href="/forgot-password" className="text-cockpit-amber hover:underline">Reset via email</a>.
+            </p>
           </div>
         </div>
 
