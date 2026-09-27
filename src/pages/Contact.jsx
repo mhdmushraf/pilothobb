@@ -8,6 +8,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { base44 } from "@/api/base44Client";
 import Seo from "@/components/Seo";
 
+// Inline, self-hosted aviation banner (no external image dependency).
+const BANNER_SVG = `<svg viewBox="0 0 1600 420" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2A1F9E"/><stop offset="0.42" stop-color="#4F46E5"/><stop offset="0.72" stop-color="#7C6FF0"/><stop offset="0.9" stop-color="#F6A45C"/><stop offset="1" stop-color="#FBC98B"/></linearGradient><radialGradient id="sun" cx="0.72" cy="0.98" r="0.5"><stop offset="0" stop-color="#FFE9C7" stop-opacity="0.95"/><stop offset="0.35" stop-color="#FBC98B" stop-opacity="0.55"/><stop offset="1" stop-color="#FBC98B" stop-opacity="0"/></radialGradient><filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="14"/></filter><filter id="soft2" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="6"/></filter></defs><rect width="1600" height="420" fill="url(#sky)"/><rect width="1600" height="420" fill="url(#sun)"/><g fill="#fff" opacity="0.5"><circle cx="180" cy="70" r="1.6"/><circle cx="420" cy="50" r="1.2"/><circle cx="900" cy="60" r="1.4"/><circle cx="1240" cy="46" r="1.2"/><circle cx="1440" cy="90" r="1.5"/><circle cx="640" cy="90" r="1.1"/></g><g filter="url(#soft)"><ellipse cx="300" cy="360" rx="360" ry="42" fill="#fff" opacity="0.22"/><ellipse cx="1150" cy="378" rx="440" ry="48" fill="#fff" opacity="0.28"/><ellipse cx="780" cy="392" rx="520" ry="44" fill="#FFE3C2" opacity="0.5"/></g><g filter="url(#soft2)" opacity="0.9"><ellipse cx="1180" cy="356" rx="150" ry="20" fill="#fff" opacity="0.55"/><ellipse cx="360" cy="344" rx="120" ry="16" fill="#fff" opacity="0.45"/></g><path d="M120 300 Q 700 250 1180 150" stroke="#fff" stroke-width="5" fill="none" opacity="0.35" stroke-linecap="round"/><path d="M120 300 Q 700 250 1180 150" stroke="#fff" stroke-width="2" fill="none" opacity="0.6" stroke-linecap="round" stroke-dasharray="2 10"/><g transform="translate(1180,150) rotate(-24)" fill="#0F1024"><path d="M0 0 L64 -6 L92 0 L64 6 Z"/><path d="M40 -3 L52 -30 L60 -30 L54 -2 Z"/><path d="M40 3 L52 30 L60 30 L54 2 Z"/><path d="M6 -2 L-16 -12 L-10 0 L-16 12 L6 2 Z"/></g></svg>`;
+const BANNER_URI = `data:image/svg+xml;utf8,${encodeURIComponent(BANNER_SVG)}`;
+
 export default function Contact() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [status, setStatus] = useState("idle"); // idle | sending | success | error
@@ -53,12 +57,11 @@ export default function Contact() {
       <section className="px-4 sm:px-6 -mt-6 mb-8 max-w-5xl mx-auto">
         <div className="relative rounded-3xl overflow-hidden border border-cockpit-border shadow-xl shadow-cockpit-amber/10">
           <img
-            src="https://images.unsplash.com/photo-1559060017-445fb9722f2a?w=1600&q=75&auto=format&fit=crop"
-            alt="Dramatic clouds at altitude"
-            loading="lazy"
+            src={BANNER_URI}
+            alt="A jet climbing through a dusk sky"
             className="w-full h-40 sm:h-56 object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-cockpit-bg/85 via-cockpit-bg/30 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-cockpit-bg/80 via-cockpit-bg/10 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-7">
             <p className="font-heading text-lg sm:text-xl font-bold text-white drop-shadow">
               We usually reply within one business day.
