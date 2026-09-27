@@ -15,8 +15,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Check } from "lucide-react";
 import Seo from "@/components/Seo";
+import { PRICES } from "@/lib/plan";
 
-const TOTAL_STEPS = 5;
+const TOTAL_STEPS = 6;
 
 const TRACK_OPTIONS = [
   "Flight hours",
@@ -42,6 +43,8 @@ export default function Onboarding() {
   const [englishValidUntil, setEnglishValidUntil] = useState("");
   const [tracking, setTracking] = useState([]);
   const [submitting, setSubmitting] = useState(false);
+  const [plan, setPlan] = useState("annual");
+  const [trialBusy, setTrialBusy] = useState(false);
 
   // prefill once the pilot record is available
   useEffect(() => {
@@ -78,7 +81,7 @@ export default function Onboarding() {
     return true;
   };
 
-  const handleFinish = async () => {
+  const saveProfile = async () => {
     setSubmitting(true);
     try {
       await base44.entities.Pilot.update(pilot.id, {
@@ -90,12 +93,31 @@ export default function Onboarding() {
         english_valid_until: englishValidUntil || undefined,
         onboarded: true,
       });
-      navigate("/quicklog?first=1");
+      setSubmitting(false);
+      return true;
     } catch (e) {
       console.error("Onboarding failed", e);
       setSubmitting(false);
+      return false;
     }
   };
+
+  const startTrial = async () => {
+    setTrialBusy(true);
+    try {
+      const res = await base44.functions.invoke("stripeCreateCheckout", {
+        plan: plan === "annual" ? "cpl_annual" : "cpl_monthly",
+      });
+      if (res?.url) { window.location.href = res.url; return; }
+      setTrialBusy(false);
+      navigate("/quicklog?first=1");
+    } catch {
+      setTrialBusy(false);
+      navigate("/quicklog?first=1");
+    }
+  };
+
+  const skipTrial = () => navigate("/quicklog?first=1");
 
   const fadeIn = direction === "next" ? "ob-fade-next" : "ob-fade-back";
 
@@ -291,6 +313,46 @@ export default function Onboarding() {
                   </div>
                 </Step>
               )}
+
+              {step === 5 && (
+                <Step
+                  title="Start your free trial"
+                  subtitle="5 days free · cancel anytime before it ends and you won't be charged"
+                >
+                  <div className="grid grid-cols-2 gap-3">
+                    {["annual", "monthly"].map((p) => {
+                      const active = plan === p;
+                      return (
+                        <button
+                          key={p}
+                          type="button"
+                          onClick={() => setPlan(p)}
+                          className={`text-left rounded-2xl p-4 border transition-all ${active ? "border-cockpit-amber bg-cockpit-amber/10 ring-1 ring-cockpit-amber/40" : "bg-cockpit-panel-light border-cockpit-border"}`}
+                        >
+                          <p className="text-[13px] text-cockpit-muted">{p === "annual" ? "CPL Annual" : "CPL Monthly"}</p>
+                          <p className="font-heading text-xl font-bold text-cockpit-cream mt-0.5">{p === "annual" ? PRICES.annualLabel : PRICES.monthlyLabel}</p>
+                          <p className="text-[11px] text-cockpit-muted mt-0.5">{p === "annual" ? "Best value" : "Billed monthly"}</p>
+                          {active && <Check className="w-4 h-4 text-cockpit-amber mt-2" />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <button
+                    onClick={startTrial}
+                    disabled={trialBusy}
+                    className="mt-4 w-full ph-btn-primary flex items-center justify-center gap-2 disabled:opacity-50"
+                    style={{ height: "3rem" }}
+                  >
+                    {trialBusy ? "Starting…" : "Start 5-day free trial"}
+                  </button>
+                  <p className="text-[11px] text-cockpit-muted text-center mt-2">
+                    Card required · charged {plan === "annual" ? PRICES.annualLabel : PRICES.monthlyLabel} after 5 days · cancel anytime
+                  </p>
+                  <button onClick={skipTrial} className="mt-3 w-full text-sm text-cockpit-muted hover:text-cockpit-cream py-1">
+                    I'll start with the free plan
+                  </button>
+                </Step>
+              )}
             </div>
           )}
 
@@ -307,7 +369,7 @@ export default function Onboarding() {
                 Back
               </Button>
 
-              {step < TOTAL_STEPS - 1 ? (
+              {step < 4 ? (
                 <Button
                   onClick={goNext}
                   disabled={!canContinue()}
@@ -316,16 +378,16 @@ export default function Onboarding() {
                   Continue
                   <ChevronRight className="w-4 h-4" />
                 </Button>
-              ) : (
+              ) : step === 4 ? (
                 <Button
-                  onClick={handleFinish}
+                  onClick={async () => { const ok = await saveProfile(); if (ok) goNext(); }}
                   disabled={submitting}
                   className="flex-1 ph-btn-primary"
                 >
-                  {submitting ? "Saving…" : "Finish setup"}
-                  <Check className="w-4 h-4" />
+                  {submitting ? "Saving…" : "Continue"}
+                  <ChevronRight className="w-4 h-4" />
                 </Button>
-              )}
+              ) : null}
             </div>
           )}
         </div>
