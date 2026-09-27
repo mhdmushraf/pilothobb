@@ -108,7 +108,8 @@ export default function Onboarding() {
       const res = await base44.functions.invoke("stripeCreateCheckout", {
         plan: plan === "annual" ? "cpl_annual" : "cpl_monthly",
       });
-      if (res?.url) { window.location.href = res.url; return; }
+      const url = res?.data?.url ?? res?.url;
+      if (url) { window.location.href = url; return; }
       setTrialBusy(false);
       navigate("/quicklog?first=1");
     } catch {
