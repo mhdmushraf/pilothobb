@@ -60,8 +60,13 @@ Deno.serve(async (req) => {
       success_url: `${appUrl}/upgrade?stripe=return`,
       cancel_url: `${appUrl}/upgrade?stripe=cancel`,
       client_reference_id: pilot?.id || undefined,
+      // Require a card up front, but don't charge during the 5-day free trial.
+      payment_method_collection: 'always',
       metadata: { pilot_id: pilot?.id || '', plan: planKey, reference },
-      subscription_data: { metadata: { pilot_id: pilot?.id || '', plan: planKey } },
+      subscription_data: {
+        trial_period_days: 5,
+        metadata: { pilot_id: pilot?.id || '', plan: planKey },
+      },
       allow_promotion_codes: true,
     });
 
