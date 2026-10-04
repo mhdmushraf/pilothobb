@@ -199,12 +199,21 @@ export default function AircraftDetail({ aircraft, onClose }) {
 
   return (
     <BottomSheet onClose={onClose} backDismisses={false} className="max-h-[92vh]">
-      <div className="flex items-start justify-between mb-4">
-        <div>
-          <p className="font-mono text-lg font-bold text-cockpit-cream">{aircraft.registration}</p>
-          <p className="text-xs text-cockpit-muted">{aircraft.type} · {aircraft.category}</p>
+      <div
+        className="relative overflow-hidden rounded-2xl p-4 mb-4 flex items-center gap-3"
+        style={{ background: "linear-gradient(135deg,#191C1E,#3525CD)" }}
+      >
+        <div
+          className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
+          style={{ background: "rgba(255,255,255,.14)" }}
+        >
+          <Plane className="w-6 h-6 text-white" />
         </div>
-        <button onClick={onClose} className="p-1 text-cockpit-muted hover:text-cockpit-cream">
+        <div className="min-w-0 flex-1">
+          <p className="font-mono text-xl font-bold text-white leading-tight">{aircraft.registration}</p>
+          <p className="text-xs text-white/75 mt-0.5 truncate">{aircraft.type} · {aircraft.category}</p>
+        </div>
+        <button onClick={onClose} className="p-1 text-white/80 hover:text-white shrink-0">
           <X className="w-5 h-5" />
         </button>
       </div>
