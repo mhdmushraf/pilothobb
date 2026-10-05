@@ -82,7 +82,7 @@ const sections = [
   {
     h: "Contact",
     body: [
-      "Questions about these terms can be sent to hello@pilothobb.com.",
+      "Questions about these terms can be sent to hello@linkzoneglobal.com.",
     ],
   },
 ];
