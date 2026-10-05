@@ -40,8 +40,8 @@ export default function LegalDoc({ updated, intro, sections }) {
       <div className="mt-14 rounded-2xl bg-cockpit-panel border border-cockpit-border p-6 text-center">
         <p className="text-sm text-cockpit-muted">
           Questions about this document? Email{" "}
-          <a href="mailto:hello@pilothobb.com" className="text-cockpit-amber font-medium">
-            hello@pilothobb.com
+          <a href="mailto:hello@linkzoneglobal.com" className="text-cockpit-amber font-medium">
+            hello@linkzoneglobal.com
           </a>
           .
         </p>
