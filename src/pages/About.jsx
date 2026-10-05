@@ -106,7 +106,7 @@ export default function About() {
                   recurring revenue, a global market.
                 </p>
                 <a
-                  href="mailto:hello@pilothobb.com"
+                  href="mailto:hello@linkzoneglobal.com"
                   className="inline-flex items-center px-5 py-2.5 rounded-xl bg-cockpit-amber text-cockpit-bg text-sm font-semibold hover:shadow-lg hover:shadow-cockpit-amber/30 hover:-translate-y-0.5 transition-all"
                 >
                   Become a launch partner
@@ -130,10 +130,10 @@ export default function About() {
         <ScrollReveal>
           <h2 className="font-heading text-3xl font-bold text-cockpit-cream mb-6">Talk to us.</h2>
           <a
-            href="mailto:hello@pilothobb.com"
+            href="mailto:hello@linkzoneglobal.com"
             className="inline-flex items-center px-6 py-3 rounded-xl bg-cockpit-amber text-cockpit-bg font-semibold hover:shadow-lg hover:shadow-cockpit-amber/30 hover:-translate-y-0.5 transition-all"
           >
-            hello@pilothobb.com
+            hello@linkzoneglobal.com
           </a>
           <p className="text-xs text-cockpit-muted mt-6">
             PilotHobb · a Linkzone Global FZCO venture
