@@ -50,7 +50,7 @@ const landingJsonLd = {
     "@id": "https://pilothobb.com/#org",
     "name": "PilotHobb",
     "url": "https://pilothobb.com",
-    "email": "hello@pilothobb.com",
+    "email": "hello@linkzoneglobal.com",
     "logo": "https://media.base44.com/images/public/6a455fc5475b58bb52305622/1a9086f0b_pilothobb-icon-appstore-1024.png"
   },
   {
