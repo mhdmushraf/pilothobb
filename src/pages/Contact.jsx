@@ -85,7 +85,7 @@ export default function Contact() {
               </div>
 
               <a
-                href="mailto:hello@pilothobb.com"
+                href="mailto:hello@linkzoneglobal.com"
                 className="flex items-center gap-3 group"
               >
                 <div className="w-10 h-10 rounded-xl bg-cockpit-amber/10 border border-cockpit-amber/20 flex items-center justify-center shrink-0">
@@ -94,7 +94,7 @@ export default function Contact() {
                 <div>
                   <p className="text-xs text-cockpit-muted">Email</p>
                   <p className="text-sm font-medium text-cockpit-cream group-hover:text-cockpit-amber transition-colors">
-                    hello@pilothobb.com
+                    hello@linkzoneglobal.com
                   </p>
                 </div>
               </a>
