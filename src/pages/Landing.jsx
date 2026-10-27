@@ -5,6 +5,7 @@ import AppStoreBadgeIcon from "@/components/landing/AppStoreBadgeIcon";
 import GooglePlayBadgeIcon from "@/components/landing/GooglePlayBadgeIcon";
 import Seo from "@/components/Seo";
 import PhonePreview from "@/components/PhonePreview";
+import CruiseViewCard from "@/components/landing/CruiseViewCard";
 import LandingNav from "@/components/landing/LandingNav";
 import MovingMapPhone from "@/components/landing/MovingMapPhone";
 import FeatureGrid from "@/components/landing/FeatureGrid";
@@ -147,6 +148,7 @@ export default function Landing() {
             </div>
 
             <div className="relative flex w-full max-w-[300px] shrink-0 justify-center lg:max-w-none">
+              <CruiseViewCard className="pointer-events-none absolute -inset-x-10 -inset-y-6 hidden opacity-70 lg:block" aria-hidden="true" />
               <div className="pointer-events-none absolute inset-0 -m-12 rounded-full bg-cockpit-amber/10 blur-3xl" aria-hidden="true" />
               <div className="relative w-[260px] shrink-0 sm:w-[300px]">
                 <PhonePreview />
