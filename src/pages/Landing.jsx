@@ -148,7 +148,7 @@ export default function Landing() {
             </div>
 
             <div className="relative flex w-full max-w-[300px] shrink-0 justify-center lg:max-w-none">
-              <CruiseViewCard className="pointer-events-none absolute -inset-x-10 -inset-y-6 hidden opacity-70 lg:block" aria-hidden="true" />
+              <CruiseViewCard className="pointer-events-none absolute -inset-x-6 -inset-y-4 hidden lg:block" aria-hidden="true" />
               <div className="pointer-events-none absolute inset-0 -m-12 rounded-full bg-cockpit-amber/10 blur-3xl" aria-hidden="true" />
               <div className="relative w-[260px] shrink-0 sm:w-[300px]">
                 <PhonePreview />
