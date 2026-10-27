@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Check, Gauge, ShieldCheck, FileDown, Apple, Play, ArrowRight, MoveRight } from "lucide-react";
+import { Check, Gauge, ShieldCheck, FileDown, ArrowRight, MoveRight } from "lucide-react";
+import AppStoreBadgeIcon from "@/components/landing/AppStoreBadgeIcon";
+import GooglePlayBadgeIcon from "@/components/landing/GooglePlayBadgeIcon";
 import Seo from "@/components/Seo";
 import PhonePreview from "@/components/PhonePreview";
 import LandingNav from "@/components/landing/LandingNav";
@@ -125,13 +127,13 @@ export default function Landing() {
                   to="/download"
                   className="inline-flex items-center justify-center gap-2.5 rounded-xl bg-cockpit-amber px-6 py-3.5 text-[14px] font-bold text-cockpit-bg transition-all hover:brightness-110 active:scale-[0.99]"
                 >
-                  <Apple className="h-5 w-5" /> Download on the App Store
+                  <AppStoreBadgeIcon className="h-5 w-5" /> Download on the App Store
                 </Link>
                 <Link
                   to="/download"
                   className="inline-flex items-center justify-center gap-2.5 rounded-xl border border-cockpit-border bg-cockpit-panel px-6 py-3.5 text-[14px] font-bold text-cockpit-cream transition-all hover:bg-cockpit-panel-light"
                 >
-                  <Play className="h-5 w-5" /> Get it on Google Play
+                  <GooglePlayBadgeIcon className="h-5 w-5" /> Get it on Google Play
                 </Link>
               </div>
 
@@ -144,9 +146,9 @@ export default function Landing() {
               </ul>
             </div>
 
-            <div className="relative flex justify-center">
+            <div className="relative flex w-full max-w-[300px] shrink-0 justify-center lg:max-w-none">
               <div className="pointer-events-none absolute inset-0 -m-12 rounded-full bg-cockpit-amber/10 blur-3xl" aria-hidden="true" />
-              <div className="relative">
+              <div className="relative w-[260px] shrink-0 sm:w-[300px]">
                 <PhonePreview />
               </div>
             </div>
@@ -201,7 +203,7 @@ export default function Landing() {
         <section id="moving-map" className="border-y border-cockpit-border bg-cockpit-panel py-20 md:py-28">
           <div className="mx-auto grid max-w-[1200px] items-center gap-14 px-4 md:px-8 lg:grid-cols-2">
             <div className="order-2 flex justify-center lg:order-1">
-              <div className="relative">
+              <div className="relative w-[260px] shrink-0 sm:w-[300px]">
                 <div className="pointer-events-none absolute inset-0 -m-10 rounded-full bg-cockpit-amber/10 blur-3xl" aria-hidden="true" />
                 <div className="relative">
                   <MovingMapPhone />
@@ -284,13 +286,13 @@ export default function Landing() {
                   to="/download"
                   className="inline-flex items-center justify-center gap-2.5 rounded-xl bg-cockpit-bg px-6 py-3.5 text-[14px] font-semibold text-cockpit-cream transition-all hover:bg-cockpit-panel-light"
                 >
-                  <Apple className="h-5 w-5" /> App Store
+                  <AppStoreBadgeIcon className="h-5 w-5" /> App Store
                 </Link>
                 <Link
                   to="/download"
                   className="inline-flex items-center justify-center gap-2.5 rounded-xl bg-cockpit-bg px-6 py-3.5 text-[14px] font-semibold text-cockpit-cream transition-all hover:bg-cockpit-panel-light"
                 >
-                  <Play className="h-5 w-5" /> Google Play
+                  <GooglePlayBadgeIcon className="h-5 w-5" /> Google Play
                 </Link>
               </div>
             </div>
