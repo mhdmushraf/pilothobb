@@ -1,46 +1,54 @@
 {
   "name": "FlightPlan",
-  "type": "object",
   "properties": {
-    "title": {
+    "booking": {
+      "description": "id of the linked Booking record, if this plan has been scheduled",
       "type": "string"
+    },
+    "cruise_speed": {
+      "type": "number"
     },
     "date": {
-      "type": "string",
-      "format": "date"
-    },
-    "from_aerodrome": {
-      "type": "string"
-    },
-    "to_aerodrome": {
+      "format": "date",
       "type": "string"
     },
     "distance_nm": {
       "type": "number"
     },
-    "cruise_speed": {
-      "type": "number"
+    "from_aerodrome": {
+      "type": "string"
     },
     "fuel_burn_rate": {
       "type": "number"
     },
+    "notes": {
+      "type": "string"
+    },
     "reserve_min": {
-      "type": "number",
-      "default": 45
+      "default": 45,
+      "type": "number"
+    },
+    "title": {
+      "type": "string"
+    },
+    "to_aerodrome": {
+      "type": "string"
+    },
+    "waypoints": {
+      "description": "JSON array of {code,name,lat,lon,alt_ft} in route order, stored as a JSON string",
+      "type": "string"
     },
     "wind_dir": {
       "type": "number"
     },
     "wind_speed": {
       "type": "number"
-    },
-    "notes": {
-      "type": "string"
     }
   },
   "required": [
     "title"
   ],
+  "type": "object",
   "rls": {
     "create": true,
     "read": {
