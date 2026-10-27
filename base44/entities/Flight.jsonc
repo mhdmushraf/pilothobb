@@ -1,114 +1,57 @@
 {
   "name": "Flight",
-  "type": "object",
   "properties": {
-    "date": {
-      "type": "string",
-      "format": "date"
-    },
     "aircraft": {
-      "type": "string",
+      "referenceEntity": "Aircraft",
       "relationType": "reference",
-      "referenceEntity": "Aircraft"
-    },
-    "from_aerodrome": {
       "type": "string"
     },
-    "to_aerodrome": {
-      "type": "string"
-    },
-    "route": {
-      "type": "string"
-    },
-    "reading_before": {
+    "autorotations": {
+      "default": 0,
       "type": "number"
     },
-    "reading_after": {
+    "battery_cycles": {
+      "default": 0,
+      "type": "number"
+    },
+    "co_pilot_time": {
+      "default": 0,
+      "type": "number"
+    },
+    "date": {
+      "format": "date",
+      "type": "string"
+    },
+    "dual_time": {
+      "default": 0,
       "type": "number"
     },
     "flight_time": {
       "type": "number"
     },
+    "from_aerodrome": {
+      "type": "string"
+    },
+    "hoist_cycles": {
+      "default": 0,
+      "type": "number"
+    },
+    "instrument_actual": {
+      "default": 0,
+      "type": "number"
+    },
+    "instrument_sim": {
+      "default": 0,
+      "type": "number"
+    },
+    "is_rpas": {
+      "default": false,
+      "type": "boolean"
+    },
     "landings": {
       "type": "number"
     },
-    "takeoffs": {
-      "type": "number"
-    },
-    "night_landings": {
-      "type": "number",
-      "default": 0
-    },
-    "pilot_role": {
-      "type": "string",
-      "enum": [
-        "PIC",
-        "Dual",
-        "PICUS",
-        "Co-pilot"
-      ]
-    },
-    "pic_time": {
-      "type": "number",
-      "default": 0
-    },
-    "dual_time": {
-      "type": "number",
-      "default": 0
-    },
-    "xc_time": {
-      "type": "number",
-      "default": 0
-    },
-    "night_time": {
-      "type": "number",
-      "default": 0
-    },
-    "instrument_actual": {
-      "type": "number",
-      "default": 0
-    },
-    "instrument_sim": {
-      "type": "number",
-      "default": 0
-    },
-    "remarks": {
-      "type": "string"
-    },
-    "touch_and_go": {
-      "type": "number",
-      "default": 0
-    },
-    "night_takeoffs": {
-      "type": "number",
-      "default": 0
-    },
-    "sim_time": {
-      "type": "number",
-      "default": 0
-    },
-    "picus_time": {
-      "type": "number",
-      "default": 0
-    },
-    "co_pilot_time": {
-      "type": "number",
-      "default": 0
-    },
-    "autorotations": {
-      "type": "number",
-      "default": 0
-    },
-    "hoist_cycles": {
-      "type": "number",
-      "default": 0
-    },
-    "is_rpas": {
-      "type": "boolean",
-      "default": false
-    },
     "mission_type": {
-      "type": "string",
       "enum": [
         "Training",
         "Commercial",
@@ -118,22 +61,82 @@
         "Photography/Film",
         "Agriculture",
         "Other"
-      ]
+      ],
+      "type": "string"
+    },
+    "night_landings": {
+      "default": 0,
+      "type": "number"
+    },
+    "night_takeoffs": {
+      "default": 0,
+      "type": "number"
+    },
+    "night_time": {
+      "default": 0,
+      "type": "number"
+    },
+    "observer": {
+      "type": "string"
     },
     "operation_category": {
-      "type": "string",
       "enum": [
         "VLOS",
         "EVLOS",
         "BVLOS"
-      ]
-    },
-    "battery_cycles": {
-      "type": "number",
-      "default": 0
-    },
-    "observer": {
+      ],
       "type": "string"
+    },
+    "pic_time": {
+      "default": 0,
+      "type": "number"
+    },
+    "picus_time": {
+      "default": 0,
+      "type": "number"
+    },
+    "pilot_role": {
+      "enum": [
+        "PIC",
+        "Dual",
+        "PICUS",
+        "Co-pilot"
+      ],
+      "type": "string"
+    },
+    "reading_after": {
+      "type": "number"
+    },
+    "reading_before": {
+      "type": "number"
+    },
+    "remarks": {
+      "type": "string"
+    },
+    "route": {
+      "type": "string"
+    },
+    "sim_time": {
+      "default": 0,
+      "type": "number"
+    },
+    "takeoffs": {
+      "type": "number"
+    },
+    "to_aerodrome": {
+      "type": "string"
+    },
+    "touch_and_go": {
+      "default": 0,
+      "type": "number"
+    },
+    "track": {
+      "description": "id of the linked Track record (GPS flight recording), if this flight was auto-logged",
+      "type": "string"
+    },
+    "xc_time": {
+      "default": 0,
+      "type": "number"
     }
   },
   "required": [
@@ -143,6 +146,7 @@
     "to_aerodrome",
     "flight_time"
   ],
+  "type": "object",
   "rls": {
     "create": true,
     "read": {

@@ -1,0 +1,85 @@
+{
+  "name": "Track",
+  "properties": {
+    "aircraft": {
+      "description": "id of the Aircraft flown",
+      "type": "string"
+    },
+    "booking": {
+      "description": "id of the linked Booking record, if this track started from a scheduled flight",
+      "type": "string"
+    },
+    "distance_nm": {
+      "type": "number"
+    },
+    "ended_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "flight": {
+      "description": "id of the linked Flight record this track was logged against, if saved",
+      "type": "string"
+    },
+    "gpx_url": {
+      "type": "string"
+    },
+    "landings_detected": {
+      "default": 0,
+      "type": "number"
+    },
+    "max_alt_ft": {
+      "type": "number"
+    },
+    "points": {
+      "description": "JSON array of {lat,lon,alt_ft,gs_kt,trk,ts} sampled from watchPosition, stored as a JSON string",
+      "type": "string"
+    },
+    "started_at": {
+      "format": "date-time",
+      "type": "string"
+    }
+  },
+  "required": [
+    "started_at"
+  ],
+  "rls": {
+    "create": true,
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  },
+  "type": "object"
+}
