@@ -1,27 +1,26 @@
 {
   "name": "Booking",
-  "type": "object",
   "properties": {
     "aircraft": {
-      "type": "string",
+      "referenceEntity": "Aircraft",
       "relationType": "reference",
-      "referenceEntity": "Aircraft"
-    },
-    "title": {
       "type": "string"
     },
     "date": {
-      "type": "string",
-      "format": "date"
-    },
-    "start_time": {
+      "format": "date",
       "type": "string"
     },
     "end_time": {
       "type": "string"
     },
+    "flight_plan": {
+      "description": "id of the linked FlightPlan record, if this booking has a planned route",
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    },
     "purpose": {
-      "type": "string",
       "enum": [
         "Training",
         "Private",
@@ -29,9 +28,13 @@
         "Maintenance",
         "Cross-country",
         "Other"
-      ]
+      ],
+      "type": "string"
     },
-    "notes": {
+    "start_time": {
+      "type": "string"
+    },
+    "title": {
       "type": "string"
     }
   },
@@ -40,6 +43,7 @@
     "date",
     "start_time"
   ],
+  "type": "object",
   "rls": {
     "create": true,
     "read": {
