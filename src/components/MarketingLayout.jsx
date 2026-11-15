@@ -1,8 +1,8 @@
 import React from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-import TopNav from "@/components/TopNav";
-import Footer from "@/components/Footer";
+import LandingNav from "@/components/landing/LandingNav";
+import LandingFooter from "@/components/landing/LandingFooter";
 import AnimatedBackground from "@/components/AnimatedBackground";
 import ErrorBoundary from "@/components/ErrorBoundary";
 
@@ -13,10 +13,10 @@ const prefersReducedMotion =
 export default function MarketingLayout() {
   const location = useLocation();
   return (
-    <div className="min-h-screen relative">
+    <div className="ph-site relative font-body">
       <AnimatedBackground />
-      <TopNav />
-      <main className="pt-16 app-scroll">
+      <LandingNav />
+      <main>
         <motion.div
           key={location.pathname}
           initial={{ opacity: 0 }}
@@ -26,7 +26,7 @@ export default function MarketingLayout() {
           <ErrorBoundary><Outlet /></ErrorBoundary>
         </motion.div>
       </main>
-      <Footer />
+      <LandingFooter />
     </div>
   );
 }

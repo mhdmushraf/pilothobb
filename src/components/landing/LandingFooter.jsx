@@ -7,7 +7,7 @@ const COLUMNS = [
     title: "Product",
     links: [
       { label: "Features", to: "/features" },
-      { label: "Moving map", to: "/features" },
+      { label: "Moving map", to: "/moving-map" },
       { label: "Pricing", to: "/pricing" },
       { label: "Drone / RPAS", to: "/rpas" },
       { label: "Get the app", to: "/download" },
@@ -34,8 +34,8 @@ const COLUMNS = [
 
 export default function LandingFooter() {
   return (
-    <footer className="border-t border-cockpit-border bg-cockpit-panel">
-      <div className="mx-auto max-w-[1200px] px-4 py-14 md:px-8 md:py-16">
+    <footer className="relative border-t border-cockpit-border bg-cockpit-bg">
+      <div className="ph-container py-14 md:py-16">
         <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div>
             <Logo size={34} />

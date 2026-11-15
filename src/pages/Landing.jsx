@@ -4,10 +4,8 @@ import { Check, Gauge, ShieldCheck, FileDown, ArrowRight, MoveRight } from "luci
 import AppStoreBadgeIcon from "@/components/landing/AppStoreBadgeIcon";
 import GooglePlayBadgeIcon from "@/components/landing/GooglePlayBadgeIcon";
 import Seo from "@/components/Seo";
-import HeroPhones from "@/components/landing/HeroPhones";
-import CruiseViewCard from "@/components/landing/CruiseViewCard";
 import LandingNav from "@/components/landing/LandingNav";
-import MovingMapPhone from "@/components/landing/MovingMapPhone";
+import { HeroPhoneShots, MapPhoneShot, CtaBand, SHOTS } from "@/components/marketing/Kit";
 import FeatureGrid from "@/components/landing/FeatureGrid";
 import PricingCards from "@/components/landing/PricingCards";
 import LandingFooter from "@/components/landing/LandingFooter";
@@ -95,7 +93,7 @@ function Eyebrow({ children }) {
 
 export default function Landing() {
   return (
-    <div className="min-h-screen bg-cockpit-bg font-body text-cockpit-cream">
+    <div className="ph-site font-body">
       <Seo
         path="/"
         title="PilotHobb — Digital Pilot Logbook for Flight Hours, Currency & Drone Hours"
@@ -120,7 +118,7 @@ export default function Landing() {
               maskImage: "radial-gradient(75% 70% at 50% 40%, black 30%, transparent 85%)",
             }}
           />
-          <div className="relative mx-auto grid max-w-[1200px] items-center gap-14 px-4 pb-16 pt-14 md:px-8 md:pb-24 md:pt-20 lg:grid-cols-[1.05fr_0.95fr]">
+          <div className="relative ph-container grid items-center gap-10 pb-16 pt-14 md:pb-24 md:pt-20 lg:grid-cols-[1.05fr_0.95fr]">
             <div>
               <span className="inline-flex items-center gap-2 rounded-full border border-cockpit-amber/25 bg-cockpit-amber/10 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-cockpit-amber">
                 <span className="h-1.5 w-1.5 rounded-full bg-cockpit-amber" />
@@ -159,19 +157,18 @@ export default function Landing() {
               </ul>
             </div>
 
-            <div className="relative flex w-full justify-center">
-              <CruiseViewCard className="pointer-events-none absolute -inset-x-6 -inset-y-4 hidden lg:block" aria-hidden="true" />
+            <div className="relative flex w-full justify-center lg:justify-end">
+              <img src={SHOTS.cruise} alt="" aria-hidden="true"
+                className="pointer-events-none absolute left-[-18%] top-[22%] hidden w-[92%] max-w-none rounded-2xl opacity-80 lg:block" />
               <div className="pointer-events-none absolute inset-0 -m-12 rounded-full bg-cockpit-amber/10 blur-3xl" aria-hidden="true" />
-              <div className="relative">
-                <HeroPhones />
-              </div>
+              <HeroPhoneShots className="w-[340px] sm:w-[480px] lg:-mr-10 lg:w-[600px]" />
             </div>
           </div>
         </section>
 
         {/* TRUST STRIP */}
         <section className="border-y border-cockpit-border bg-cockpit-bg">
-          <div className="mx-auto flex max-w-[1200px] flex-col items-center gap-4 px-4 py-6 md:flex-row md:gap-10 md:px-8">
+          <div className="ph-container flex flex-col items-center gap-4 py-6 md:flex-row md:gap-10">
             <span className="shrink-0 text-[10px] font-semibold uppercase tracking-[0.3em] text-cockpit-muted">
               Built for every authority
             </span>
@@ -188,7 +185,7 @@ export default function Landing() {
 
         {/* WHY */}
         <section className="py-20 md:py-28">
-          <div className="mx-auto max-w-[1200px] px-4 md:px-8">
+          <div className="ph-container">
             <div className="mb-14 max-w-2xl">
               <Eyebrow>Why PilotHobb</Eyebrow>
               <h2 className="mt-4 font-heading text-[30px] font-bold leading-tight md:text-[42px]">
@@ -215,14 +212,9 @@ export default function Landing() {
 
         {/* MOVING MAP */}
         <section id="moving-map" className="border-y border-cockpit-border bg-cockpit-panel py-20 md:py-28">
-          <div className="mx-auto grid max-w-[1200px] items-center gap-14 px-4 md:px-8 lg:grid-cols-2">
+          <div className="ph-container grid items-center gap-14 lg:grid-cols-2">
             <div className="order-2 flex justify-center lg:order-1">
-              <div className="relative w-[260px] shrink-0 sm:w-[300px]">
-                <div className="pointer-events-none absolute inset-0 -m-10 rounded-full bg-cockpit-amber/10 blur-3xl" aria-hidden="true" />
-                <div className="relative">
-                  <MovingMapPhone />
-                </div>
-              </div>
+              <MapPhoneShot className="w-[330px] sm:w-[400px]" />
             </div>
 
             <div className="order-1 lg:order-2">
@@ -242,7 +234,7 @@ export default function Landing() {
                 ))}
               </ul>
               <Link
-                to="/features"
+                to="/moving-map"
                 className="mt-9 inline-flex items-center gap-2 rounded-xl bg-cockpit-amber px-6 py-3.5 text-[14px] font-bold text-cockpit-bg transition-all hover:brightness-110"
               >
                 See the moving map <ArrowRight className="h-4 w-4" />
@@ -253,7 +245,7 @@ export default function Landing() {
 
         {/* FEATURES */}
         <section id="features" className="py-20 md:py-28">
-          <div className="mx-auto max-w-[1200px] px-4 md:px-8">
+          <div className="ph-container">
             <div className="mb-14 max-w-2xl">
               <Eyebrow>Everything a working pilot needs</Eyebrow>
               <h2 className="mt-4 font-heading text-[30px] font-bold leading-tight md:text-[42px]">
@@ -266,7 +258,7 @@ export default function Landing() {
 
         {/* PRICING */}
         <section id="pricing" className="border-t border-cockpit-border py-20 md:py-28">
-          <div className="mx-auto max-w-[1200px] px-4 md:px-8">
+          <div className="ph-container">
             <div className="mb-14 max-w-2xl">
               <Eyebrow>Pricing</Eyebrow>
               <h2 className="mt-4 font-heading text-[30px] font-bold leading-tight md:text-[42px]">
@@ -285,33 +277,7 @@ export default function Landing() {
           </div>
         </section>
 
-        {/* CTA BAND */}
-        <section className="pb-20 md:pb-28">
-          <div className="mx-auto max-w-[1100px] px-4 md:px-8">
-            <div className="overflow-hidden rounded-3xl bg-gradient-to-br from-cockpit-amber to-cockpit-warning px-6 py-14 text-center md:px-16 md:py-16">
-              <h2 className="font-heading text-[28px] font-bold leading-tight text-cockpit-bg md:text-[42px]">
-                Preflight check complete.
-              </h2>
-              <p className="mx-auto mt-3 mb-8 max-w-xl text-[16px] text-cockpit-bg/80 md:text-[18px]">
-                Download PilotHobb and log your next flight down to the tenth.
-              </p>
-              <div className="flex flex-col justify-center gap-3 sm:flex-row">
-                <Link
-                  to="/download"
-                  className="inline-flex items-center justify-center gap-2.5 rounded-xl bg-cockpit-bg px-6 py-3.5 text-[14px] font-semibold text-cockpit-cream transition-all hover:bg-cockpit-panel-light"
-                >
-                  <AppStoreBadgeIcon className="h-5 w-5" /> App Store
-                </Link>
-                <Link
-                  to="/download"
-                  className="inline-flex items-center justify-center gap-2.5 rounded-xl bg-cockpit-bg px-6 py-3.5 text-[14px] font-semibold text-cockpit-cream transition-all hover:bg-cockpit-panel-light"
-                >
-                  <GooglePlayBadgeIcon className="h-5 w-5" /> Google Play
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
+        <CtaBand />
       </main>
 
       <LandingFooter />

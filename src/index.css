@@ -157,3 +157,14 @@ input, textarea { -webkit-user-select: text; user-select: text; }
 .app-scroll { -webkit-overflow-scrolling: touch; }
 .safe-top { padding-top: env(safe-area-inset-top); }
 .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+/* Marketing site: designed on a 1440px canvas. On larger displays the whole
+   site scales up so it always fills the screen instead of sitting in a narrow column. */
+.ph-site { background: #0A0E17; color: #F3ECDD; min-height: 100vh; }
+.ph-container { width: 100%; max-width: 1200px; margin-left: auto; margin-right: auto; padding-left: 20px; padding-right: 20px; }
+@media (min-width: 768px) { .ph-container { padding-left: 40px; padding-right: 40px; } }
+@media (min-width: 1600px) { .ph-site { zoom: 1.15; } }
+@media (min-width: 1800px) { .ph-site { zoom: 1.28; } }
+@media (min-width: 2000px) { .ph-site { zoom: 1.42; } }
+@media (min-width: 2300px) { .ph-site { zoom: 1.62; } }
+@media (min-width: 2700px) { .ph-site { zoom: 1.9; } }
+@media (min-width: 3200px) { .ph-site { zoom: 2.25; } }
