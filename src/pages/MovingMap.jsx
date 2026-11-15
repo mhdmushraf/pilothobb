@@ -83,7 +83,7 @@ export default function MovingMap() {
 
         <div className="mt-12 overflow-hidden rounded-3xl border border-cockpit-border bg-cockpit-panel px-6 pt-10 md:px-12">
           <div className="flex flex-col items-center justify-center gap-6 md:flex-row md:items-end md:gap-12">
-            <MapPhoneShot className="-mb-10 w-[320px] sm:w-[380px]" />
+            <MapPhoneShot className="-mb-12 w-[270px] shrink-0 sm:w-[300px]" />
             <div className="mb-10 w-full max-w-[300px] rounded-[28px] border border-cockpit-border bg-cockpit-bg p-5">
               <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.25em] text-cockpit-amber">Automated logging</p>
               <p className="mt-1 font-heading text-[17px] font-bold text-cockpit-cream">Flight detected</p>

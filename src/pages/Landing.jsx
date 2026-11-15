@@ -159,9 +159,9 @@ export default function Landing() {
 
             <div className="relative flex w-full justify-center lg:justify-end">
               <img src={SHOTS.cruise} alt="" aria-hidden="true"
-                className="pointer-events-none absolute left-[-18%] top-[22%] hidden w-[92%] max-w-none rounded-2xl opacity-80 lg:block" />
+                className="pointer-events-none absolute right-[38%] top-[26%] hidden w-[560px] max-w-none rounded-2xl opacity-90 lg:block" />
               <div className="pointer-events-none absolute inset-0 -m-12 rounded-full bg-cockpit-amber/10 blur-3xl" aria-hidden="true" />
-              <HeroPhoneShots className="w-[340px] sm:w-[480px] lg:-mr-10 lg:w-[600px]" />
+              <HeroPhoneShots className="w-[320px] sm:w-[420px] lg:w-[504px]" />
             </div>
           </div>
         </section>
@@ -214,7 +214,7 @@ export default function Landing() {
         <section id="moving-map" className="border-y border-cockpit-border bg-cockpit-panel py-20 md:py-28">
           <div className="ph-container grid items-center gap-14 lg:grid-cols-2">
             <div className="order-2 flex justify-center lg:order-1">
-              <MapPhoneShot className="w-[330px] sm:w-[400px]" />
+              <MapPhoneShot className="w-[270px] sm:w-[320px]" />
             </div>
 
             <div className="order-1 lg:order-2">

@@ -19,24 +19,32 @@ export function Eyebrow({ children }) {
   );
 }
 
+const FRAME = "overflow-hidden border border-cockpit-border bg-cockpit-bg shadow-[0_30px_80px_rgba(0,0,0,0.55)]";
+const RADIUS = { borderRadius: "10.5% / 5.9%" };
+
+function Shot({ src, alt, className = "", lazy = false }) {
+  return (
+    <div className={`${FRAME} ${className}`} style={RADIUS}>
+      <img src={src} alt={alt} className="block w-full select-none" draggable="false" loading={lazy ? "lazy" : undefined} />
+    </div>
+  );
+}
+
 /** The two hero phones exactly as drawn in the design (dashboard behind, moving map in front). */
 export function HeroPhoneShots({ className = "" }) {
   return (
-    <div className={`relative aspect-[624/760] ${className}`}>
-      <img src={SHOTS.dashboard} alt="PilotHobb dashboard showing total flight time, currency and recent flights"
-        className="absolute left-0 top-[7.5%] w-[63%] select-none" draggable="false" />
-      <img src={SHOTS.map} alt="PilotHobb live moving map with airspace, route and GPS flight recording"
-        className="absolute left-[32%] top-0 w-[68%] select-none" draggable="false" />
+    <div className={`relative aspect-[504/658] ${className}`}>
+      <Shot src={SHOTS.dashboard} alt="PilotHobb dashboard showing total flight time, currency and recent flights"
+        className="absolute left-0 top-[9.1%] w-[54.2%]" />
+      <Shot src={SHOTS.map} alt="PilotHobb live moving map with airspace, route and GPS flight recording"
+        className="absolute left-[39.7%] top-0 w-[60.3%]" />
     </div>
   );
 }
 
 /** A single moving-map phone, as drawn in the design. */
 export function MapPhoneShot({ className = "" }) {
-  return (
-    <img src={SHOTS.map} alt="PilotHobb live moving map with airspace, route and GPS flight recording"
-      className={`select-none ${className}`} draggable="false" loading="lazy" />
-  );
+  return <Shot src={SHOTS.map} alt="PilotHobb live moving map with airspace, route and GPS flight recording" className={className} lazy />;
 }
 
 export function Breadcrumbs({ items }) {
