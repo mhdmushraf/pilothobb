@@ -2,7 +2,7 @@
   "name": "Aircraft",
   "properties": {
     "airframe_hours": {
-      "description": "Total airframe hours",
+      "description": "Total airframe hours; grows with the Tach",
       "type": "number"
     },
     "category": {
@@ -29,6 +29,11 @@
     },
     "engine_hours": {
       "default": 0,
+      "description": "Engine hours since new or overhaul; grows with the Tach",
+      "type": "number"
+    },
+    "engine_tbo_hours": {
+      "description": "Engine hours at which the overhaul is due (TBO)",
       "type": "number"
     },
     "hobbs_reading": {
@@ -50,7 +55,11 @@
       "type": "number"
     },
     "propeller_hours": {
-      "description": "Propeller hours since new or overhaul",
+      "description": "Propeller hours since new or overhaul; grows with the Tach",
+      "type": "number"
+    },
+    "propeller_tbo_hours": {
+      "description": "Propeller hours at which the overhaul is due",
       "type": "number"
     },
     "registration": {
