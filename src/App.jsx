@@ -31,6 +31,9 @@ import Download from '@/pages/Download';
 import Changelog from '@/pages/Changelog';
 import Privacy from '@/pages/Privacy';
 import Terms from '@/pages/Terms';
+import MovingMap from '@/pages/MovingMap';
+import GuideCplHours from '@/pages/GuideCplHours';
+import CompareLogten from '@/pages/CompareLogten';
 import RootEntry from '@/components/RootEntry';
 
 // App pages
@@ -93,6 +96,9 @@ const AuthenticatedApp = () => {
       {/* Marketing (public) */}
       <Route element={<MarketingLayout />}>
         <Route path="/features" element={<Features />} />
+        <Route path="/moving-map" element={<MovingMap />} />
+        <Route path="/guides/sacaa-cpl-hour-requirements" element={<GuideCplHours />} />
+        <Route path="/compare/pilothobb-vs-logten" element={<CompareLogten />} />
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
