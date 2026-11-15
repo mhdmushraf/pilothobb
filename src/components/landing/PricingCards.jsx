@@ -48,7 +48,7 @@ const TIERS = [
     features: [
       "Everything in CPL",
       "Student roster & oversight",
-      "Bulk seats billed yearly",
+      "Bulk seats, billed yearly",
       "School branding",
     ],
   },
