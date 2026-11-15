@@ -67,19 +67,6 @@ export default function Faq() {
       />
       <PageHeader eyebrow="Help" title="Frequently asked questions" subtitle="Everything you need to know about logging with PilotHobb." />
 
-      {/* Hero image band */}
-      <section className="px-4 sm:px-6 -mt-6 mb-10 max-w-5xl mx-auto">
-        <div className="relative rounded-3xl overflow-hidden border border-cockpit-border shadow-xl shadow-cockpit-amber/10">
-          <img
-            src="https://images.unsplash.com/photo-1559060017-445fb9722f2a?w=1600&q=75&auto=format&fit=crop"
-            alt="Clouds at altitude"
-            loading="lazy"
-            className="w-full h-40 sm:h-52 object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-cockpit-bg/85 to-transparent" />
-        </div>
-      </section>
-
       <section className="px-4 sm:px-6 pb-16 max-w-3xl mx-auto space-y-12">
         {groups.map((g) => (
           <ScrollReveal key={g.title}>

@@ -8,7 +8,6 @@ const MEDIA = "https://media.base44.com/images/public/6a455fc5475b58bb52305622";
 export const SHOTS = {
   dashboard: `${MEDIA}/17d0d47fa_hero-phone-dashboard.png`,
   map: `${MEDIA}/4109fd7cb_hero-phone-moving-map.png`,
-  cruise: `${MEDIA}/efa5df61d_hero-cruise-card.png`,
 };
 
 export function Eyebrow({ children }) {
@@ -19,13 +18,27 @@ export function Eyebrow({ children }) {
   );
 }
 
-const FRAME = "overflow-hidden border border-cockpit-border bg-cockpit-bg shadow-[0_30px_80px_rgba(0,0,0,0.55)]";
-const RADIUS = { borderRadius: "10.5% / 5.9%" };
+// The exported screens carry empty margin around the phone; these crops show only the phone itself.
+const CROPS = {
+  dashboard: { aspect: "857 / 1882", width: "137.57%", marginLeft: "-18.67%", marginTop: "-10.5%" },
+  map: { aspect: "949 / 2083", width: "134.14%", marginLeft: "-16.97%", marginTop: "-9.48%" },
+};
 
-function Shot({ src, alt, className = "", lazy = false }) {
+function Shot({ kind, alt, className = "", lazy = false }) {
+  const c = CROPS[kind];
   return (
-    <div className={`${FRAME} ${className}`} style={RADIUS}>
-      <img src={src} alt={alt} className="block w-full select-none" draggable="false" loading={lazy ? "lazy" : undefined} />
+    <div
+      className={`overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,0.6)] ${className}`}
+      style={{ aspectRatio: c.aspect, borderRadius: "10.5% / 4.8%" }}
+    >
+      <img
+        src={SHOTS[kind]}
+        alt={alt}
+        draggable="false"
+        loading={lazy ? "lazy" : undefined}
+        className="block max-w-none select-none"
+        style={{ width: c.width, marginLeft: c.marginLeft, marginTop: c.marginTop }}
+      />
     </div>
   );
 }
@@ -33,10 +46,10 @@ function Shot({ src, alt, className = "", lazy = false }) {
 /** The two hero phones exactly as drawn in the design (dashboard behind, moving map in front). */
 export function HeroPhoneShots({ className = "" }) {
   return (
-    <div className={`relative aspect-[504/658] ${className}`}>
-      <Shot src={SHOTS.dashboard} alt="PilotHobb dashboard showing total flight time, currency and recent flights"
+    <div className={`relative aspect-[504/667] ${className}`}>
+      <Shot kind="dashboard" alt="PilotHobb dashboard showing total flight time, currency and recent flights"
         className="absolute left-0 top-[9.1%] w-[54.2%]" />
-      <Shot src={SHOTS.map} alt="PilotHobb live moving map with airspace, route and GPS flight recording"
+      <Shot kind="map" alt="PilotHobb live moving map with airspace, route and GPS flight recording"
         className="absolute left-[39.7%] top-0 w-[60.3%]" />
     </div>
   );
@@ -44,7 +57,7 @@ export function HeroPhoneShots({ className = "" }) {
 
 /** A single moving-map phone, as drawn in the design. */
 export function MapPhoneShot({ className = "" }) {
-  return <Shot src={SHOTS.map} alt="PilotHobb live moving map with airspace, route and GPS flight recording" className={className} lazy />;
+  return <Shot kind="map" alt="PilotHobb live moving map with airspace, route and GPS flight recording" className={className} lazy />;
 }
 
 export function Breadcrumbs({ items }) {

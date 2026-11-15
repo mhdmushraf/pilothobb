@@ -5,7 +5,7 @@ import AppStoreBadgeIcon from "@/components/landing/AppStoreBadgeIcon";
 import GooglePlayBadgeIcon from "@/components/landing/GooglePlayBadgeIcon";
 import Seo from "@/components/Seo";
 import LandingNav from "@/components/landing/LandingNav";
-import { HeroPhoneShots, MapPhoneShot, CtaBand, SHOTS } from "@/components/marketing/Kit";
+import { HeroPhoneShots, MapPhoneShot, CtaBand } from "@/components/marketing/Kit";
 import FeatureGrid from "@/components/landing/FeatureGrid";
 import PricingCards from "@/components/landing/PricingCards";
 import LandingFooter from "@/components/landing/LandingFooter";
@@ -158,10 +158,8 @@ export default function Landing() {
             </div>
 
             <div className="relative flex w-full justify-center lg:justify-end">
-              <img src={SHOTS.cruise} alt="" aria-hidden="true"
-                className="pointer-events-none absolute right-[38%] top-[26%] hidden w-[560px] max-w-none rounded-2xl opacity-90 lg:block" />
               <div className="pointer-events-none absolute inset-0 -m-12 rounded-full bg-cockpit-amber/10 blur-3xl" aria-hidden="true" />
-              <HeroPhoneShots className="w-[320px] sm:w-[420px] lg:w-[504px]" />
+              <HeroPhoneShots className="relative w-[300px] sm:w-[400px] lg:w-[480px]" />
             </div>
           </div>
         </section>
@@ -214,7 +212,7 @@ export default function Landing() {
         <section id="moving-map" className="border-y border-cockpit-border bg-cockpit-panel py-20 md:py-28">
           <div className="ph-container grid items-center gap-14 lg:grid-cols-2">
             <div className="order-2 flex justify-center lg:order-1">
-              <MapPhoneShot className="w-[270px] sm:w-[320px]" />
+              <MapPhoneShot className="w-[250px] sm:w-[290px]" />
             </div>
 
             <div className="order-1 lg:order-2">
