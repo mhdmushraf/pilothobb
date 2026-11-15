@@ -4,7 +4,7 @@ import { Check, Gauge, ShieldCheck, FileDown, ArrowRight, MoveRight } from "luci
 import AppStoreBadgeIcon from "@/components/landing/AppStoreBadgeIcon";
 import GooglePlayBadgeIcon from "@/components/landing/GooglePlayBadgeIcon";
 import Seo from "@/components/Seo";
-import PhonePreview from "@/components/PhonePreview";
+import HeroPhones from "@/components/landing/HeroPhones";
 import CruiseViewCard from "@/components/landing/CruiseViewCard";
 import LandingNav from "@/components/landing/LandingNav";
 import MovingMapPhone from "@/components/landing/MovingMapPhone";
@@ -108,15 +108,27 @@ export default function Landing() {
       <main>
         {/* HERO */}
         <section className="relative overflow-hidden">
-          <div className="mx-auto grid max-w-[1200px] items-center gap-14 px-4 pb-16 pt-14 md:px-8 md:pb-24 md:pt-20 lg:grid-cols-[1.05fr_0.95fr]">
+          {/* faint chart grid behind the hero, fading out toward the edges */}
+          <div
+            className="pointer-events-none absolute inset-0"
+            aria-hidden="true"
+            style={{
+              backgroundImage:
+                "linear-gradient(rgba(36,48,73,0.35) 1px, transparent 1px), linear-gradient(90deg, rgba(36,48,73,0.35) 1px, transparent 1px)",
+              backgroundSize: "56px 56px",
+              WebkitMaskImage: "radial-gradient(75% 70% at 50% 40%, black 30%, transparent 85%)",
+              maskImage: "radial-gradient(75% 70% at 50% 40%, black 30%, transparent 85%)",
+            }}
+          />
+          <div className="relative mx-auto grid max-w-[1200px] items-center gap-14 px-4 pb-16 pt-14 md:px-8 md:pb-24 md:pt-20 lg:grid-cols-[1.05fr_0.95fr]">
             <div>
               <span className="inline-flex items-center gap-2 rounded-full border border-cockpit-amber/25 bg-cockpit-amber/10 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-cockpit-amber">
                 <span className="h-1.5 w-1.5 rounded-full bg-cockpit-amber" />
                 New · Live moving map with GPS flight recording
               </span>
 
-              <h1 className="mb-5 mt-6 font-heading text-[40px] font-bold leading-[1.03] md:text-[58px]">
-                Every flight, down to the <span className="text-cockpit-amber">tenth of an hour.</span>
+              <h1 className="mb-5 mt-6 font-heading text-[40px] font-bold leading-[1.03] text-cockpit-cream md:text-[60px]">
+                Every flight,<br className="hidden sm:block" /> down to the tenth<br className="hidden sm:block" /> of an hour.
               </h1>
 
               <p className="mb-8 max-w-xl text-[17px] leading-relaxed text-cockpit-muted md:text-[19px]">
@@ -147,11 +159,11 @@ export default function Landing() {
               </ul>
             </div>
 
-            <div className="relative flex w-full max-w-[300px] shrink-0 justify-center lg:max-w-none">
+            <div className="relative flex w-full justify-center">
               <CruiseViewCard className="pointer-events-none absolute -inset-x-6 -inset-y-4 hidden lg:block" aria-hidden="true" />
               <div className="pointer-events-none absolute inset-0 -m-12 rounded-full bg-cockpit-amber/10 blur-3xl" aria-hidden="true" />
-              <div className="relative w-[260px] shrink-0 sm:w-[300px]">
-                <PhonePreview />
+              <div className="relative">
+                <HeroPhones />
               </div>
             </div>
           </div>
