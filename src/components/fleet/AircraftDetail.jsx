@@ -35,6 +35,33 @@ function StatTile({ icon: Icon, label, value, accent }) {
   );
 }
 
+// One component's hours against its overhaul limit: hours left and the Tach reading it falls due at
+function LifeRow({ label, hours, limit, tach }) {
+  const h = hours == null ? null : Number(hours);
+  const lim = limit == null ? null : Number(limit);
+  const left = h != null && lim != null ? lim - h : null;
+  const pct = h != null && lim ? Math.max(0, Math.min(100, (h / lim) * 100)) : 0;
+  const tone = left == null ? "text-cockpit-muted" : left <= 0 ? "text-cockpit-expired" : left <= 50 ? "text-cockpit-warning" : "text-cockpit-valid";
+  const fill = left == null ? "bg-cockpit-muted" : left <= 0 ? "bg-cockpit-expired" : left <= 50 ? "bg-cockpit-warning" : "bg-cockpit-valid";
+  return (
+    <div>
+      <div className="flex items-baseline justify-between">
+        <span className="text-sm font-semibold text-cockpit-cream">{label}</span>
+        <span className="font-mono text-sm text-cockpit-cream">{h != null ? `${h.toFixed(1)} h` : "Not set"}{lim != null ? ` / ${lim.toFixed(0)} h` : ""}</span>
+      </div>
+      {lim != null && h != null && (
+        <>
+          <div className="mt-1.5 h-1.5 rounded-full bg-cockpit-bg overflow-hidden"><div className={`h-full rounded-full ${fill}`} style={{ width: `${pct}%` }} /></div>
+          <p className={`mt-1 text-xs ${tone}`}>
+            {left <= 0 ? `Overdue by ${Math.abs(left).toFixed(1)} h` : `${left.toFixed(1)} h left`}
+            {tach != null && left > 0 ? ` · due at Tach ${(Number(tach) + left).toFixed(1)}` : ""}
+          </p>
+        </>
+      )}
+    </div>
+  );
+}
+
 function MaintRow({ label, hoursRemaining, onSet }) {
   let color = "text-cockpit-valid";
   let bg = "bg-cockpit-valid/10 border-cockpit-valid/30";
@@ -105,6 +132,32 @@ export default function AircraftDetail({ aircraft, onClose }) {
   const [pendingFile, setPendingFile] = useState(null);
   const [editingMaint, setEditingMaint] = useState(null);
   const [maintForm, setMaintForm] = useState({ mpi_due_reading: "", oil_due_reading: "" });
+  const [editingMeters, setEditingMeters] = useState(false);
+  const [meterForm, setMeterForm] = useState({});
+  const [, bump] = useState(0);
+  const METER_FIELDS = [
+    ["hobbs_reading", "Hobbs reading"], ["tach_reading", "Tach reading"], ["time_multiplier", "Flight time multiplier"],
+    ["engine_hours", "Engine hours now"], ["engine_tbo_hours", "Engine overhaul due at (h)"],
+    ["propeller_hours", "Propeller hours now"], ["propeller_tbo_hours", "Propeller overhaul due at (h)"],
+    ["airframe_hours", "Airframe hours now"],
+  ];
+  const openMeters = () => {
+    setMeterForm(Object.fromEntries(METER_FIELDS.map(([k]) => [k, aircraft[k] ?? (k === "time_multiplier" ? 1 : "")])));
+    setEditingMeters(true);
+  };
+  const saveMeters = async () => {
+    const updates = {};
+    METER_FIELDS.forEach(([k]) => { updates[k] = meterForm[k] !== "" && meterForm[k] != null ? Number(meterForm[k]) : null; });
+    if (!(updates.time_multiplier > 0)) updates.time_multiplier = 1;
+    if (aircraft.time_source === "Hobbs" && updates.hobbs_reading != null) updates.current_reading = updates.hobbs_reading;
+    if (aircraft.time_source === "Tach" && updates.tach_reading != null) updates.current_reading = updates.tach_reading;
+    try {
+      await base44.entities.Aircraft.update(aircraft.id, updates);
+      Object.assign(aircraft, updates);
+    } catch { /* keep the old values on screen */ }
+    setEditingMeters(false);
+    bump((n) => n + 1);
+  };
 
   const isDrone = aircraft.category === "Drone (RPAS)";
   const isManned = !isDrone;
@@ -228,6 +281,49 @@ export default function AircraftDetail({ aircraft, onClose }) {
         <StatTile icon={Settings} label="Engine hours" value={`${(aircraft.engine_hours ?? 0).toFixed(1)} h`} />
         <StatTile icon={Clock} label="Last flown" value={lastFlown} />
       </div>
+
+      {/* Meters and component life */}
+      {isManned && (
+        <div className="mb-3">
+          <h3 className="text-xs font-semibold text-cockpit-muted uppercase tracking-wider mb-2">Meters &amp; component life</h3>
+          {editingMeters ? (
+            <div className="space-y-3 rounded-xl bg-cockpit-panel border border-cockpit-border p-4">
+              <div className="grid grid-cols-2 gap-3">
+                {METER_FIELDS.map(([k, label]) => (
+                  <div key={k} className="space-y-1.5">
+                    <Label className="text-[10px] text-cockpit-muted uppercase tracking-wider">{label}</Label>
+                    <Input type="number" step="0.1" value={meterForm[k] ?? ""}
+                      onChange={(e) => setMeterForm((f) => ({ ...f, [k]: e.target.value }))}
+                      className="bg-cockpit-panel-light border-cockpit-border text-cockpit-cream font-mono" />
+                  </div>
+                ))}
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" onClick={() => setEditingMeters(false)} className="flex-1 border-cockpit-border text-cockpit-muted">Cancel</Button>
+                <Button size="sm" onClick={saveMeters} className="flex-1 bg-cockpit-amber text-cockpit-bg hover:bg-cockpit-amber-hi">Save</Button>
+              </div>
+            </div>
+          ) : (
+            <div className="rounded-xl bg-cockpit-panel border border-cockpit-border p-4 space-y-3">
+              <div className="grid grid-cols-3 gap-2 text-center">
+                {[["Hobbs", aircraft.hobbs_reading], ["Tach", aircraft.tach_reading], ["Multiplier", aircraft.time_multiplier > 0 ? aircraft.time_multiplier : 1]].map(([l, v]) => (
+                  <div key={l}>
+                    <p className="font-mono text-sm font-bold text-cockpit-cream">{v != null ? (l === "Multiplier" ? `× ${v}` : Number(v).toFixed(1)) : "—"}</p>
+                    <p className="text-[10px] uppercase tracking-wider text-cockpit-muted">{l}</p>
+                  </div>
+                ))}
+              </div>
+              <LifeRow label="Engine" hours={aircraft.engine_hours} limit={aircraft.engine_tbo_hours} tach={aircraft.tach_reading} />
+              <LifeRow label="Propeller" hours={aircraft.propeller_hours} limit={aircraft.propeller_tbo_hours} tach={aircraft.tach_reading} />
+              <LifeRow label="Airframe" hours={aircraft.airframe_hours} />
+              <p className="text-[11px] text-cockpit-muted">These grow automatically with the Tach after each flight.</p>
+              <Button variant="ghost" size="sm" onClick={openMeters} className="w-full text-xs text-cockpit-muted hover:text-cockpit-cream">
+                <Settings className="w-3 h-3" /> Edit meters, multiplier and overhaul limits
+              </Button>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Maintenance section */}
       {isManned && (

@@ -26,11 +26,28 @@ export function computeTotals(flight, pilot, aircraft, sign = 1) {
     a.total_time = r1((a.total_time || 0) + sign * (f.flight_time || 0));
     a.pic_time   = r1((a.pic_time || 0) + sign * (f.pic_time || 0));
     a.dual_time  = r1((a.dual_time || 0) + sign * (f.dual_time || 0));
+    // Engine, airframe and propeller hours follow the Tach. On a Tach aircraft they grow by the
+    // Tach difference; where no Tach is kept at all they grow by the flight time instead.
+    let grow = 0;
+    if (a.time_source === 'Tach') {
+      const prev = a.tach_reading ?? a.current_reading;
+      if (sign > 0 && f.reading_after != null && prev != null) grow = Math.max(0, f.reading_after - prev);
+    } else if (a.tach_reading == null) {
+      grow = sign * (f.flight_time || 0);
+    }
+    if (grow) {
+      ['engine_hours', 'airframe_hours', 'propeller_hours'].forEach((k) => {
+        if (a[k] != null) a[k] = Math.max(0, r1((a[k] || 0) + grow));
+      });
+    }
     if (sign > 0) {
       a.last_flown = f.date;
       a.current_reading = a.time_source === 'Manual'
         ? r1((a.current_reading || 0) + (f.flight_time || 0))
         : (f.reading_after ?? a.current_reading);
+      // Keep the named meter in step with the reading the flight ended on
+      if (a.time_source === 'Hobbs' && f.reading_after != null) a.hobbs_reading = f.reading_after;
+      if (a.time_source === 'Tach' && f.reading_after != null) a.tach_reading = f.reading_after;
     }
   }
   return { pilotPatch: p, aircraftPatch: a };

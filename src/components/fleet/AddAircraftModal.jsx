@@ -21,7 +21,14 @@ export default function AddAircraftModal({ onClose, onSaved }) {
     category: "SEP",
     time_source: "Hobbs",
     current_reading: 0,
+    hobbs_reading: "",
+    tach_reading: "",
+    time_multiplier: 1,
     engine_hours: 0,
+    engine_tbo_hours: "",
+    propeller_hours: "",
+    propeller_tbo_hours: "",
+    airframe_hours: "",
     mpi_due_reading: "",
     oil_due_reading: "",
     weight_class: "",
@@ -32,6 +39,15 @@ export default function AddAircraftModal({ onClose, onSaved }) {
 
   const isDrone = form.category === "Drone (RPAS)";
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
+  const opt = (v) => (v !== "" && v != null ? Number(v) : undefined);
+  const numField = (key, label, placeholder) => (
+    <div className="space-y-1.5">
+      <Label className="text-xs text-cockpit-muted uppercase tracking-wider">{label}</Label>
+      <Input type="number" step="0.1" value={form[key]} placeholder={placeholder}
+        onChange={(e) => set(key, e.target.value)}
+        className="bg-cockpit-panel-light border-cockpit-border text-cockpit-cream font-mono" />
+    </div>
+  );
 
   const onCategoryChange = (val) => {
     if (val === "Drone (RPAS)") {
@@ -55,8 +71,18 @@ export default function AddAircraftModal({ onClose, onSaved }) {
         type: form.type,
         category: form.category,
         time_source: form.time_source,
-        current_reading: Number(form.current_reading) || 0,
+        current_reading:
+          form.time_source === "Hobbs" && form.hobbs_reading !== "" ? Number(form.hobbs_reading)
+          : form.time_source === "Tach" && form.tach_reading !== "" ? Number(form.tach_reading)
+          : Number(form.current_reading) || 0,
+        hobbs_reading: opt(form.hobbs_reading),
+        tach_reading: opt(form.tach_reading),
+        time_multiplier: Number(form.time_multiplier) > 0 ? Number(form.time_multiplier) : 1,
         engine_hours: Number(form.engine_hours) || 0,
+        engine_tbo_hours: opt(form.engine_tbo_hours),
+        propeller_hours: opt(form.propeller_hours),
+        propeller_tbo_hours: opt(form.propeller_tbo_hours),
+        airframe_hours: opt(form.airframe_hours),
         mpi_due_reading: form.mpi_due_reading !== "" ? Number(form.mpi_due_reading) : undefined,
         oil_due_reading: form.oil_due_reading !== "" ? Number(form.oil_due_reading) : undefined,
         weight_class: isDrone ? form.weight_class || undefined : undefined,
@@ -116,12 +142,23 @@ export default function AddAircraftModal({ onClose, onSaved }) {
             </Select>
             {isDrone && <p className="text-[11px] text-cockpit-muted">Auto-set to Manual for drones</p>}
           </div>
-          <div className="space-y-1.5">
-            <Label className="text-xs text-cockpit-muted uppercase tracking-wider">Engine hours</Label>
-            <Input type="number" step="0.1" value={form.engine_hours}
-              onChange={(e) => set("engine_hours", e.target.value)}
-              className="bg-cockpit-panel-light border-cockpit-border text-cockpit-cream font-mono" />
-          </div>
+          {!isDrone && (
+            <>
+              <div className="grid grid-cols-2 gap-3">
+                {numField("hobbs_reading", "Hobbs reading", "0.0")}
+                {numField("tach_reading", "Tach reading", "0.0")}
+              </div>
+              {numField("time_multiplier", "Flight time multiplier", "1.0")}
+              <div className="grid grid-cols-2 gap-3">
+                {numField("engine_hours", "Engine hours now", "0.0")}
+                {numField("engine_tbo_hours", "Engine overhaul due at (h)", "e.g. 2000")}
+                {numField("propeller_hours", "Propeller hours now", "0.0")}
+                {numField("propeller_tbo_hours", "Propeller overhaul due at (h)", "e.g. 2000")}
+              </div>
+              {numField("airframe_hours", "Airframe hours now", "0.0")}
+              <p className="text-[11px] text-cockpit-muted">Engine, propeller and airframe hours grow automatically with the Tach after each flight.</p>
+            </>
+          )}
           <div className="space-y-1.5">
             <Label className="text-xs text-cockpit-muted uppercase tracking-wider">Next MPI due at (reading)</Label>
             <Input type="number" step="0.1" value={form.mpi_due_reading}
