@@ -1,54 +1,43 @@
 {
   "name": "Aircraft",
-  "type": "object",
   "properties": {
-    "registration": {
-      "type": "string"
-    },
-    "type": {
-      "type": "string"
-    },
-    "time_source": {
-      "type": "string",
-      "enum": [
-        "Hobbs",
-        "Tach",
-        "Manual"
-      ]
+    "airframe_hours": {
+      "description": "Total airframe hours",
+      "type": "number"
     },
     "category": {
-      "type": "string",
       "enum": [
         "SEP",
         "MEP",
         "Helicopter",
         "Drone (RPAS)",
         "Other"
-      ]
-    },
-    "pic_time": {
-      "type": "number",
-      "default": 0
-    },
-    "dual_time": {
-      "type": "number",
-      "default": 0
-    },
-    "total_time": {
-      "type": "number",
-      "default": 0
-    },
-    "last_flown": {
-      "type": "string",
-      "format": "date"
+      ],
+      "type": "string"
     },
     "current_reading": {
-      "type": "number",
-      "default": 0
+      "default": 0,
+      "type": "number"
+    },
+    "description": {
+      "maxLength": 1000,
+      "type": "string"
+    },
+    "dual_time": {
+      "default": 0,
+      "type": "number"
     },
     "engine_hours": {
-      "type": "number",
-      "default": 0
+      "default": 0,
+      "type": "number"
+    },
+    "hobbs_reading": {
+      "description": "Latest Hobbs meter reading",
+      "type": "number"
+    },
+    "last_flown": {
+      "format": "date",
+      "type": "string"
     },
     "mpi_due_reading": {
       "type": "number"
@@ -56,11 +45,45 @@
     "oil_due_reading": {
       "type": "number"
     },
+    "pic_time": {
+      "default": 0,
+      "type": "number"
+    },
+    "propeller_hours": {
+      "description": "Propeller hours since new or overhaul",
+      "type": "number"
+    },
+    "registration": {
+      "type": "string"
+    },
     "serial_number": {
       "type": "string"
     },
+    "tach_reading": {
+      "description": "Latest Tach meter reading",
+      "type": "number"
+    },
+    "time_multiplier": {
+      "default": 1,
+      "description": "Flight time = meter difference x this multiplier (for example 1.2 for Tach-based logging)",
+      "type": "number"
+    },
+    "time_source": {
+      "enum": [
+        "Hobbs",
+        "Tach",
+        "Manual"
+      ],
+      "type": "string"
+    },
+    "total_time": {
+      "default": 0,
+      "type": "number"
+    },
+    "type": {
+      "type": "string"
+    },
     "weight_class": {
-      "type": "string",
       "enum": [
         "< 250 g",
         "250 g \u2013 2 kg",
@@ -68,17 +91,15 @@
         "7 \u2013 25 kg",
         "> 25 kg",
         "Manned"
-      ]
-    },
-    "description": {
-      "type": "string",
-      "maxLength": 1000
+      ],
+      "type": "string"
     }
   },
   "required": [
     "registration",
     "type"
   ],
+  "type": "object",
   "rls": {
     "create": true,
     "read": {
