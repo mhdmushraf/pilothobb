@@ -162,9 +162,19 @@ input, textarea { -webkit-user-select: text; user-select: text; }
 .ph-site { background: #0A0E17; color: #F3ECDD; min-height: 100vh; }
 .ph-container { width: 100%; max-width: 1200px; margin-left: auto; margin-right: auto; padding-left: 20px; padding-right: 20px; }
 @media (min-width: 768px) { .ph-container { padding-left: 40px; padding-right: 40px; } }
-@media (min-width: 1600px) { .ph-site { zoom: 1.15; } }
-@media (min-width: 1800px) { .ph-site { zoom: 1.28; } }
-@media (min-width: 2000px) { .ph-site { zoom: 1.42; } }
-@media (min-width: 2300px) { .ph-site { zoom: 1.62; } }
-@media (min-width: 2700px) { .ph-site { zoom: 1.9; } }
-@media (min-width: 3200px) { .ph-site { zoom: 2.25; } }
+.ph-site { --ph-unzoom: 1; }
+@media (min-width: 1600px) { .ph-site { zoom: 1.15; --ph-unzoom: 0.8696; } }
+@media (min-width: 1800px) { .ph-site { zoom: 1.28; --ph-unzoom: 0.7813; } }
+@media (min-width: 2000px) { .ph-site { zoom: 1.42; --ph-unzoom: 0.7042; } }
+@media (min-width: 2300px) { .ph-site { zoom: 1.62; --ph-unzoom: 0.6173; } }
+@media (min-width: 2700px) { .ph-site { zoom: 1.9; --ph-unzoom: 0.5263; } }
+@media (min-width: 3200px) { .ph-site { zoom: 2.25; --ph-unzoom: 0.4444; } }
+/* Interactive maps need true pixels, so they cancel the site scaling inside their own box. */
+.ph-unzoom { zoom: var(--ph-unzoom, 1); }
+.ph-map .leaflet-container { background: #0A0E17; font-family: inherit; }
+.ph-map .leaflet-tooltip { background: #141B2B; color: #F3ECDD; border: 1px solid #243049; border-radius: 8px; box-shadow: none; font-size: 12px; padding: 4px 8px; }
+.ph-map .leaflet-tooltip::before { display: none; }
+.ph-map .ph-code { background: transparent; border: 0; padding: 0; color: #F3ECDD; font-family: var(--font-mono); font-size: 10px; font-weight: 700; text-shadow: 0 0 3px #0A0E17, 0 0 3px #0A0E17; }
+.ph-map .leaflet-control-attribution { background: rgba(10,14,23,0.8); color: #8893A8; font-size: 10px; }
+.ph-map .leaflet-control-attribution a { color: #8893A8; }
+.ph-map .leaflet-bar a { background: #141B2B; color: #F3ECDD; border-color: #243049; }
