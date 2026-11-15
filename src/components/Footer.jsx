@@ -64,7 +64,7 @@ export default function Footer() {
         </div>
         <div className="pt-6 border-t border-cockpit-border">
           <p className="text-xs text-cockpit-muted text-center leading-relaxed">
-            © 2026 PilotHobb · Linkzone Global FZCO · Not affiliated with any aviation authority
+            © 2026 PilotHobb · Linkzone Global FZ-LLC · Not affiliated with any aviation authority
           </p>
         </div>
       </div>

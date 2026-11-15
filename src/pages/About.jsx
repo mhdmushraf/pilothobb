@@ -136,7 +136,7 @@ export default function About() {
             hello@linkzoneglobal.com
           </a>
           <p className="text-xs text-cockpit-muted mt-6">
-            PilotHobb · a Linkzone Global FZCO venture
+            PilotHobb · a Linkzone Global FZ-LLC venture
           </p>
         </ScrollReveal>
       </section>

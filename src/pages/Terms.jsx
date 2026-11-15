@@ -7,7 +7,7 @@ const sections = [
   {
     h: "Acceptance of terms",
     body: [
-      "By creating an account or using PilotHobb (the “Service”), operated by Linkzone Global FZCO, you agree to these Terms of Service. If you do not agree, please do not use the Service.",
+      "By creating an account or using PilotHobb (the “Service”), operated by Linkzone Global FZ-LLC, you agree to these Terms of Service. If you do not agree, please do not use the Service.",
     ],
   },
   {
@@ -58,13 +58,13 @@ const sections = [
   {
     h: "Limitation of liability",
     body: [
-      "To the maximum extent permitted by law, PilotHobb and Linkzone Global FZCO are not liable for indirect or consequential losses, or for any loss arising from reliance on records or calculations that you did not independently verify.",
+      "To the maximum extent permitted by law, PilotHobb and Linkzone Global FZ-LLC are not liable for indirect or consequential losses, or for any loss arising from reliance on records or calculations that you did not independently verify.",
     ],
   },
   {
     h: "Governing law",
     body: [
-      "These Terms are governed by the laws of the United Arab Emirates. The Service is provided by Linkzone Global FZCO, Dubai.",
+      "These Terms are governed by the laws of the United Arab Emirates. The Service is provided by Linkzone Global FZ-LLC, Dubai.",
     ],
   },
   {

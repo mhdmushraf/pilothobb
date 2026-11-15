@@ -7,7 +7,7 @@ const sections = [
   {
     h: "Who we are",
     body: [
-      "PilotHobb is a digital pilot logbook operated by Linkzone Global FZCO (“PilotHobb”, “we”, “us”). This policy explains what personal information we collect, why, and the choices you have.",
+      "PilotHobb is a digital pilot logbook operated by Linkzone Global FZ-LLC (“PilotHobb”, “we”, “us”). This policy explains what personal information we collect, why, and the choices you have.",
     ],
   },
   {

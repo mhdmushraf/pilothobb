@@ -121,7 +121,7 @@ export default function Contact() {
 
               <div className="pt-4 border-t border-cockpit-border">
                 <p className="text-xs text-cockpit-muted leading-relaxed">
-                  PilotHobb · a Linkzone Global FZCO venture
+                  PilotHobb · a Linkzone Global FZ-LLC venture
                 </p>
               </div>
             </div>
