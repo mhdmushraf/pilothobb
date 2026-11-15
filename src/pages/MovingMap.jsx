@@ -80,7 +80,7 @@ export default function MovingMap() {
         <div className="ph-container">
           <h2 className="font-heading text-[26px] font-bold text-cockpit-cream md:text-[32px]">Live South African airspace map</h2>
           <p className="mb-6 mt-3 max-w-3xl text-[15px] leading-relaxed text-cockpit-muted">
-            Control zones, TMAs, danger, restricted and prohibited areas and aerodromes across South Africa. Hover an area for its name and limits, switch layers on and off, and tap “Show my position” to see your own GPS position and track on the chart.
+            Control zones, TMAs, danger, restricted and prohibited areas and aerodromes across South Africa. Tap an area for its name and limits, switch the base map and layers, and tap “Show my position” to see your own GPS position and track on the chart.
           </p>
           <LiveVfrMap />
         </div>
