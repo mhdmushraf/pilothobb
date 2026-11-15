@@ -1,5 +1,6 @@
 import React from "react";
-import { Layers, Compass, Crosshair, Plus, Minus, Satellite } from "lucide-react";
+import { Layers, Compass, Crosshair, Plus, Minus, Satellite, Navigation, ChevronRight, Square } from "lucide-react";
+import PhoneTabBar from "@/components/landing/PhoneTabBar";
 
 const V_LINES = [50, 100, 150, 200, 250];
 const H_LINES = [60, 120, 180, 240, 300, 360, 420, 480, 540, 600];
@@ -16,7 +17,8 @@ export default function MovingMapPhone() {
         className="relative mx-auto bg-cockpit-border p-2 rounded-[44px] shadow-2xl shadow-black/60"
         style={{ aspectRatio: "9 / 19" }}
       >
-        <div className="relative w-full h-full overflow-hidden bg-cockpit-panel rounded-[36px]">
+        <div className="relative flex w-full h-full flex-col overflow-hidden bg-cockpit-panel rounded-[36px]">
+         <div className="relative min-h-0 flex-1">
           {/* status bar */}
           <div className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between px-4 pt-2.5">
             <span className="font-mono text-[10px] font-semibold text-cockpit-cream">9:41</span>
@@ -89,14 +91,14 @@ export default function MovingMapPhone() {
           <div className="absolute top-7 left-0 right-0 px-3">
             <div className="grid grid-cols-4 gap-1 rounded-xl border border-cockpit-border/70 bg-cockpit-bg/85 backdrop-blur px-2.5 py-2">
               {[
-                ["GS", "112", "kt"],
-                ["ALT", "6,250", "ft"],
-                ["TRK", "047", "°M"],
-                ["VS", "+300", "fpm"],
-              ].map(([label, value, unit]) => (
+                ["GS", "112", "kt", "text-cockpit-cream"],
+                ["ALT", "6,250", "ft", "text-cockpit-cream"],
+                ["TRK", "047", "°M", "text-cockpit-amber"],
+                ["VS", "+300", "fpm", "text-cockpit-valid"],
+              ].map(([label, value, unit, tone]) => (
                 <div key={label} className="text-center">
                   <p className="font-mono text-[7px] text-cockpit-muted">{label}</p>
-                  <p className="font-mono text-[12px] font-bold leading-tight text-cockpit-cream">
+                  <p className={`font-mono text-[12px] font-bold leading-tight ${tone}`}>
                     {value}
                     <span className="ml-0.5 text-[7px] font-normal text-cockpit-muted">{unit}</span>
                   </p>
@@ -110,14 +112,14 @@ export default function MovingMapPhone() {
                 <span className="h-1.5 w-1.5 rounded-full bg-cockpit-expired" /> REC 00:42:17
               </span>
               <span className="flex items-center gap-1 rounded-full border border-cockpit-border/70 bg-cockpit-bg/85 px-2 py-1 font-mono text-[7.5px] text-cockpit-muted">
-                <Satellite className="h-2.5 w-2.5 text-cockpit-valid" /> 11 sats
+                <Satellite className="h-2.5 w-2.5 text-cockpit-valid" /> GPS 11 sats · ±4 m
               </span>
               <span className="rounded-full border border-cockpit-border/70 bg-cockpit-bg/85 px-2 py-1 font-mono text-[7.5px] text-cockpit-muted">N-UP</span>
             </div>
           </div>
 
           {/* map controls */}
-          <div className="absolute right-3 top-[220px] flex flex-col gap-1.5">
+          <div className="absolute right-3 top-[150px] flex flex-col gap-1.5">
             {[Layers, Compass, Crosshair, Plus, Minus].map((Icon, i) => (
               <div key={i} className="flex h-7 w-7 items-center justify-center rounded-lg border border-cockpit-border/70 bg-cockpit-bg/85 backdrop-blur">
                 <Icon className="h-3.5 w-3.5 text-cockpit-cream/80" />
@@ -126,26 +128,36 @@ export default function MovingMapPhone() {
           </div>
 
           {/* bottom sheet */}
-          <div className="absolute bottom-3 left-3 right-3 space-y-2">
-            <div className="rounded-xl border border-cockpit-border bg-cockpit-bg/90 backdrop-blur px-3 py-2">
-              <p className="font-mono text-[8px] uppercase tracking-wider text-cockpit-amber">Next · RANDJ → FAGM Rand</p>
-              <p className="mt-0.5 font-mono text-[9.5px] text-cockpit-cream">11.2 NM · BRG 047° · ETA 06 min</p>
+          <div className="absolute bottom-2.5 left-2.5 right-2.5 rounded-2xl border border-cockpit-border bg-cockpit-bg/95 p-2.5 backdrop-blur">
+            <div className="flex items-center gap-2">
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-fuchsia-400/40 bg-fuchsia-400/10">
+                <Navigation className="h-3.5 w-3.5 text-fuchsia-400" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="truncate font-mono text-[7px] uppercase tracking-wider text-cockpit-muted">Next · RANDJ → FAGM Rand</p>
+                <p className="truncate font-mono text-[9.5px] font-semibold text-cockpit-cream">11.2 NM · BRG 047° · ETA 06 min</p>
+              </div>
+              <ChevronRight className="h-3.5 w-3.5 shrink-0 text-cockpit-muted" />
             </div>
-            <div className="rounded-xl border border-cockpit-border bg-cockpit-bg/90 backdrop-blur px-3 py-2">
-              <div className="flex items-center justify-between mb-1.5">
-                <span className="flex items-center gap-1.5 text-[8px] font-semibold uppercase tracking-[0.15em] text-cockpit-expired">
-                  <span className="w-1.5 h-1.5 rounded-full bg-cockpit-expired" /> Recording
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-mono text-[11px] font-semibold text-cockpit-cream">FAHG → FAGM</p>
-                  <p className="text-[9px] text-cockpit-muted">Hobbs 1.3 h tracked</p>
+            <div className="mt-2 grid grid-cols-3 gap-1.5">
+              {[
+                ["FAGM", "Rand · 11 NM", "text-cockpit-cream"],
+                ["FAHG", "Heidelberg · 19 NM", "text-cockpit-cream"],
+                ["FAOR", "OR Tambo · 16 NM", "text-cockpit-expired"],
+              ].map(([code, sub, tone]) => (
+                <div key={code} className="rounded-lg border border-cockpit-border bg-cockpit-panel px-1.5 py-1">
+                  <p className={`font-mono text-[8.5px] font-bold ${tone}`}>{code}</p>
+                  <p className="truncate text-[6px] text-cockpit-muted">{sub}</p>
                 </div>
-                <span className="rounded-lg bg-cockpit-amber px-2.5 py-1.5 text-[9.5px] font-bold text-cockpit-bg">Stop &amp; log</span>
-              </div>
+              ))}
+            </div>
+            <div className="mt-2 flex items-center justify-center gap-1.5 rounded-xl bg-cockpit-expired px-3 py-2">
+              <Square className="h-2.5 w-2.5 fill-cockpit-bg text-cockpit-bg" />
+              <span className="text-[9.5px] font-bold text-cockpit-bg">Stop &amp; log flight · Hobbs 1.3 h</span>
             </div>
           </div>
+         </div>
+          <PhoneTabBar active="map" />
         </div>
       </div>
     </div>
