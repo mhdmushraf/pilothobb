@@ -218,7 +218,7 @@ export default function LiveVfrMap() {
     if (key === baseRef.current) return;
     baseRef.current = key;
     setBase(key);
-    mapRef.current.setStyle(styleFor(key));
+    mapRef.current.setStyle(styleFor(key), { diff: false });
   };
 
   const stop = () => {
