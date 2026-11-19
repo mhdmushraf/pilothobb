@@ -36,9 +36,23 @@
       "default": 0,
       "type": "number"
     },
+    "instructor_sim_time": {
+      "default": 0,
+      "description": "Logbook column 12: time given as instructor in an FSTD",
+      "type": "number"
+    },
+    "instructor_time": {
+      "default": 0,
+      "description": "Logbook columns 10-11: time flown as instructor in the aircraft",
+      "type": "number"
+    },
     "instrument_actual": {
       "default": 0,
       "type": "number"
+    },
+    "instrument_place": {
+      "description": "Logbook column 7: place where the instrument time was flown",
+      "type": "string"
     },
     "instrument_sim": {
       "default": 0,
@@ -64,6 +78,10 @@
       ],
       "type": "string"
     },
+    "nav_aids": {
+      "description": "Logbook column 6: navigation aids used (VOR, NDB, ILS, GNSS)",
+      "type": "string"
+    },
     "night_landings": {
       "default": 0,
       "type": "number"
@@ -85,6 +103,10 @@
         "EVLOS",
         "BVLOS"
       ],
+      "type": "string"
+    },
+    "pic_name": {
+      "description": "Logbook column 4: name of the pilot in command (SELF when the pilot was PIC)",
       "type": "string"
     },
     "pic_time": {
